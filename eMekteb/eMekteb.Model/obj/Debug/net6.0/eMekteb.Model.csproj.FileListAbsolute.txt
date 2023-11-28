@@ -1,0 +1,12 @@
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Model\bin\Debug\net6.0\eMekteb.Model.deps.json
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Model\bin\Debug\net6.0\eMekteb.Model.dll
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Model\bin\Debug\net6.0\eMekteb.Model.pdb
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Model\obj\Debug\net6.0\eMekteb.Model.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Model\obj\Debug\net6.0\eMekteb.Model.AssemblyInfoInputs.cache
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Model\obj\Debug\net6.0\eMekteb.Model.AssemblyInfo.cs
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Model\obj\Debug\net6.0\eMekteb.Model.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Model\obj\Debug\net6.0\eMekteb.Model.dll
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Model\obj\Debug\net6.0\refint\eMekteb.Model.dll
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Model\obj\Debug\net6.0\eMekteb.Model.pdb
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Model\obj\Debug\net6.0\ref\eMekteb.Model.dll
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Model\obj\Debug\net6.0\eMekteb.Model.sourcelink.json

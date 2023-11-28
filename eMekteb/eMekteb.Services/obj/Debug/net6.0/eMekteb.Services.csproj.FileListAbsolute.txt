@@ -1,0 +1,16 @@
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\bin\Debug\net6.0\eMekteb.Services.deps.json
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\bin\Debug\net6.0\eMekteb.Services.dll
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\bin\Debug\net6.0\eMekteb.Services.pdb
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\obj\Debug\net6.0\eMekteb.Services.csproj.AssemblyReference.cache
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\obj\Debug\net6.0\eMekteb.Services.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\obj\Debug\net6.0\eMekteb.Services.AssemblyInfoInputs.cache
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\obj\Debug\net6.0\eMekteb.Services.AssemblyInfo.cs
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\obj\Debug\net6.0\eMekteb.Services.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\obj\Debug\net6.0\eMekteb.Services.dll
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\obj\Debug\net6.0\refint\eMekteb.Services.dll
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\obj\Debug\net6.0\eMekteb.Services.pdb
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\obj\Debug\net6.0\ref\eMekteb.Services.dll
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\bin\Debug\net6.0\eMekteb.Model.dll
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\bin\Debug\net6.0\eMekteb.Model.pdb
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\obj\Debug\net6.0\eMekteb.Services.csproj.CopyComplete
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\obj\Debug\net6.0\eMekteb.Services.sourcelink.json
