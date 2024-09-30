@@ -11,6 +11,7 @@ namespace eMekteb.Services.Interfaces
     {
         Task<T>GetById(int id);
         Task<PagedResult<T>> Get(TSearch search = null);
+       
 
     }
 }

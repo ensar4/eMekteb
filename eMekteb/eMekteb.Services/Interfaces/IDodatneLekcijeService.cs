@@ -12,5 +12,8 @@ namespace eMekteb.Services.Interfaces
 {
     public interface IDodatneLekcijeService : ICRUDService<DodatneLekcijeM, BaseSearchObject, DodatneLekcijeInsert, DodatneLekcijeUpdate>
     {
+        Task<PagedResult<DodatneLekcijeM>> GetByMektebId(int mektebId);
+        Task<DodatneLekcijeM> Update(DodatneLekcijeM takmicar);
+
     }
 }

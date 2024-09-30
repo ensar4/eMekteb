@@ -22,8 +22,5 @@ namespace eMekteb.Services.Database
         public virtual Kategorija? Kategorija { get; set; }
 
 
-
-        public virtual ICollection<Bodovi> Bodovi { get; set; } = new List<Bodovi>();
-
     }
 }

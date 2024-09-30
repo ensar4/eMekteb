@@ -20,17 +20,16 @@ namespace eMekteb.Services.Database
         public int MedzlisId { get; set; }
         public virtual Medzlis? Medzlis { get; set; }
 
-        [ForeignKey("AkademskaGodina")]
-        public int AkademskaGodinaId { get; set; }
-        public virtual AkademskaGodina? AkademskaGodina { get; set; }
-
+        //[ForeignKey("AkademskaGodina")]
+        //public int AkademskaGodinaId { get; set; }
+        //public virtual AkademskaGodina? AkademskaGodina { get; set; }
 
 
         public virtual ICollection<Kamp> Kampovi { get; set; } = new List<Kamp>();
         public virtual ICollection<Obavijest> Obavijesti { get; set; } = new List<Obavijest>();
         public virtual ICollection<Korisnik> Korisnik { get; set; } = new List<Korisnik>();
         public virtual ICollection<DodatneLekcije> DodatneLekcije { get; set; } = new List<DodatneLekcije>();
-
+        public ICollection<AkademskaMekteb>? AkademskaMekteb { get; set; } 
 
 
 

@@ -15,8 +15,13 @@ namespace eMekteb.Services.Database
         public bool? Prisutan { get; set; }
         public DateTime? Datum { get; set; }
 
+
         [ForeignKey("Korisnik")]
         public int KorisnikId { get; set; }
         public virtual Korisnik? Korisnik { get; set; }
+
+        [ForeignKey("Cas")]
+        public int CasId { get; set; }
+        public virtual Cas? Cas { get; set; }
     }
 }

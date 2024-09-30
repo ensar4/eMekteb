@@ -20,6 +20,8 @@ namespace eMekteb.Services.Interfaces
         {
 
         }
+
+
         public virtual async Task<T> Insert(TInsert insert)
         {
             var set = _dbContext.Set<TDb>();
@@ -49,6 +51,20 @@ namespace eMekteb.Services.Interfaces
 
             return _mapper.Map<T>(entity);
 
+        }
+
+        public virtual async Task<T> Delete(int id)
+        {
+            var entity = await _dbContext.Set<TDb>().FindAsync(id);
+            if (entity == null)
+            {
+                return null; 
+            }
+
+            _dbContext.Set<TDb>().Remove(entity);
+            await _dbContext.SaveChangesAsync();
+
+            return _mapper.Map<T>(entity);
         }
     }
 }

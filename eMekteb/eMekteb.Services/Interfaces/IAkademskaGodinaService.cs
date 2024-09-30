@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace eMekteb.Services.Interfaces
 {
-    public interface IAkademskaGodinaService : ICRUDService<AkademskaGodinaM, BaseSearchObject, AkademskaGodinaInsert, AkademskaGodinaUpdate>
+    public interface IAkademskaGodinaService : ICRUDService<AkademskaGodinaM, AkademskaGodSearchObject, AkademskaGodinaInsert, AkademskaGodinaUpdate>
     {
+        public Task<AkademskaGodinaM?> GetLastAkGAsync();
     }
 }

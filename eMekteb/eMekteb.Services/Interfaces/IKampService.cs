@@ -12,5 +12,7 @@ namespace eMekteb.Services.Interfaces
 {
     public interface IKampService : ICRUDService<KampM, BaseSearchObject, KampInsert, KampUpdate>
     {
+        Task<PagedResult<KampM>> GetByMektebId(int mektebId);
+        public Task<KampM?> GetLastKampAsync();
     }
 }

@@ -12,5 +12,7 @@ namespace eMekteb.Services.Interfaces
 {
     public interface IZadacaService : ICRUDService<ZadacaM, BaseSearchObject, ZadacaInsert, ZadacaUpdate>
     {
+        Task<PagedResult<ZadacaM>> GetByKorisnikId(int korisnikId);
+
     }
 }

@@ -10,11 +10,22 @@ namespace eMekteb.Controllers
 {
 
     [ApiController]
-    public class AkademskaGodinaController : BaseCRUDController<AkademskaGodinaM, BaseSearchObject, AkademskaGodinaInsert, AkademskaGodinaUpdate>
-    { 
-        public AkademskaGodinaController(ILogger<BaseController<AkademskaGodinaM, BaseSearchObject>> logger, IAkademskaGodinaService service) : base(logger, service)
+    public class AkademskaGodinaController : BaseCRUDController<AkademskaGodinaM, AkademskaGodSearchObject, AkademskaGodinaInsert, AkademskaGodinaUpdate>
+    {
+        IAkademskaGodinaService service1;
+        public AkademskaGodinaController(ILogger<BaseController<AkademskaGodinaM, AkademskaGodSearchObject>> logger, IAkademskaGodinaService service) : base(logger, service)
         {
-
+            service1 = service;
+        }
+        [HttpGet("active")]
+        public async Task<IActionResult> GetLastAkG()
+        {
+            var result = await service1.GetLastAkGAsync();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
     }
 }

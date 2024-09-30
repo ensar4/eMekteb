@@ -11,10 +11,18 @@ namespace eMekteb.Controllers
 
     [ApiController]
     public class KategorijaController : BaseCRUDController<KategorijaM, BaseSearchObject, KategorijaInsert, object>
-    { 
+    {
+        IKategorijaService service1;
         public KategorijaController(ILogger<BaseController<KategorijaM, BaseSearchObject>> logger, IKategorijaService service) : base(logger, service)
         {
-
+            service1 = service;
         }
+
+        [HttpGet("{Takmicenjeid}")]
+        public async Task<PagedResult<KategorijaM>> GetByTakmicenjeId(int Takmicenjeid)
+        {
+            return await service1.GetByTakmicenjeId(Takmicenjeid);
+        }
+
     }
 }

@@ -13,8 +13,8 @@ namespace eMekteb.Services.Database
         public string? Ime { get; set; }
         public string? Prezime { get; set; }
         public string? Username { get; set; }
-        public string? LozinkaHash { get; set; }
-        public string? LozinkaSalt { get; set; }
+       // public string? LozinkaHash { get; set; }
+       // public string? LozinkaSalt { get; set; }
         public string? Telefon { get; set; }
         public string? Mail { get; set; }
         public string? Spol { get; set; }

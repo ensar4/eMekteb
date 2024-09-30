@@ -17,9 +17,7 @@ namespace eMekteb.Services.Database
         public DateTime? DatumPocetka { get; set; }
         public DateTime? DatumZavrsetka { get; set; }
         public string? Voditelj { get; set; }
-
-        [ForeignKey("Mekteb")]
         public int MektebId { get; set; }
-        public virtual Mekteb? Mekteb { get; set; }
+
     }
 }

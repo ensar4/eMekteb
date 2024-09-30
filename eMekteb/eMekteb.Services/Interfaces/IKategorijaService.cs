@@ -12,5 +12,7 @@ namespace eMekteb.Services.Interfaces
 {
     public interface IKategorijaService : ICRUDService<KategorijaM, BaseSearchObject, KategorijaInsert, object>
     {
+
+        Task<PagedResult<KategorijaM>> GetByTakmicenjeId(int takmicenjeId);
     }
 }

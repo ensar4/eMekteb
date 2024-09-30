@@ -19,7 +19,28 @@ namespace eMekteb.Services
         {
         }
 
+        public async Task<PagedResult<KampM>> GetByMektebId(int mektebId)
+        { 
+            var items = await _dbContext.Set<Kamp>()
+                                   .Where(y => y.MektebId == mektebId)
+                                   .ToListAsync();
+            PagedResult<KampM> result = new PagedResult<KampM>();
+            result.Count = items.Count();
 
+
+            var tmp = _mapper.Map<List<KampM>>(items);
+            result.Result = tmp;
+
+            return result;
+        }
+        public async Task<KampM?> GetLastKampAsync()
+        {
+            var lastTakmicenje = await _dbContext.Set<Kamp>()
+                                                 .OrderByDescending(t => t.Id)
+                                                 .FirstOrDefaultAsync();
+
+            return _mapper.Map<KampM>(lastTakmicenje);
+        }
 
 
     }

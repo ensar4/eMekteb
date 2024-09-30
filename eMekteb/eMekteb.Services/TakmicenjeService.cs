@@ -19,9 +19,29 @@ namespace eMekteb.Services
         {
         }
 
-       
+        public async Task<TakmicenjeM?> GetLastTakmicenjeAsync()
+        {
+            var lastTakmicenje = await _dbContext.Set<Takmicenje>()
+                                                 .OrderByDescending(t => t.Id)
+                                                 .FirstOrDefaultAsync();
 
+            return _mapper.Map<TakmicenjeM>(lastTakmicenje);
+        }
+
+        public override async Task<PagedResult<TakmicenjeM>> Get(BaseSearchObject? search)
+        {
+            var result = await base.Get(search);
+
+            foreach (var takmicenje in result.Result)
+            {
+                takmicenje.UkupnoUcenika = await _dbContext.Takmicar
+                    .CountAsync(t => t.Kategorija.TakmicenjeId == takmicenje.id);
+            }
+
+            return result;
+        }
 
 
     }
 }
+

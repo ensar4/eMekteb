@@ -23,23 +23,28 @@ namespace eMekteb.Services.Database
         public string? Status { get; set; }
         public DateTime DatumRodjenja {get; set; }
         public string? ImeRoditelja { get; set; }
-
+        public double? Prisustvo { get; set; }
+        public string? NazivRazreda { get; set; }
+        public double? Prosjek { get; set; }
+       
         [ForeignKey("Mekteb")]
         public int MektebId { get; set; }
         public virtual Mekteb? Mekteb { get; set; }
 
         [ForeignKey("Razred")]
-        public int RazredId { get; set; }
+        public int? RazredId { get; set; }
         public virtual Razred? Razred { get; set; }
 
 
-        public virtual ICollection<Prisustvo> Prisustva { get; set; } = new List<Prisustvo>();
-        public virtual ICollection<KorisniciUloge> KorisniciUloge { get; set; } = new List<KorisniciUloge>();
+        public virtual ICollection<Prisustvo> Prisustva { get; set; }
+        public virtual ICollection<KorisniciUloge> KorisniciUloge { get;} = new List<KorisniciUloge>();
         public virtual ICollection<Zadaca> Zadace { get; set; } = new List<Zadaca>();
 
+        public int? RoditeljId { get; set; }  
+        [ForeignKey("RoditeljId")]
+        public virtual Korisnik? Roditelj { get; set; } 
 
-
-
+        public virtual ICollection<Korisnik> Djeca { get; set; } = new List<Korisnik>();
 
     }
 }

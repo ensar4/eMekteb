@@ -14,3 +14,5 @@ C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\bin\Debug\
 C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\bin\Debug\net6.0\eMekteb.Model.pdb
 C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\obj\Debug\net6.0\eMekteb.Services.csproj.CopyComplete
 C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\obj\Debug\net6.0\eMekteb.Services.sourcelink.json
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\bin\Debug\net6.0\eMekteb.Services.runtimeconfig.json
+C:\Users\User\Desktop\Seminarski-RS2\eMekteb\eMekteb\eMekteb.Services\obj\Debug\net6.0\eMekteb.Services.genruntimeconfig.cache

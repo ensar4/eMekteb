@@ -1,3 +1,42 @@
+//{
+//  "profiles": {
+//    "eMekteb": {
+//      "commandName": "Project",
+//      "launchBrowser": true,
+//      "launchUrl": "swagger",
+//      "environmentVariables": {
+//        "ASPNETCORE_ENVIRONMENT": "Development"
+//      },
+//      "dotnetRunMessages": true,
+//      "applicationUrl": "https://0.0.0.0:7160;http://0.0.0.0:5160"
+//    },
+//    "IIS Express": {
+//      "commandName": "IISExpress",
+//      "launchBrowser": true,
+//      "launchUrl": "swagger",
+//      "environmentVariables": {
+//        "ASPNETCORE_ENVIRONMENT": "Development"
+//      }
+//    },
+//    "Docker": {
+//      "commandName": "Docker",
+//      "launchBrowser": true,
+//      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+//      "publishAllPorts": true,
+//      "useSSL": true
+//    }
+//  },
+//  "$schema": "https://json.schemastore.org/launchsettings.json",
+//  "iisSettings": {
+//    "windowsAuthentication": false,
+//    "anonymousAuthentication": true,
+//    "iisExpress": {
+//      "applicationUrl": "http://localhost:35567",
+//      "sslPort": 44353
+//    }
+//  }
+//}
+
 {
   "profiles": {
     "eMekteb": {
@@ -8,7 +47,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7160;http://localhost:5160"
+      "applicationUrl": "https://0.0.0.0:7160;http://0.0.0.0:5160"
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -31,7 +70,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:35567",
+      "applicationUrl": "http://0.0.0.0:35567",
       "sslPort": 44353
     }
   }

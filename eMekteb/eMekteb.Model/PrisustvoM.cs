@@ -13,6 +13,6 @@ namespace eMekteb.Services.Database
         public bool? Prisutan { get; set; }
         public DateTime? Datum { get; set; }
         public int KorisnikId { get; set; }
-
+        public int CasId { get; set; }
     }
 }

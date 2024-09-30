@@ -1,4 +1,4 @@
-using eMekteb;
+﻿using eMekteb;
 using eMekteb.Controllers;
 using eMekteb.Filters;
 using eMekteb.Model;
@@ -8,8 +8,11 @@ using eMekteb.Services.Database;
 using eMekteb.Services.Interfaces;
 using eMekteb.Services.ObavijestStateMachine;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,12 +33,14 @@ builder.Services.AddTransient<ITakmicenjeKategorijaService, TakmicenjeKategorija
 builder.Services.AddTransient<IUlogaService, UlogaService>();
 builder.Services.AddTransient<IZadacaService, ZadacaService>();
 builder.Services.AddTransient<IAkademskaGodinaService, AkademskaGodinaService>();
-builder.Services.AddTransient<IBodoviService, BodoviService>();
 builder.Services.AddTransient<IDodatneLekcijeService, DodatneLekcijeService>();
 builder.Services.AddTransient<IKampService, KampService>();
-builder.Services.AddTransient<ILekcijaService, LekcijaService>();
+builder.Services.AddTransient<ICasService, CasService>();
 builder.Services.AddTransient<IKorisnikService, KorisnikService>();
 builder.Services.AddTransient<IKorisniciUlogeService, KorisniciUlogeService>();
+builder.Services.AddTransient<IKampKorisnikService, KampKorisnikService>();
+builder.Services.AddTransient<ISlikaService, SlikaService>();
+builder.Services.AddTransient<IAkademskaMektebService, AkademskaMektebService>();
 
 builder.Services.AddTransient<BaseState>();
 builder.Services.AddTransient<InitialState>();
@@ -62,7 +67,39 @@ builder.Services.AddControllersWithViews();
 //builder.Services.AddAuthentication("BasicAuthentication")
 //    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+//        options.Authority = "https://localhost:7049";
+//        options.Audience = "weatherapi";
+//        options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+//    });
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        // Korišćenje IConfiguration objekta
+        var configuration = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
+
+        options.Authority = configuration.GetValue<string>("IdentityServerUrl")!;
+        options.MetadataAddress = configuration.GetValue<string>("IdentityServerMetaDataUrl")!;
+        options.RequireHttpsMetadata = false;
+
+        var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("IdentityServerJWTSecret")!));
+
+        options.TokenValidationParameters.ValidateAudience = false;
+        options.TokenValidationParameters.ValidateIssuer = false;
+        options.TokenValidationParameters.ValidateLifetime = true;
+        options.TokenValidationParameters.ValidateIssuerSigningKey = true;
+        options.TokenValidationParameters.IssuerSigningKey = secretKey;
+    });
+
+
 var app = builder.Build();
+
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

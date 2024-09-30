@@ -12,5 +12,8 @@ namespace eMekteb.Services.Interfaces
 {
     public interface ITakmicarService : ICRUDService<TakmicarM, TakmicarSearchObject, TakmicarInsert, TakmicarUpdate>
     {
+        Task<PagedResult<TakmicarM>> GetByKategorijaId(int kategorijaId);
+        Task<TakmicarM> Update(TakmicarM takmicar);
     }
+
 }

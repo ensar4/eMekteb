@@ -8,6 +8,8 @@ namespace eMekteb.Services.Database
 {
     public class OcjeneM
     {
+
+        public int Id { get; set; }
         public string? Ocjena { get; set; }
     }
 }

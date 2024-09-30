@@ -9,6 +9,8 @@ namespace eMekteb.Services.Database
 {
     public class UlogaM
     {
+
+        public int Id { get; set; }
         public string? Naziv { get; set; }
         //public virtual ICollection<KorisniciUloge> KorisniciUloge { get; set; } = new List<KorisniciUloge>();
 

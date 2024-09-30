@@ -37,12 +37,19 @@ namespace eMekteb.Services
             return base.AddFilter(query, search);
         }
 
-        public virtual async Task<ObavijestM> GetByMektebId(int Mektebid)
+        public async Task<PagedResult<ObavijestM>> GetByMektebId(int mektebId)
         {
-            var items = await _dbContext.Set<Obavijest>().Where(y => y.MektebId == Mektebid).ToListAsync();
-            var item = items.FirstOrDefault();
+            var items = await _dbContext.Set<Obavijest>()
+                                    .Where(y => y.MektebId == mektebId)
+                                    .ToListAsync();
+            PagedResult<ObavijestM> result = new PagedResult<ObavijestM>();
+            result.Count = items.Count();
 
-            return _mapper.Map<ObavijestM>(item);
+
+            var tmp = _mapper.Map<List<ObavijestM>>(items);
+            result.Result = tmp;
+
+            return result;
         }
 
         public override Task<ObavijestM> Insert(ObavijestInsert insert)

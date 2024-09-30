@@ -10,6 +10,7 @@ namespace eMekteb.Services.Database
 {
     public class DodatneLekcijeM
     {
+        public int? Id { get; set; }
         public string Naziv { get; set; } = null!;
         public string Tekst { get; set; } = null!;
         public DateTime DatumObjavljivanja { get; set; }

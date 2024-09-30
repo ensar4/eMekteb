@@ -15,8 +15,8 @@ namespace eMekteb.Services.Database
         public string? Ime { get; set; }
         public string? Prezime { get; set; }
         public string? Username { get; set; }
-        public string? LozinkaHash { get; set; }
-        public string? LozinkaSalt { get; set; }
+       // public string? LozinkaHash { get; set; }
+       // public string? LozinkaSalt { get; set; }
         public string? Telefon { get; set; }
         public string? Mail { get; set; }
         public string? Spol { get; set; }
@@ -25,13 +25,19 @@ namespace eMekteb.Services.Database
         public string? ImeRoditelja { get; set; }
         public int MektebId { get; set; }
         public int RazredId { get; set; }
+        public double? Prisustvo { get; set; }
+        public string? NazivRazreda { get; set; }
+        public double? Prosjek { get; set; }
+
+
+
 
 
         //public virtual ICollection<Prisustvo> Prisustva { get; set; } = new List<Prisustvo>();
         public virtual ICollection<KorisniciUlogeM> KorisniciUloge { get;  } = new List<KorisniciUlogeM>();
 
-
         //public virtual ICollection<Zadaca> Zadace { get; set; } = new List<Zadaca>();
+
 
 
 

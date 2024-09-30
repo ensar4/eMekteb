@@ -9,6 +9,6 @@ namespace eMekteb.Services.Database
     public class Ocjene
     {
         public int Id { get; set; }
-        public string? Ocjena { get; set; }
+        public int? Ocjena { get; set; }
     }
 }

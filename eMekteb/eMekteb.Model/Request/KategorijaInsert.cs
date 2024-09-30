@@ -11,6 +11,7 @@ namespace eMekteb.Services.Database
     {
         public string? Naziv { get; set; }
         public string? Nivo { get; set; }
+        public int TakmicenjeId { get; set; }
 
     }
 }

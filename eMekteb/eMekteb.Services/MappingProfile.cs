@@ -76,9 +76,6 @@ namespace eMekteb.Services
             CreateMap<AkademskaGodinaInsert, AkademskaGodina>();
             CreateMap<AkademskaGodinaUpdate, AkademskaGodina>();
 
-            CreateMap<Bodovi, BodoviM>();
-            CreateMap<BodoviM, Bodovi>();
-            CreateMap<BodoviInsert, Bodovi>();
 
             CreateMap<DodatneLekcije, DodatneLekcijeM>();
             CreateMap<DodatneLekcijeM, DodatneLekcije>();
@@ -90,11 +87,6 @@ namespace eMekteb.Services
             CreateMap<KampInsert, Kamp>();
             CreateMap<KampUpdate, Kamp>();
 
-            CreateMap<Lekcija, LekcijaM>();
-            CreateMap<LekcijaM, Lekcija>();
-            CreateMap<LekcijaInsert, Lekcija>();
-            CreateMap<LekcijaUpdate, Lekcija>();
-
             CreateMap<Korisnik, KorisnikM>();
             CreateMap<KorisnikM, Korisnik>();
             CreateMap<KorisnikInsert, Korisnik>();
@@ -104,6 +96,27 @@ namespace eMekteb.Services
             CreateMap<KorisniciUlogeM, KorisniciUloge>();
             CreateMap<KorisniciUlogeInsert, KorisniciUloge>();
             CreateMap<KorisniciUlogeUpdate, KorisniciUloge>();
+
+            CreateMap<Cas, CasM>();
+            CreateMap<CasM, Cas>();
+            CreateMap<CasInsert, Cas>();
+            CreateMap<CasUpdate, Cas>();
+
+            CreateMap<KampKorisnik, KampKorisnikM>();
+            CreateMap<KampKorisnikM, KampKorisnik>();
+            CreateMap<KampKorisnikInsert, KampKorisnik>();
+            CreateMap<KampKorisnikUpdate, KampKorisnik>();
+
+            CreateMap<Slika, SlikaM>();
+            CreateMap<SlikaM, Slika>();
+            CreateMap<SlikaInsert, Slika>();
+            CreateMap<SlikaUpdate, Slika>();
+
+            CreateMap<AkademskaMekteb, AkademskaMektebM>();
+            CreateMap<AkademskaMektebM, AkademskaMekteb>();
+            CreateMap<AkademskaMektebInsert, AkademskaMekteb>();
+            CreateMap<AkademskaGodinaUpdate, AkademskaMekteb>();
+
 
         }
 

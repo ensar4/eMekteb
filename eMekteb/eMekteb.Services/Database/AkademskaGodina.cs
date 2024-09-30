@@ -15,7 +15,10 @@ namespace eMekteb.Services.Database
         public DateTime DatumPocetka { get; set; }
         public DateTime DatumZavrsetka { get; set; }
 
-        public virtual ICollection<Mekteb>Mektebi { get; set; } = new List<Mekteb>();
+        public ICollection<AkademskaMekteb>? AkademskaMekteb { get; set; } 
+
+
+
 
 
     }

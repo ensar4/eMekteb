@@ -10,6 +10,7 @@ namespace eMekteb.Services.Database
 {
     public class RazredM
     {
+        public int? id { get; set; }
         public string? Naziv { get; set; }
 
 

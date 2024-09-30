@@ -11,10 +11,21 @@ namespace eMekteb.Controllers
 
     [ApiController]
     public class TakmicenjeController : BaseCRUDController<TakmicenjeM, BaseSearchObject, TakmicenjeInsert, TakmicenjeUpdate>
-    { 
+    {
+        ITakmicenjeService service1;
         public TakmicenjeController(ILogger<BaseController<TakmicenjeM, BaseSearchObject>> logger, ITakmicenjeService service) : base(logger, service)
         {
-
+            service1 = service;
+        }
+        [HttpGet("last")]
+        public async Task<IActionResult> GetLastTakmicenje()
+        {
+            var result = await service1.GetLastTakmicenjeAsync();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
     }
 }

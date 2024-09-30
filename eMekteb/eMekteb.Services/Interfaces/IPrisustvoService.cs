@@ -12,5 +12,10 @@ namespace eMekteb.Services.Interfaces
 {
     public interface IPrisustvoService : ICRUDService<PrisustvoM, BaseSearchObject, PrisustvoInsert, object>
     {
+        public double IzracunajPostotakPrisustva(int korisnikId);
+        Task<PagedResult<PrisustvoM>> GetByCasId(int casId);
+        Task<PagedResult<PrisustvoM>> GetByKorisnikId(int korisnikId);
+
+
     }
 }

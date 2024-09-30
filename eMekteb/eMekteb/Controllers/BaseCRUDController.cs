@@ -1,5 +1,6 @@
 ﻿using eMekteb.Model;
 using eMekteb.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eMekteb.Controllers
@@ -27,6 +28,18 @@ namespace eMekteb.Controllers
         public virtual async Task<T> Update(int id, [FromBody] TUpdate update)
         {
             return await _service.Update(id, update);
+        }
+
+        [HttpDelete("{id}")]
+        public virtual async Task<IActionResult> Delete(int id)
+        {
+            var entity = await _service.Delete(id);
+            if (entity == null)
+            {
+                return NotFound(); // Return 404 if the entity was not found
+            }
+
+            return Ok(entity); // Return 200 with the deleted entity
         }
 
     }

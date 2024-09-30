@@ -14,10 +14,6 @@ namespace eMekteb.Services.Database
         public int Id { get; set; }
         public string? Naziv { get; set; }
 
-
-
-
-        public virtual ICollection<Lekcija> Lekcije { get; set; } = new List<Lekcija>();
         public virtual ICollection<Korisnik> Ucenici { get; set; } = new List<Korisnik>();
 
 

@@ -3,6 +3,7 @@ using eMekteb.Model;
 using eMekteb.Model.SearchObjects;
 using eMekteb.Services.Database;
 using eMekteb.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using System;
@@ -24,30 +25,35 @@ namespace eMekteb.Services
             this._mapper = mapper;
         }
 
+
+
         public virtual async Task<PagedResult<T>> Get(TSearch? search)
         {
             var query = _dbContext.Set<TDb>().AsQueryable();
 
             PagedResult<T> result = new PagedResult<T>();
-
-            query = AddFilter(query, search);
-
             result.Count = await query.CountAsync();
 
-            if (search?.Page.HasValue==true && search?.PageSize.HasValue==true)
+            query = AddFilter(query, search);
+            query = AddInclude(query, search);
+
+            if (search?.Page.HasValue == true && search?.PageSize.HasValue == true)
             {
-                query = query.Take(search.PageSize.Value).Skip(search.Page.Value * search.PageSize.Value);
+                if (query.Count() > search.PageSize)
+                {
+                    int skipCount = (search.Page.Value - 1) * search.PageSize.Value;
+                    query = query.Skip(skipCount).Take(search.PageSize.Value);
+                }
+
             }
 
             var list = await query.ToListAsync();
-
 
             var tmp = _mapper.Map<List<T>>(list);
             result.Result = tmp;
 
             return result;
         }
-
         public virtual async Task<T> GetById(int id)
         {
             var item = await _dbContext.Set<TDb>().FindAsync(id);
@@ -63,5 +69,7 @@ namespace eMekteb.Services
         {
             return query;
         }
+
+       
     }
 }

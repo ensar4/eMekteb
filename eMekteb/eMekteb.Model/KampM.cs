@@ -10,6 +10,7 @@ namespace eMekteb.Services.Database
 {
     public class KampM
     {
+        public int Id { get; set; }
         public string? Naziv { get; set; }
         public string? Opis { get; set; }
         public DateTime? DatumPocetka { get; set; }

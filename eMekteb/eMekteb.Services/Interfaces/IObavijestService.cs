@@ -12,7 +12,7 @@ namespace eMekteb.Services.Interfaces
 {
     public interface IObavijestService : ICRUDService<ObavijestM, ObavijestSearchObject, ObavijestInsert, ObavijestUpdate>
     {
-        Task<ObavijestM> GetByMektebId(int id);
+        Task<PagedResult<ObavijestM>> GetByMektebId(int mektebId);
         Task<ObavijestM> Activate(int id);
         Task<ObavijestM> Hide(int id);
         Task<List<string>> AllowedActions(int id);

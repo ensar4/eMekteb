@@ -18,8 +18,8 @@ namespace eMekteb.Controllers
            service1=service;
         }
 
-        [HttpGet("api/obavijest/mekteb/{Mektebid}")]
-        public async Task<ObavijestM> GetByMektebId(int Mektebid)
+        [HttpGet("{Mektebid}")]
+        public async Task<PagedResult<ObavijestM>> GetByMektebId(int Mektebid)
         {
             return await service1.GetByMektebId(Mektebid);
         }

@@ -21,7 +21,7 @@ namespace eMekteb.Services.Database
         public DateTime DatumRodjenja {get; set; }
         public string? ImeRoditelja { get; set; }
         public int MektebId { get; set; }
-        public int RazredId { get; set; }
+        public int? RazredId { get; set; }
 
         [Compare("PasswordPotvrda", ErrorMessage ="Lozinke se ne slazu")]
         public string? Password { get; set; }

@@ -20,6 +20,20 @@ namespace eMekteb.Services
         }
 
 
+        public async Task<PagedResult<ZadacaM>> GetByKorisnikId(int korisnikId)
+        {
+            var items = await _dbContext.Set<Zadaca>()
+                                    .Where(y => y.KorisnikId == korisnikId)
+                                    .ToListAsync();
+            PagedResult<ZadacaM> result = new PagedResult<ZadacaM>();
+            result.Count = items.Count();
+
+
+            var tmp = _mapper.Map<List<ZadacaM>>(items);
+            result.Result = tmp;
+
+            return result;
+        }
 
 
     }

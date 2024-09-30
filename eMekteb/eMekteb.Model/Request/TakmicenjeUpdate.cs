@@ -13,7 +13,7 @@ namespace eMekteb.Services.Database
         public string? Godina { get; set; }
         public DateTime DatumOdrzavanja { get; set; }
         public string Lokacija { get; set; } = null!;
-        public string? VrijemePočetka { get; set; }
+        public string? VrijemePocetka { get; set; }
         public string? Info { get; set; }
 
     }

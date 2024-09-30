@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace eMekteb.Services
 {
@@ -19,9 +20,19 @@ namespace eMekteb.Services
         {
         }
 
-       
+        public async Task<PagedResult<KategorijaM>> GetByTakmicenjeId(int takmicenjeId)
+        {
+            var items = await _dbContext.Set<Kategorija>()
+                                   .Where(y => y.TakmicenjeId == takmicenjeId)
+                                   .ToListAsync();
+            PagedResult<KategorijaM> result = new PagedResult<KategorijaM>();
+            result.Count = items.Count();
 
+            var tmp = _mapper.Map<List<KategorijaM>>(items);
+            result.Result = tmp;
 
+            return result;
+        }
 
     }
 }
