@@ -8,7 +8,7 @@ part of 'akademska_godina.dart';
 
 AkademskaGodina _$AkademskaGodinaFromJson(Map<String, dynamic> json) =>
     AkademskaGodina(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['naziv'] as String?,
       json['datumPocetka'] == null
           ? null
@@ -16,8 +16,8 @@ AkademskaGodina _$AkademskaGodinaFromJson(Map<String, dynamic> json) =>
       json['datumZavrsetka'] == null
           ? null
           : DateTime.parse(json['datumZavrsetka'] as String),
-      json['ukupnoMekteba'] as int?,
-      json['ukupnoUcenika'] as int?,
+      (json['ukupnoMekteba'] as num?)?.toInt(),
+      (json['ukupnoUcenika'] as num?)?.toInt(),
       (json['prosjecnaOcjena'] as num?)?.toDouble(),
       (json['prosjecnoPrisustvo'] as num?)?.toDouble(),
     );

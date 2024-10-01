@@ -7,13 +7,13 @@ part of 'medzlis.dart';
 // **************************************************************************
 
 Medzlis _$MedzlisFromJson(Map<String, dynamic> json) => Medzlis(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['naziv'] as String?,
       json['adresa'] as String?,
       json['telefon'] as String?,
       json['mail'] as String?,
-      json['ukupnoMekteba'] as int?,
-      json['ukupnoUcenika'] as int?,
+      (json['ukupnoMekteba'] as num?)?.toInt(),
+      (json['ukupnoUcenika'] as num?)?.toInt(),
       (json['prosjecnaOcjena'] as num?)?.toDouble(),
       (json['prosjecnoPrisustvo'] as num?)?.toDouble(),
     );

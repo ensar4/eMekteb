@@ -7,14 +7,14 @@ part of 'ucenik.dart';
 // **************************************************************************
 
 Ucenik _$UcenikFromJson(Map<String, dynamic> json) => Ucenik(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['ime'] as String?,
       json['telefon'] as String?,
       json['prezime'] as String?,
       json['imeRoditelja'] as String?,
-      json['mektebId'] as int?,
+      (json['mektebId'] as num?)?.toInt(),
       json['status'] as String?,
-      json['razredId'] as int?,
+      (json['razredId'] as num?)?.toInt(),
       json['datumRodjenja'] == null
           ? null
           : DateTime.parse(json['datumRodjenja'] as String),

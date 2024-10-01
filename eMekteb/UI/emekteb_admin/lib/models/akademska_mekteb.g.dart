@@ -8,9 +8,9 @@ part of 'akademska_mekteb.dart';
 
 AkademskaMekteb _$AkademskaMektebFromJson(Map<String, dynamic> json) =>
     AkademskaMekteb(
-      json['id'] as int?,
-      json['akademskaGodinaId'] as int?,
-      json['mektebId'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['akademskaGodinaId'] as num?)?.toInt(),
+      (json['mektebId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$AkademskaMektebToJson(AkademskaMekteb instance) =>

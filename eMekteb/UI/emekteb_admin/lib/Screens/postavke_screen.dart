@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/admin.dart';
 import '../models/korisnik.dart';
+import '../models/mail_object.dart';
 import '../models/searches/change_password_request.dart';
 import '../models/searches/search_result.dart';
 import '../providers/admin_provider.dart';
@@ -701,6 +702,16 @@ class _ProfilInfoState extends State<Postavke> {
                     );
                     fetchDataKomisija();
                     Navigator.of(context).pop();
+
+                    // Construct the mail object
+                    var mailObject = MailObject(
+                      mail,  // mailAdresa
+                      "Takmicenje",  // subject
+                      "Esselamu alejkum, Postavljeni ste za člana komisije na ovogodišnjem takmičenju, pristupne podatke ćete dobiti na dan takmičenja. Hvala!",  // poruka
+                    );
+
+                    // Send the email
+                    await provider.sendMail(mailObject);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Greška pri dodavanju člana komisije')),

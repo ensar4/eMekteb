@@ -7,11 +7,11 @@ part of 'mualim.dart';
 // **************************************************************************
 
 Mualim _$MualimFromJson(Map<String, dynamic> json) => Mualim(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['ime'] as String?,
       json['telefon'] as String?,
       json['prezime'] as String?,
-      json['mektebId'] as int?,
+      (json['mektebId'] as num?)?.toInt(),
       json['status'] as String?,
       json['datumRodjenja'] == null
           ? null

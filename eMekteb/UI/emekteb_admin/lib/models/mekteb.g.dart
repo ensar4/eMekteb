@@ -7,14 +7,14 @@ part of 'mekteb.dart';
 // **************************************************************************
 
 Mekteb _$MektebFromJson(Map<String, dynamic> json) => Mekteb(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['naziv'] as String?,
       json['telefon'] as String?,
       json['adresa'] as String?,
       json['mualim'] as String?,
-      json['medzlisId'] as int?,
-      json['akademskaGodinaId'] as int?,
-      json['ukupnoUcenika'] as int?,
+      (json['medzlisId'] as num?)?.toInt(),
+      (json['akademskaGodinaId'] as num?)?.toInt(),
+      (json['ukupnoUcenika'] as num?)?.toInt(),
       (json['prosjecnoPrisustvo'] as num?)?.toDouble(),
       (json['prosjecnaOcjena'] as num?)?.toDouble(),
     );

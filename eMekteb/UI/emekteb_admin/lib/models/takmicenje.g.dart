@@ -7,7 +7,7 @@ part of 'takmicenje.dart';
 // **************************************************************************
 
 Takmicenje _$TakmicenjeFromJson(Map<String, dynamic> json) => Takmicenje(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['godina'] as String?,
       json['datumOdrzavanja'] == null
           ? null
@@ -15,8 +15,8 @@ Takmicenje _$TakmicenjeFromJson(Map<String, dynamic> json) => Takmicenje(
       json['lokacija'] as String?,
       json['vrijemePocetka'] as String?,
       json['info'] as String?,
-      json['medzlisId'] as int?,
-      json['ukupnoUcenika'] as int?,
+      (json['medzlisId'] as num?)?.toInt(),
+      (json['ukupnoUcenika'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$TakmicenjeToJson(Takmicenje instance) =>

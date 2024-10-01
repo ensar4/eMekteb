@@ -131,4 +131,15 @@ Komisija fromJson(data) {
     }
   }
 
+
+  Future<void> sendMail(dynamic object) async {
+    var url = "${baseOfUrl}Mail";
+    var uri = Uri.parse(url);
+    var headers = getHeaders();
+    var obj = jsonEncode(object);
+    var req = await http.post(uri, headers: headers, body: obj);
+    if (!isValidResponse(req)) {
+      throw Exception("Greška.");
+    }
+  }
 }

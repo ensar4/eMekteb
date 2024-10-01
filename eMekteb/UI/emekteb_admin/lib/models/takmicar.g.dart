@@ -7,12 +7,12 @@ part of 'takmicar.dart';
 // **************************************************************************
 
 Takmicar _$TakmicarFromJson(Map<String, dynamic> json) => Takmicar(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['ime'] as String?,
       json['prezime'] as String?,
       DateTime.parse(json['datumRodjenja'] as String),
-      json['kategorijaId'] as int?,
-      json['ukupnoBodova'] as int?,
+      (json['kategorijaId'] as num?)?.toInt(),
+      (json['ukupnoBodova'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$TakmicarToJson(Takmicar instance) => <String, dynamic>{
