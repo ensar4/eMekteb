@@ -282,7 +282,7 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
                                 },
                                 child: Text(obavijest.stateMachine == "draft" ? "Aktiviraj" : "Sakrij"),
                                 style: ElevatedButton.styleFrom(
-                                  primary: obavijest.stateMachine == "draft" ? Colors.green : Colors.red,
+                                  backgroundColor: obavijest.stateMachine == "draft" ? Colors.green : Colors.red,
                                 ),
                               ),
                               IconButton(

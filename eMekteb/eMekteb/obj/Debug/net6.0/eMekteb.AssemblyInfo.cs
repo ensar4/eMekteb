@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("eMekteb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9943c170c1eab3e6f3b1b0881f38a79bd13afaf8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("eMekteb")]
 [assembly: System.Reflection.AssemblyTitleAttribute("eMekteb")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

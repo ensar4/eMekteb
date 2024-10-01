@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb\\eMekteb.csproj": {}
+    "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb\\eMekteb.csproj": {}
   },
   "projects": {
-    "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb.Model\\eMekteb.Model.csproj": {
+    "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb.Model\\eMekteb.Model.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb.Model\\eMekteb.Model.csproj",
+        "projectUniqueName": "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb.Model\\eMekteb.Model.csproj",
         "projectName": "eMekteb.Model",
-        "projectPath": "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb.Model\\eMekteb.Model.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb.Model\\obj\\",
+        "projectPath": "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb.Model\\eMekteb.Model.csproj",
+        "packagesPath": "C:\\Users\\korisnik\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb.Model\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\korisnik\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -55,21 +55,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb.Services\\eMekteb.Services.csproj": {
+    "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb.Services\\eMekteb.Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb.Services\\eMekteb.Services.csproj",
+        "projectUniqueName": "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb.Services\\eMekteb.Services.csproj",
         "projectName": "eMekteb.Services",
-        "projectPath": "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb.Services\\eMekteb.Services.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb.Services\\obj\\",
+        "projectPath": "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb.Services\\eMekteb.Services.csproj",
+        "packagesPath": "C:\\Users\\korisnik\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb.Services\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\korisnik\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -83,8 +83,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb.Model\\eMekteb.Model.csproj": {
-                "projectPath": "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb.Model\\eMekteb.Model.csproj"
+              "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb.Model\\eMekteb.Model.csproj": {
+                "projectPath": "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb.Model\\eMekteb.Model.csproj"
               }
             }
           }
@@ -146,21 +146,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb\\eMekteb.csproj": {
+    "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb\\eMekteb.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb\\eMekteb.csproj",
+        "projectUniqueName": "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb\\eMekteb.csproj",
         "projectName": "eMekteb",
-        "projectPath": "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb\\eMekteb.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb\\obj\\",
+        "projectPath": "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb\\eMekteb.csproj",
+        "packagesPath": "C:\\Users\\korisnik\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\korisnik\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -174,11 +174,11 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb.Model\\eMekteb.Model.csproj": {
-                "projectPath": "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb.Model\\eMekteb.Model.csproj"
+              "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb.Model\\eMekteb.Model.csproj": {
+                "projectPath": "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb.Model\\eMekteb.Model.csproj"
               },
-              "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb.Services\\eMekteb.Services.csproj": {
-                "projectPath": "C:\\Users\\User\\Desktop\\Seminarski-RS2\\eMekteb\\eMekteb\\eMekteb.Services\\eMekteb.Services.csproj"
+              "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb.Services\\eMekteb.Services.csproj": {
+                "projectPath": "C:\\Users\\korisnik\\Desktop\\RS2\\eMekteb\\eMekteb\\eMekteb.Services\\eMekteb.Services.csproj"
               }
             }
           }
@@ -245,7 +245,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     }
