@@ -210,3 +210,6 @@ C:\Users\korisnik\Desktop\RS2\eMekteb\eMekteb\eMekteb\obj\Debug\net6.0\refint\eM
 C:\Users\korisnik\Desktop\RS2\eMekteb\eMekteb\eMekteb\obj\Debug\net6.0\eMekteb.pdb
 C:\Users\korisnik\Desktop\RS2\eMekteb\eMekteb\eMekteb\obj\Debug\net6.0\eMekteb.genruntimeconfig.cache
 C:\Users\korisnik\Desktop\RS2\eMekteb\eMekteb\eMekteb\obj\Debug\net6.0\ref\eMekteb.dll
+C:\Users\korisnik\Desktop\RS2\eMekteb\eMekteb\eMekteb\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\korisnik\Desktop\RS2\eMekteb\eMekteb\eMekteb\bin\Debug\net6.0\RabbitMQ.Client.dll
+C:\Users\korisnik\Desktop\RS2\eMekteb\eMekteb\eMekteb\bin\Debug\net6.0\System.Threading.Channels.dll

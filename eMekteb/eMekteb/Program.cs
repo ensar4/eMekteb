@@ -40,6 +40,7 @@ builder.Services.AddTransient<IKorisnikService, KorisnikService>();
 builder.Services.AddTransient<IKorisniciUlogeService, KorisniciUlogeService>();
 builder.Services.AddTransient<IKampKorisnikService, KampKorisnikService>();
 builder.Services.AddTransient<ISlikaService, SlikaService>();
+builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<IAkademskaMektebService, AkademskaMektebService>();
 
 builder.Services.AddTransient<BaseState>();
