@@ -1,0 +1,91 @@
+version: '3'
+services:
+  # MSSQL Docker
+  emekteb-sql:
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Mostar2017
+      - MSSQL_PID=Developer
+    ports:
+      - 1401:1433
+    expose:
+      - 1433
+    networks:
+      - emekteb
+
+  emekteb-ids:
+    build:
+      context: .
+      dockerfile: ./emekteb.IdentityServer/Dockerfile
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+    environment:
+      - ConnectionStrings:DefaultConnection=Server=emekteb-sql,1433;Database=200119;User=employee;Password=Mostar2017;ConnectRetryCount=0;TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - ${IDS_PORT}:7049
+    depends_on:
+      - emekteb-sql
+    networks:
+      - emekteb
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - emekteb
+  
+  emekteb-api:
+    restart: unless-stopped
+    build:
+      context: .
+    environment:
+      - IdentityServerUrl=http://emekteb-ids:7049
+      - IdentityServerMetaDataUrl=http://emekteb-ids:7049/.well-known/openid-configuration
+      - ConnectionStrings:DefaultConnection=Server=emekteb-sql,1433;Database=200119;User=employee;Password=Mostar2017;ConnectRetryCount=0;TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASS=guest
+      - SERVER_ADDRESS=smtp.gmail.com
+      - MAIL_SENDER=ensarlizde@gmail.com
+      - MAIL_PASS=butaumlpokptcnez
+      - MAIL_PORT=587
+    ports:
+      - ${API_PORT}:7160
+    networks:
+      - emekteb
+    depends_on:
+      - emekteb-sql
+      - rabbitmq
+      - emekteb-ids
+
+  emekteb-console:
+    restart: unless-stopped
+    build:
+      context: ./RabbitMQ
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASS=guest
+      - SERVER_ADDRESS=smtp.gmail.com
+      - MAIL_SENDER=ensarlizde@gmail.com
+      - MAIL_PASS=butaumlpokptcnez
+      - MAIL_PORT=587
+    networks:
+      - emekteb
+    depends_on:
+      - rabbitmq
+
+networks:
+  emekteb:
+    driver: bridge
