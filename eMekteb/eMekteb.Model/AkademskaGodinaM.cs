@@ -18,6 +18,7 @@ namespace eMekteb.Services.Database
         public int? UkupnoUcenika { get; set; }
         public double? ProsjecnaOcjena { get; set; } 
         public double? ProsjecnoPrisustvo { get; set; }
+        public bool? isAktivna { get; set; }
 
         //public virtual ICollection<MektebM>Mektebi { get; set; } = new List<MektebM>();
 

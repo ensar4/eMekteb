@@ -25,7 +25,6 @@ class MektebProvider extends BaseProvider<Mekteb>{
         'telefon':telefon,
         'medzlisId': 1,
         'adresa': adresa,
-        'akademskaGodinaId': 1,
       }),
     );
 

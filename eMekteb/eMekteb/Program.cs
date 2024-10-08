@@ -42,6 +42,8 @@ builder.Services.AddTransient<IKampKorisnikService, KampKorisnikService>();
 builder.Services.AddTransient<ISlikaService, SlikaService>();
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<IAkademskaMektebService, AkademskaMektebService>();
+builder.Services.AddTransient<IAkademskaRazredService, AkademskaRazredService>();
+builder.Services.AddTransient<IRazredKorisnikService, RazredKorisnikService>();
 
 builder.Services.AddTransient<BaseState>();
 builder.Services.AddTransient<InitialState>();

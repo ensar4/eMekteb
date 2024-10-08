@@ -110,7 +110,7 @@ namespace eMekteb.Controllers
                 DatumRodjenja = dto.UcenikDatumRodjenja,
                 ImeRoditelja = dto.UcenikImeRoditelja,
                 MektebId = dto.UcenikMektebId,
-                RazredId = dto.UcenikRazredId
+               // RazredId = dto.UcenikRazredId
             };
 
             var parentInsert = new KorisnikInsert
@@ -127,7 +127,7 @@ namespace eMekteb.Controllers
                 DatumRodjenja = dto.RoditeljDatumRodjenja,
                 ImeRoditelja = dto.RoditeljImeRoditelja,
                 MektebId = dto.RoditeljMektebId,
-                RazredId = dto.RoditeljRazredId
+                //RazredId = dto.RoditeljRazredId
 
             };
 

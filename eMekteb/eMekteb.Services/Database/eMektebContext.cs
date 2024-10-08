@@ -33,6 +33,8 @@ namespace eMekteb.Services.Database
         public DbSet<Takmicar> Takmicar { get; set; }
         public DbSet<AkademskaGodina> AkademskaGodina { get; set; }
         public DbSet<AkademskaMekteb> AkademskaMekteb { get; set; }
+        public DbSet<AkademskaRazred> AkademskaRazred { get; set; }
+        public DbSet<RazredKorisnik> RazredKorisnik { get; set; }
         public DbSet<Razred> Razred { get; set; }
         public DbSet<Ocjene> Ocjene { get; set; }
         public DbSet<Zadaca> Zadaca { get; set; }

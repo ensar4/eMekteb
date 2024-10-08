@@ -24,10 +24,9 @@ namespace eMekteb.Services.Database
         public DateTime DatumRodjenja {get; set; }
         public string? ImeRoditelja { get; set; }
         public int MektebId { get; set; }
-        public int RazredId { get; set; }
         public double? Prisustvo { get; set; }
         public string? NazivRazreda { get; set; }
-        public double? Prosjek { get; set; }
+        public double? Prosjek { get; set; }          //svi ovi atributi mi trebaju za aktuelnu godinu
 
 
 

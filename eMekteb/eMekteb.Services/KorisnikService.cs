@@ -21,16 +21,29 @@ namespace eMekteb.Services
         }
         public async Task<PagedResult<KorisnikM>> GetByRoditeljId(int roditeljId)
         {
+            // Fetch students by RoditeljId
             var items = _dbContext.Set<Korisnik>()
-                                    .Where(y => y.RoditeljId == roditeljId);
+                                  .Where(k => k.RoditeljId == roditeljId)
+                                  .Join(_dbContext.RazredKorisnik,
+                                        k => k.Id,
+                                        kr => kr.KorisnikId,
+                                        (k, kr) => new { Korisnik = k, KorisnikRazred = kr })
+                                  .Join(_dbContext.Razred,
+                                        kr => kr.KorisnikRazred.RazredId,
+                                        r => r.Id,
+                                        (kr, r) => new { kr.Korisnik, Razred = r });
 
             var uceniciWithAttendance = await items.ToListAsync();
 
-            foreach (var ucenik in uceniciWithAttendance)
+            foreach (var ucenikData in uceniciWithAttendance)
             {
-                var attendanceRecords = _dbContext.Prisustvo
-                    .Where(p => p.KorisnikId == ucenik.Id)
-                    .ToList(); // Assuming synchronous fetching for simplicity
+                var ucenik = ucenikData.Korisnik;
+                var razred = ucenikData.Razred;
+
+                // Fetch attendance records for the specific student (Korisnik) and class (Razred)
+                var attendanceRecords = await _dbContext.Prisustvo
+                    .Where(p => p.KorisnikId == ucenik.Id && p.RazredId == razred.Id)
+                    .ToListAsync();
 
                 int totalClasses = attendanceRecords.Count;
                 if (totalClasses > 0)
@@ -44,14 +57,15 @@ namespace eMekteb.Services
                     ucenik.Prisustvo = 0;
                 }
 
-                var zadace = _dbContext.Zadaca
-                    .Where(z => z.KorisnikId == ucenik.Id)
+                // Fetch zadace (assignments) for the specific student and class to calculate the average grade
+                var zadace = await _dbContext.Zadaca
+                    .Where(z => z.RazredId == razred.Id && z.KorisnikId == ucenik.Id)
                     .Include(z => z.Ocjene)
-                    .ToList(); // Assuming synchronous fetching for simplicity
+                    .ToListAsync();
 
                 if (zadace.Count > 0)
                 {
-                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena); // Assuming Ocjene has a property 'Vrijednost' for grade
+                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena); // Assuming Ocjene has a property 'Ocjena'
                     ucenik.Prosjek = averageGrade;
                 }
                 else
@@ -59,28 +73,19 @@ namespace eMekteb.Services
                     ucenik.Prosjek = 0; // No grades available
                 }
 
-                var razred = await _dbContext.Razred
-               .Where(r => r.Id == ucenik.RazredId)
-               .FirstOrDefaultAsync();
-
-                if (razred != null)
-                {
-                    ucenik.NazivRazreda = razred.Naziv;
-                }
-                else
-                {
-                    ucenik.NazivRazreda = null;
-                }
+                // Set the Razred name for the student
+                ucenik.NazivRazreda = razred.Naziv;
             }
 
             PagedResult<KorisnikM> result = new PagedResult<KorisnikM>
             {
                 Count = uceniciWithAttendance.Count,
-                Result = _mapper.Map<List<KorisnikM>>(uceniciWithAttendance)
+                Result = _mapper.Map<List<KorisnikM>>(uceniciWithAttendance.Select(ud => ud.Korisnik).ToList())
             };
 
             return result;
         }
+
 
 
         public async Task<UcenikRoditeljResponse> CreateStudentWithParentAsync(KorisnikInsert studentInsert, KorisnikInsert parentInsert)
@@ -218,26 +223,38 @@ namespace eMekteb.Services
             return _mapper.Map<KorisnikM>(entity);
         }
 
-     
-        public async Task<PagedResult<KorisnikM>> GetUcenici(int? Id)
+        public async Task<PagedResult<KorisnikM>> GetUcenici(int? mektebId)
         {
             var ucenikRoleName = "Ucenik";
 
+            // Query the ucenici through the KorisnikRazred table to link them with Razred
             var uceniciQuery = _dbContext.Set<Korisnik>()
-                .Where(k => k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == ucenikRoleName));
+                .Where(k => k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == ucenikRoleName))
+                .Join(_dbContext.RazredKorisnik,
+                      k => k.Id,
+                      kr => kr.KorisnikId,
+                      (k, kr) => new { Korisnik = k, KorisnikRazred = kr })
+                .Join(_dbContext.Razred,
+                      kr => kr.KorisnikRazred.RazredId,
+                      r => r.Id,
+                      (kr, r) => new { kr.Korisnik, Razred = r });
 
-            if (Id.HasValue)
+            if (mektebId.HasValue)
             {
-                uceniciQuery = uceniciQuery.Where(k => k.MektebId == Id.Value);
+                uceniciQuery = uceniciQuery.Where(k => k.Razred.MektebId == mektebId.Value);
             }
 
             var uceniciWithAttendance = await uceniciQuery.ToListAsync();
 
-            foreach (var ucenik in uceniciWithAttendance)
+            foreach (var ucenikData in uceniciWithAttendance)
             {
-                var attendanceRecords = _dbContext.Prisustvo
-                    .Where(p => p.KorisnikId == ucenik.Id)
-                    .ToList(); // Assuming synchronous fetching for simplicity
+                var ucenik = ucenikData.Korisnik;
+                var razred = ucenikData.Razred;
+
+                // Fetch attendance records for the specific Ucenik and Razred
+                var attendanceRecords = await _dbContext.Prisustvo
+                    .Where(p => p.KorisnikId == ucenik.Id && p.RazredId == razred.Id)
+                    .ToListAsync();
 
                 int totalClasses = attendanceRecords.Count;
                 if (totalClasses > 0)
@@ -251,14 +268,15 @@ namespace eMekteb.Services
                     ucenik.Prisustvo = 0;
                 }
 
-                var zadace = _dbContext.Zadaca
-                    .Where(z => z.KorisnikId == ucenik.Id)
+                // Fetch zadace (assignments) for the Ucenik's Razred to calculate the average grade
+                var zadace = await _dbContext.Zadaca
+                    .Where(z => z.RazredId == razred.Id && z.KorisnikId == ucenik.Id)
                     .Include(z => z.Ocjene)
-                    .ToList(); // Assuming synchronous fetching for simplicity
+                    .ToListAsync();
 
                 if (zadace.Count > 0)
                 {
-                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena); // Assuming Ocjene has a property 'Vrijednost' for grade
+                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena); // Assuming Ocjene has a property 'Ocjena'
                     ucenik.Prosjek = averageGrade;
                 }
                 else
@@ -266,38 +284,28 @@ namespace eMekteb.Services
                     ucenik.Prosjek = 0; // No grades available
                 }
 
-                var razred = await _dbContext.Razred
-               .Where(r => r.Id == ucenik.RazredId)
-               .FirstOrDefaultAsync();
-
-                if (razred != null)
-                {
-                    ucenik.NazivRazreda = razred.Naziv;
-                }
-                else
-                {
-                    ucenik.NazivRazreda = null; 
-                }
+                // Set the Razred name for the student
+                ucenik.NazivRazreda = razred.Naziv;
             }
 
             PagedResult<KorisnikM> result = new PagedResult<KorisnikM>
             {
                 Count = uceniciWithAttendance.Count,
-                Result = _mapper.Map<List<KorisnikM>>(uceniciWithAttendance)
+                Result = _mapper.Map<List<KorisnikM>>(uceniciWithAttendance.Select(ud => ud.Korisnik).ToList())
             };
 
             return result;
         }
 
+
+
         public async Task<PagedResult<KorisnikM>> GetMualimi(int? Id)
         {
             var ucenikRoleName = "Imam";
 
-            // Query to get all users with the role "Ucenik"
             var uceniciQuery = _dbContext.Set<Korisnik>()
                 .Where(k => k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == ucenikRoleName));
 
-            // If Id is provided, filter by mektebId
             if (Id.HasValue)
             {
                 uceniciQuery = uceniciQuery.Where(k => k.MektebId == Id.Value);
@@ -318,11 +326,9 @@ namespace eMekteb.Services
         {
             var RoleName = "Komisija";
 
-            // Query to get all users with the role "Ucenik"
             var komisijaQuery = _dbContext.Set<Korisnik>()
                 .Where(k => k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == RoleName));
 
-            // If Id is provided, filter by mektebId
             if (Id.HasValue)
             {
                 komisijaQuery = komisijaQuery.Where(k => k.MektebId == Id.Value);
@@ -343,11 +349,9 @@ namespace eMekteb.Services
         {
             var RoleName = "Admin";
 
-            // Query to get all users with the role "Ucenik"
             var adminQuery = _dbContext.Set<Korisnik>()
                 .Where(k => k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == RoleName));
 
-            // If Id is provided, filter by mektebId
             if (Id.HasValue)
             {
                 adminQuery = adminQuery.Where(k => k.MektebId == Id.Value);
@@ -372,21 +376,17 @@ namespace eMekteb.Services
                 throw new Exception("User not found");
             }
 
-            // Validate old password
             if (GenerateHash(user.LozinkaSalt, oldPassword) != user.LozinkaHash)
             {
                 throw new Exception("Old password is incorrect");
             }
 
-            // Create new password hash and salt
             var newSalt = GenerateSalt();
             var newHash = GenerateHash(newSalt, newPassword);
 
-            // Update user's password hash and salt
             user.LozinkaSalt = newSalt;
             user.LozinkaHash = newHash;
 
-            // Save changes
             await _dbContext.SaveChangesAsync();
 
             return true;
@@ -399,17 +399,14 @@ namespace eMekteb.Services
                 throw new Exception("User not found");
             }
 
-            // Validate old password
             if (GenerateHash(user.LozinkaSalt, request.OldPassword) != user.LozinkaHash)
             {
                 throw new Exception("Old password is incorrect");
             }
 
-            // Create new password hash and salt
             var newSalt = GenerateSalt();
             var newHash = GenerateHash(newSalt, request.NewPassword);
 
-            // Update user's password hash and salt
             user.LozinkaSalt = newSalt;
             user.LozinkaHash = newHash;
 
@@ -429,7 +426,6 @@ namespace eMekteb.Services
                 throw new Exception("User not found");
             }
 
-            // Update other fields as needed
             _mapper.Map(update, korisnik);
 
             // Handle password change
@@ -450,128 +446,120 @@ namespace eMekteb.Services
             return _mapper.Map<KorisnikM>(korisnik);
         }
 
-        public override async Task<PagedResult<KorisnikM>> Get(KorisnikSearchObject? search)
-        {
-            var query = _dbContext.Set<Korisnik>().AsQueryable();
+        //public override async Task<PagedResult<KorisnikM>> Get(KorisnikSearchObject? search)
+        //{
+        //    var query = _dbContext.Set<Korisnik>().AsQueryable();
 
-            var uceniciWithAttendance = await query.ToListAsync();
+        //    var uceniciWithAttendance = await query.ToListAsync();
 
-            foreach (var ucenik in uceniciWithAttendance)
-            {
-                // Calculate attendance
-                var attendanceRecords = _dbContext.Prisustvo
-                    .Where(p => p.KorisnikId == ucenik.Id)
-                    .ToList();
+        //    foreach (var ucenik in uceniciWithAttendance)
+        //    {
+        //        var attendanceRecords = _dbContext.Prisustvo
+        //            .Where(p => p.KorisnikId == ucenik.Id)
+        //            .ToList();
 
-                int totalClasses = attendanceRecords.Count;
-                if (totalClasses > 0)
-                {
-                    int presentCount = attendanceRecords.Count(p => p.Prisutan == true);
-                    double attendancePercentage = (double)presentCount / totalClasses * 100;
-                    ucenik.Prisustvo = Math.Round(attendancePercentage, 0);
-                }
-                else
-                {
-                    ucenik.Prisustvo = 0;
-                }
+        //        int totalClasses = attendanceRecords.Count;
+        //        if (totalClasses > 0)
+        //        {
+        //            int presentCount = attendanceRecords.Count(p => p.Prisutan == true);
+        //            double attendancePercentage = (double)presentCount / totalClasses * 100;
+        //            ucenik.Prisustvo = Math.Round(attendancePercentage, 0);
+        //        }
+        //        else
+        //        {
+        //            ucenik.Prisustvo = 0;
+        //        }
 
-                // Calculate average grade
-                var zadace = _dbContext.Zadaca
-                    .Where(z => z.KorisnikId == ucenik.Id)
-                    .Include(z => z.Ocjene)
-                    .ToList();
+        //        var zadace = _dbContext.Zadaca
+        //            .Where(z => z.KorisnikId == ucenik.Id)
+        //            .Include(z => z.Ocjene)
+        //            .ToList();
 
-                if (zadace.Count > 0)
-                {
-                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena);
-                    ucenik.Prosjek = Math.Round(averageGrade, 1);
-                }
-                else
-                {
-                    ucenik.Prosjek = 0;
-                }
+        //        if (zadace.Count > 0)
+        //        {
+        //            double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena);
+        //            ucenik.Prosjek = Math.Round(averageGrade, 1);
+        //        }
+        //        else
+        //        {
+        //            ucenik.Prosjek = 0;
+        //        }
 
-                // Set Razred name
-                var razred = await _dbContext.Razred
-               .Where(r => r.Id == ucenik.RazredId)
-               .FirstOrDefaultAsync();
+        //        var razred = await _dbContext.Razred
+        //       .Where(r => r.Id == ucenik.RazredId)
+        //       .FirstOrDefaultAsync();
 
-                if (razred != null)
-                {
-                    ucenik.NazivRazreda = razred.Naziv;
-                }
-                else
-                {
-                    ucenik.NazivRazreda = null;
-                }
-            }
+        //        if (razred != null)
+        //        {
+        //            ucenik.NazivRazreda = razred.Naziv;
+        //        }
+        //        else
+        //        {
+        //            ucenik.NazivRazreda = null;
+        //        }
+        //    }
 
-            PagedResult<KorisnikM> result = new PagedResult<KorisnikM>
-            {
-                Count = uceniciWithAttendance.Count,
-                Result = _mapper.Map<List<KorisnikM>>(uceniciWithAttendance)
-            };
+        //    PagedResult<KorisnikM> result = new PagedResult<KorisnikM>
+        //    {
+        //        Count = uceniciWithAttendance.Count,
+        //        Result = _mapper.Map<List<KorisnikM>>(uceniciWithAttendance)
+        //    };
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        public override async Task<KorisnikM> GetById(int id)
-        {
-            // Fetch the specific Korisnik by its ID
-            var ucenik = await _dbContext.Set<Korisnik>()
-                .Where(k => k.Id == id)
-                .FirstOrDefaultAsync();
+        //public override async Task<KorisnikM> GetById(int id)
+        //{
+        //    var ucenik = await _dbContext.Set<Korisnik>()
+        //        .Where(k => k.Id == id)
+        //        .FirstOrDefaultAsync();
 
-            if (ucenik == null)
-            {
-                throw new Exception("Korisnik not found");
-            }
+        //    if (ucenik == null)
+        //    {
+        //        throw new Exception("Korisnik not found");
+        //    }
 
-            // Calculate attendance
-            var attendanceRecords = _dbContext.Prisustvo
-                .Where(p => p.KorisnikId == ucenik.Id)
-                .ToList();
+        //    var attendanceRecords = _dbContext.Prisustvo
+        //        .Where(p => p.KorisnikId == ucenik.Id)
+        //        .ToList();
 
-            int totalClasses = attendanceRecords.Count;
-            if (totalClasses > 0)
-            {
-                int presentCount = attendanceRecords.Count(p => p.Prisutan == true);
-                double attendancePercentage = (double)presentCount / totalClasses * 100;
-                ucenik.Prisustvo = Math.Round(attendancePercentage, 0); // Round to 0 decimal places
-            }
-            else
-            {
-                ucenik.Prisustvo = 0;
-            }
+        //    int totalClasses = attendanceRecords.Count;
+        //    if (totalClasses > 0)
+        //    {
+        //        int presentCount = attendanceRecords.Count(p => p.Prisutan == true);
+        //        double attendancePercentage = (double)presentCount / totalClasses * 100;
+        //        ucenik.Prisustvo = Math.Round(attendancePercentage, 0); // Round to 0 decimal places
+        //    }
+        //    else
+        //    {
+        //        ucenik.Prisustvo = 0;
+        //    }
 
-            // Calculate average grade
-            var zadace = _dbContext.Zadaca
-                .Where(z => z.KorisnikId == ucenik.Id)
-                .Include(z => z.Ocjene)
-                .ToList();
+        //    var zadace = _dbContext.Zadaca
+        //        .Where(z => z.KorisnikId == ucenik.Id)
+        //        .Include(z => z.Ocjene)
+        //        .ToList();
 
-            if (zadace.Count > 0)
-            {
-                double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena);
-                ucenik.Prosjek = Math.Round(averageGrade, 1); // Round to 1 decimal place
-            }
-            else
-            {
-                ucenik.Prosjek = 0;
-            }
+        //    if (zadace.Count > 0)
+        //    {
+        //        double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena);
+        //        ucenik.Prosjek = Math.Round(averageGrade, 1); // Round to 1 decimal place
+        //    }
+        //    else
+        //    {
+        //        ucenik.Prosjek = 0;
+        //    }
 
-            // Set Razred name
-            var razred = await _dbContext.Razred
-                .Where(r => r.Id == ucenik.RazredId)
-                .FirstOrDefaultAsync();
+        //    var razred = await _dbContext.Razred
+        //        .Where(r => r.Id == ucenik.RazredId)
+        //        .FirstOrDefaultAsync();
 
-            ucenik.NazivRazreda = razred?.Naziv; // Set Razred name if it exists, otherwise null
+        //    ucenik.NazivRazreda = razred?.Naziv; // Set Razred name if it exists, otherwise null
 
-            // Map the Korisnik entity to KorisnikM
-            var result = _mapper.Map<KorisnikM>(ucenik);
+        //    var result = _mapper.Map<KorisnikM>(ucenik);
 
-            return result;
-        }
+        //    return result;
+        //}
 
 
     }

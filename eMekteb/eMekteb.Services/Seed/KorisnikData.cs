@@ -26,7 +26,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = DateTime.Now,
                     ImeRoditelja = "Mujo",
                     MektebId = 1,
-                    RazredId = 1,
+                   // RazredId = 1,
                     LozinkaHash = "dP9XoZcTTTU8f4ddDbNLJalRQqQ=",
                     LozinkaSalt = "jmK1d1xnmg2DC0svh3UvRw=="
                 },
@@ -43,7 +43,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = DateTime.Now,
                     ImeRoditelja = "Bob Smith",
                     MektebId = 1,
-                    RazredId = 1,
+                   // RazredId = 1,
                     LozinkaHash = "z/sT0B+tdXeEL9SHGZRnuwLTq24=",
                     LozinkaSalt = "TojKLl0mMwNiLEbjjO9oZg==",
                 
@@ -61,7 +61,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = DateTime.Now,
                     ImeRoditelja = "Alice Johnson",
                     MektebId = 1,
-                    RazredId = 1,
+                   // RazredId = 1,
                     LozinkaHash = "YumKKJBN/A/I4N5FUZAQiS+GsKU=",
                     LozinkaSalt = "sDj4ejrFF0VUWuf3Z86EAg==",
                     RoditeljId = 2
@@ -79,7 +79,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = DateTime.Now,
                     ImeRoditelja = "Alice",
                     MektebId = 2,
-                    RazredId = 1,
+                   // RazredId = 1,
                     LozinkaHash = "AM3voFixj70K2UEq0c+7KnPEoaU=",
                     LozinkaSalt = "jmK1d1xnmg2DC0svh3UvRw=="
                 },
@@ -96,7 +96,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = DateTime.Now,
                     ImeRoditelja = "Alic",
                     MektebId = 1,
-                    RazredId = 1,
+                  //  RazredId = 1,
                     LozinkaHash = "cKnCCVJWJjRXqM7XevrbN6B3RbM=",
                     LozinkaSalt = "cLnMQzMpSBWfc9nVetCRnw=="
                 }

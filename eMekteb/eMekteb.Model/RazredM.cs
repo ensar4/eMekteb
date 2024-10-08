@@ -12,7 +12,7 @@ namespace eMekteb.Services.Database
     {
         public int? id { get; set; }
         public string? Naziv { get; set; }
-
+        public int MektebId { get; set; }
 
 
         //public virtual ICollection<Lekcija> Lekcije { get; set; } = new List<Lekcija>();

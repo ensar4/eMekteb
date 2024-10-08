@@ -5,6 +5,7 @@ import 'package:emekteb_admin/models/korisnik.dart';
 import 'package:emekteb_admin/providers/admin_provider.dart';
 import 'package:emekteb_admin/providers/akademskagodina_provider.dart';
 import 'package:emekteb_admin/providers/akademskamekteb_provider.dart';
+import 'package:emekteb_admin/providers/akademskarazred_provider.dart';
 import 'package:emekteb_admin/providers/auth_provider.dart';
 import 'package:emekteb_admin/providers/kategorija_provider.dart';
 import 'package:emekteb_admin/providers/komisija_provider.dart';
@@ -12,6 +13,7 @@ import 'package:emekteb_admin/providers/medzlis_provider.dart';
 import 'package:emekteb_admin/providers/mekteb_provider.dart';
 import 'package:emekteb_admin/providers/mualim_provider.dart';
 import 'package:emekteb_admin/providers/password_provider.dart';
+import 'package:emekteb_admin/providers/razred_provider.dart';
 import 'package:emekteb_admin/providers/takmicar_provider.dart';
 import 'package:emekteb_admin/providers/takmicenja_provider.dart';
 import 'package:emekteb_admin/providers/ucenici_provider.dart';
@@ -33,6 +35,8 @@ void main() {
     ChangeNotifierProvider(create: (_)=> KomisijaProvider()),
     ChangeNotifierProvider(create: (_)=> AdminProvider()),
     ChangeNotifierProvider(create: (_)=> AkademskaMektebProvider()),
+    ChangeNotifierProvider(create: (_)=> AkademskaRazredProvider()),
+    ChangeNotifierProvider(create: (_)=> RazredProvider()),
 
 
 

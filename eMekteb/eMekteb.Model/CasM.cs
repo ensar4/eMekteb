@@ -15,6 +15,7 @@ namespace eMekteb.Services.Database
         public string? Razred { get; set; }
         public string? Lekcija { get; set; }
         public int MektebId { get; set; }
+        public int AkademskaGodinaId { get; set; }
 
 
     }

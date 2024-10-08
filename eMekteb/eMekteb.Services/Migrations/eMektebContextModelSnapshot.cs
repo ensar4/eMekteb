@@ -39,6 +39,9 @@ namespace eMekteb.Services.Migrations
                     b.Property<string>("Naziv")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("isAktivna")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.ToTable("AkademskaGodina");
@@ -67,6 +70,29 @@ namespace eMekteb.Services.Migrations
                     b.ToTable("AkademskaMekteb");
                 });
 
+            modelBuilder.Entity("eMekteb.Services.Database.AkademskaRazred", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AkademskaGodinaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RazredId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AkademskaGodinaId");
+
+                    b.HasIndex("RazredId");
+
+                    b.ToTable("AkademskaRazred");
+                });
+
             modelBuilder.Entity("eMekteb.Services.Database.Cas", b =>
                 {
                     b.Property<int>("Id")
@@ -74,6 +100,9 @@ namespace eMekteb.Services.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AkademskaGodinaId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Datum")
                         .HasColumnType("datetime2");
@@ -88,6 +117,8 @@ namespace eMekteb.Services.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AkademskaGodinaId");
 
                     b.HasIndex("MektebId");
 
@@ -429,11 +460,16 @@ namespace eMekteb.Services.Migrations
                     b.Property<bool?>("Prisutan")
                         .HasColumnType("bit");
 
+                    b.Property<int>("RazredId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CasId");
 
                     b.HasIndex("KorisnikId");
+
+                    b.HasIndex("RazredId");
 
                     b.ToTable("Prisustvo");
                 });
@@ -446,12 +482,43 @@ namespace eMekteb.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("MektebId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Naziv")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MektebId");
+
                     b.ToTable("Razred");
+                });
+
+            modelBuilder.Entity("eMekteb.Services.Database.RazredKorisnik", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DatumUpisa")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("KorisnikId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RazredId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KorisnikId");
+
+                    b.HasIndex("RazredId");
+
+                    b.ToTable("RazredKorisnik");
                 });
 
             modelBuilder.Entity("eMekteb.Services.Database.Slika", b =>
@@ -598,11 +665,16 @@ namespace eMekteb.Services.Migrations
                     b.Property<int>("OcjeneId")
                         .HasColumnType("int");
 
+                    b.Property<int>("RazredId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("KorisnikId");
 
                     b.HasIndex("OcjeneId");
+
+                    b.HasIndex("RazredId");
 
                     b.ToTable("Zadaca");
                 });
@@ -626,13 +698,40 @@ namespace eMekteb.Services.Migrations
                     b.Navigation("Mekteb");
                 });
 
+            modelBuilder.Entity("eMekteb.Services.Database.AkademskaRazred", b =>
+                {
+                    b.HasOne("eMekteb.Services.Database.AkademskaGodina", "AkademskaGodina")
+                        .WithMany()
+                        .HasForeignKey("AkademskaGodinaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("eMekteb.Services.Database.Razred", "Razred")
+                        .WithMany()
+                        .HasForeignKey("RazredId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AkademskaGodina");
+
+                    b.Navigation("Razred");
+                });
+
             modelBuilder.Entity("eMekteb.Services.Database.Cas", b =>
                 {
+                    b.HasOne("eMekteb.Services.Database.AkademskaGodina", "AkademskaGodina")
+                        .WithMany()
+                        .HasForeignKey("AkademskaGodinaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("eMekteb.Services.Database.Mekteb", "Mekteb")
                         .WithMany()
                         .HasForeignKey("MektebId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AkademskaGodina");
 
                     b.Navigation("Mekteb");
                 });
@@ -714,7 +813,7 @@ namespace eMekteb.Services.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("eMekteb.Services.Database.Razred", "Razred")
+                    b.HasOne("eMekteb.Services.Database.Razred", null)
                         .WithMany("Ucenici")
                         .HasForeignKey("RazredId");
 
@@ -723,8 +822,6 @@ namespace eMekteb.Services.Migrations
                         .HasForeignKey("RoditeljId");
 
                     b.Navigation("Mekteb");
-
-                    b.Navigation("Razred");
 
                     b.Navigation("Roditelj");
                 });
@@ -765,9 +862,47 @@ namespace eMekteb.Services.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("eMekteb.Services.Database.Razred", "Razred")
+                        .WithMany()
+                        .HasForeignKey("RazredId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Cas");
 
                     b.Navigation("Korisnik");
+
+                    b.Navigation("Razred");
+                });
+
+            modelBuilder.Entity("eMekteb.Services.Database.Razred", b =>
+                {
+                    b.HasOne("eMekteb.Services.Database.Mekteb", "Mekteb")
+                        .WithMany()
+                        .HasForeignKey("MektebId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Mekteb");
+                });
+
+            modelBuilder.Entity("eMekteb.Services.Database.RazredKorisnik", b =>
+                {
+                    b.HasOne("eMekteb.Services.Database.Korisnik", "Korisnik")
+                        .WithMany()
+                        .HasForeignKey("KorisnikId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("eMekteb.Services.Database.Razred", "Razred")
+                        .WithMany()
+                        .HasForeignKey("RazredId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Korisnik");
+
+                    b.Navigation("Razred");
                 });
 
             modelBuilder.Entity("eMekteb.Services.Database.Slika", b =>
@@ -836,9 +971,17 @@ namespace eMekteb.Services.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("eMekteb.Services.Database.Razred", "Razred")
+                        .WithMany()
+                        .HasForeignKey("RazredId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Korisnik");
 
                     b.Navigation("Ocjene");
+
+                    b.Navigation("Razred");
                 });
 
             modelBuilder.Entity("eMekteb.Services.Database.AkademskaGodina", b =>

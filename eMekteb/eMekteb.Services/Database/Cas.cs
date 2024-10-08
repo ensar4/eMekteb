@@ -20,6 +20,10 @@ namespace eMekteb.Services.Database
         public int MektebId { get; set; }
         public virtual Mekteb? Mekteb { get; set; }
 
+        [ForeignKey("AkademskaGodina")]
+        public int? AkademskaGodinaId { get; set; }
+        public virtual AkademskaGodina? AkademskaGodina { get; set; }
+
         public virtual ICollection<Prisustvo> Prisustva { get; set; } = new List<Prisustvo>();
     }
 }

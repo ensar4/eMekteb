@@ -6,8 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
 import '../models/mekteb.dart';
+import '../models/razred.dart';
 import '../models/searches/search_result.dart';
+import '../providers/akademskarazred_provider.dart';
 import '../providers/mekteb_provider.dart';
+import '../providers/razred_provider.dart';
 
 void main() {
   runApp(const AkGodine());
@@ -23,10 +26,12 @@ class AkGodine extends StatefulWidget {
 class _ProfilInfoState extends State<AkGodine> {
   late AkademskagodinaProvider _akademskaProvider;
   late AkademskaMektebProvider _akademskaMektebProvider;
+  late AkademskaRazredProvider _akademskaRazredProvider;
   int currentPage = 1;
   int numPages = 12;
   bool isLoading = false;
   bool isLoading2 = false;
+  bool isLoading3 = false;
   int ukupnoMekteba = 1;
   int ukupnoMekteba2 = 1;
   late MektebProvider _mektebProvider;
@@ -38,13 +43,20 @@ class _ProfilInfoState extends State<AkGodine> {
   String dropdownValue = 'Broj učenika';
   bool isSortAsc = false;
 
+  late RazredProvider _razredProvider;
+  SearchResult<Razred>? listaRazreda;
+  List<Razred> filteredListRazredi = [];
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _mektebProvider = context.read<MektebProvider>();
     _akademskaProvider = context.read<AkademskagodinaProvider>();
     _akademskaMektebProvider = context.read<AkademskaMektebProvider>();
+    _razredProvider = context.read<RazredProvider>();
+    _akademskaRazredProvider = context.read<AkademskaRazredProvider>();
     fetchDataMektebi();
+    fetchDataRazredi();
     fetchData();
   }
 
@@ -94,6 +106,31 @@ class _ProfilInfoState extends State<AkGodine> {
 
         filteredListM = listaMekteba?.result ?? [];
         isLoading2 = false;
+      });
+    }
+  }
+
+  Future<void> fetchDataRazredi({String? filter}) async {
+    if (!isLoading3) {
+      setState(() {
+        isLoading3 = true;
+        // Clear existing data when the filter changes
+        listaRazreda = null;
+        filteredListM.clear();
+      });
+
+      var data = await _razredProvider.get();
+
+      setState(() {
+        if (listaRazreda == null) {
+          listaRazreda = data;
+          ukupnoMekteba2 = data.count;
+        } else {
+          listaRazreda!.result.addAll(data.result);
+        }
+
+        filteredListRazredi = listaRazreda?.result ?? [];
+        isLoading3 = false;
       });
     }
   }
@@ -299,6 +336,10 @@ class _ProfilInfoState extends State<AkGodine> {
                     // Loop through all mektebs in filteredListM and insert AkademskaMekteb records
                     for (Mekteb mekteb in filteredListM) {
                       await _akademskaMektebProvider.insertAkademskaMekteb(akademskaGodinaId, mekteb.id);
+                    }
+
+                    for (Razred razred in filteredListRazredi) {
+                      await _akademskaRazredProvider.insertAkademskaRazred(akademskaGodinaId, razred.id);
                     }
 
                     fetchData();

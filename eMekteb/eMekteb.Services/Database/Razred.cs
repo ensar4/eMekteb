@@ -14,6 +14,9 @@ namespace eMekteb.Services.Database
         public int Id { get; set; }
         public string? Naziv { get; set; }
 
+        [ForeignKey("Mekteb")]
+        public int? MektebId { get; set; }
+        public virtual Mekteb? Mekteb { get; set; }
         public virtual ICollection<Korisnik> Ucenici { get; set; } = new List<Korisnik>();
 
 

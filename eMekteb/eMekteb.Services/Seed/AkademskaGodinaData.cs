@@ -19,7 +19,8 @@ namespace eAkademskaGodina.Services.Seed
                     Id = 1,
                     Naziv = "2022/23",
                     DatumPocetka = DateTime.Now,
-                    DatumZavrsetka=DateTime.Now
+                    DatumZavrsetka=DateTime.Now,
+                    isAktivna = false
 
                 },
                 new AkademskaGodina
@@ -27,7 +28,9 @@ namespace eAkademskaGodina.Services.Seed
                     Id = 2,
                     Naziv = "2023/24",
                     DatumPocetka = DateTime.Now,
-                    DatumZavrsetka = DateTime.Now
+                    DatumZavrsetka = DateTime.Now,
+                    isAktivna = false
+
 
                 }
 

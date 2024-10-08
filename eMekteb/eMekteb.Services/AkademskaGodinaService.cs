@@ -25,38 +25,42 @@ namespace eMekteb.Services
 
             foreach (var aGm in result.Result)
             {
+                // Count the total number of Mektebs associated with the academic year
                 aGm.UkupnoMekteba = await _dbContext.AkademskaMekteb
-                    .CountAsync(mg => mg.AkademskaGodinaId == aGm.Id);
+                    .CountAsync(am => am.AkademskaGodinaId == aGm.Id);
 
-                var mektebiUAkademskojGodini = await _dbContext.AkademskaMekteb
-                    .Where(mg => mg.AkademskaGodinaId == aGm.Id)
-                    .Select(mg => mg.MektebId)
+                // Get all Razred IDs associated with the academic year via AkademskaGodinaRazred
+                var razredIds = await _dbContext.AkademskaRazred
+                    .Where(ag => ag.AkademskaGodinaId == aGm.Id)
+                    .Select(ag => ag.RazredId)
                     .ToListAsync();
 
-                if (!mektebiUAkademskojGodini.Any())
+                if (!razredIds.Any())
                 {
+                    // If no classes are associated with the academic year, set default values
                     aGm.UkupnoUcenika = 0;
                     aGm.ProsjecnaOcjena = null;
                     aGm.ProsjecnoPrisustvo = null;
                     continue;
                 }
 
-                var korisniciIds = await _dbContext.Korisnik
-                     .Where(k => k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == "Ucenik")
-                             && mektebiUAkademskojGodini.Contains(k.MektebId)) 
-                     .Select(k => k.Id)
-                     .ToListAsync();
+                // Fetch Ucenik IDs connected to the found RazredIds via KorisnikRazred
+                var korisniciIds = await _dbContext.RazredKorisnik
+                    .Where(kr => razredIds.Contains(kr.RazredId))
+                    .Select(kr => kr.KorisnikId)
+                    .ToListAsync();
 
                 aGm.UkupnoUcenika = korisniciIds.Count;
 
+                // Calculate average grade for all Uceniks (students) in these RazredIds
                 var zadace = await _dbContext.Zadaca
-                    .Where(z => korisniciIds.Contains(z.KorisnikId))
+                    .Where(z => razredIds.Contains(z.RazredId))  // Zadaca linked to Razred, not directly to Ucenik
                     .Include(z => z.Ocjene)
                     .ToListAsync();
 
                 if (zadace.Count > 0)
                 {
-                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena);
+                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena); // Assuming Ocjene has property Ocjena
                     aGm.ProsjecnaOcjena = averageGrade;
                 }
                 else
@@ -64,15 +68,16 @@ namespace eMekteb.Services
                     aGm.ProsjecnaOcjena = null;
                 }
 
+                // Calculate average attendance for all Uceniks in the academic year
                 var prisustva = await _dbContext.Prisustvo
-                    .Where(p => korisniciIds.Contains(p.KorisnikId))
+                    .Where(p => razredIds.Contains((int)p.RazredId))  // Prisustvo linked to Razred, not directly to Ucenik
                     .ToListAsync();
 
                 if (prisustva.Count > 0)
                 {
                     double averageAttendance = prisustva
                         .GroupBy(p => p.KorisnikId)
-                        .Select(g => g.Count(p => p.Prisutan == true) / (double)g.Count())
+                        .Select(g => g.Count(p => (bool)p.Prisutan) / (double)g.Count())
                         .Average() * 100;
                     aGm.ProsjecnoPrisustvo = averageAttendance;
                 }
@@ -84,13 +89,14 @@ namespace eMekteb.Services
 
             return result;
         }
+
         public async Task<AkademskaGodinaM?> GetLastAkGAsync()
         {
-            var lastTakmicenje = await _dbContext.Set<AkademskaGodina>()
+            var last = await _dbContext.Set<AkademskaGodina>()
                                                  .OrderByDescending(t => t.Id)
                                                  .FirstOrDefaultAsync();
 
-            return _mapper.Map<AkademskaGodinaM>(lastTakmicenje);
+            return _mapper.Map<AkademskaGodinaM>(last);
         }
 
         public override IQueryable<AkademskaGodina> AddFilter(IQueryable<AkademskaGodina> query, AkademskaGodSearchObject? search)

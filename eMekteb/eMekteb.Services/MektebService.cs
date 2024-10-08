@@ -44,59 +44,6 @@ namespace eMekteb.Services
         }
 
 
-        //public async override Task<PagedResult<MektebM>> Get(MektebSearchObject? search)
-        //{
-        //    var result = await base.Get(search);
-
-        //    foreach (var mektebM in result.Result)
-        //    {
-        //        // Calculate the total number of students
-        //        mektebM.UkupnoUcenika = await _dbContext.Korisnik.CountAsync(u => u.MektebId == mektebM.Id);
-
-        //        // Calculate the average grade for the Mekteb
-        //        var korisniciIds = await _dbContext.Korisnik
-        //            .Where(k => k.MektebId == mektebM.Id)
-        //            .Select(k => k.Id)
-        //            .ToListAsync();
-
-        //        var zadace = await _dbContext.Zadaca
-        //            .Where(z => korisniciIds.Contains(z.KorisnikId))
-        //            .Include(z => z.Ocjene)
-        //            .ToListAsync();
-
-        //        if (zadace.Count > 0)
-        //        {
-        //            double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena); // Assuming Ocjene has a property 'Vrijednost' for grade
-        //            mektebM.ProsjecnaOcjena = averageGrade;
-        //        }
-        //        else
-        //        {
-        //            mektebM.ProsjecnaOcjena = null;
-        //        }
-
-
-        //        var prisustva = await _dbContext.Prisustvo
-        //            .Where(p => korisniciIds.Contains(p.KorisnikId))
-        //            .ToListAsync();
-
-        //        if (prisustva.Count > 0)
-        //        {
-        //            double averageAttendance = prisustva
-        //                .GroupBy(p => p.KorisnikId)
-        //                .Select(g => g.Count(p => p.Prisutan == true) / (double)g.Count())
-        //                .Average() * 100; 
-        //            mektebM.ProsjecnoPrisustvo = averageAttendance;
-        //        }
-        //        else
-        //        {
-        //            mektebM.ProsjecnoPrisustvo = null; 
-        //        }
-        //    }
-
-        //    return result;
-        //}
-
-
         public async override Task<PagedResult<MektebM>> Get(MektebSearchObject? search)
         {
             var result = await base.Get(search);

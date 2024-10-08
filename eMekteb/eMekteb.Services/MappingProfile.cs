@@ -117,6 +117,16 @@ namespace eMekteb.Services
             CreateMap<AkademskaMektebInsert, AkademskaMekteb>();
             CreateMap<AkademskaGodinaUpdate, AkademskaMekteb>();
 
+            CreateMap<AkademskaRazred, AkademskaRazredM>();
+            CreateMap<AkademskaRazredM, AkademskaRazred>();
+            CreateMap<AkademskaRazredInsert, AkademskaRazred>();
+            CreateMap<AkademskaRazredUpdate, AkademskaRazred>();
+            
+            CreateMap<RazredKorisnik, RazredKorisnikM>();
+            CreateMap<RazredKorisnikM, RazredKorisnik>();
+            CreateMap<RazredKorisnikInsert, RazredKorisnik>();
+            CreateMap<RazredKorisnikUpdate, RazredKorisnik>();
+
 
         }
 

@@ -31,9 +31,9 @@ namespace eMekteb.Services.Database
         public int MektebId { get; set; }
         public virtual Mekteb? Mekteb { get; set; }
 
-        [ForeignKey("Razred")]
-        public int? RazredId { get; set; }
-        public virtual Razred? Razred { get; set; }
+        //[ForeignKey("Razred")]
+        //public int? RazredId { get; set; }
+        //public virtual Razred? Razred { get; set; }
 
 
         public virtual ICollection<Prisustvo> Prisustva { get; set; }

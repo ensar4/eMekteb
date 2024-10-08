@@ -62,6 +62,7 @@ class _CasDetaljiState extends State<CasDetalji> {
     fetchDataPrisutniUcenici();
   }
 
+//fetch da dobijemo sve ucenike da bi ih mogli oznaciti prisutnim
   Future<void> fetchData() async {
     setState(() {
       isLoading = true;
@@ -105,6 +106,7 @@ class _CasDetaljiState extends State<CasDetalji> {
     }
   }
 
+  //dobavljanje svih podataka o prisustvu odabranom casu
  Future<void> fetchDataPrisustva() async {
     if (!isLoading2) {
       setState(() {
@@ -130,6 +132,7 @@ class _CasDetaljiState extends State<CasDetalji> {
     }
   }
 
+  //prikaz prisutnih ucenika na casu (ne prikazuj odsutne)
   Future<void> fetchDataPrisutniUcenici() async {
     if (!isLoading3 && filteredListPrisustva.isNotEmpty) {
       setState(() {

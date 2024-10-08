@@ -19,7 +19,11 @@ namespace eMekteb.Services.Database
         [ForeignKey("Ocjene")]
         public int OcjeneId { get; set; }
         public virtual Ocjene? Ocjene { get; set; }
-
         public string? Lekcija { get; set; }
+
+
+        [ForeignKey("Razred")]
+        public int RazredId { get; set; }
+        public virtual Razred? Razred { get; set; }
     }
 }

@@ -11,6 +11,6 @@ namespace eMekteb.Services.Database
     public class RazredInsert
     {
         public string? Naziv { get; set; }
-
+        public int MektebId { get; set; }
     }
 }
