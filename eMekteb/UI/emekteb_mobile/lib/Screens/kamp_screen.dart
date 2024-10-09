@@ -99,14 +99,14 @@ class _ProfilInfoState extends State<Kamps> {
                 padding: const EdgeInsets.only(top: 25.0),
                 child: btnAdd(),
               ),
-              listaTakmicenja(),
+              listaKampova(),
             ],
           ),
         ],
       );
   }
 
-  Widget listaTakmicenja() {
+  Widget listaKampova() {
     final screenWidth = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.only(top: 30.0),
@@ -114,7 +114,6 @@ class _ProfilInfoState extends State<Kamps> {
         width: screenWidth * 0.9, // 80% of the screen width
         height: 500,
         decoration: BoxDecoration(
-          color: Colors.white,
           borderRadius: BorderRadius.circular(20),
          //boxShadow: [
          //  BoxShadow(

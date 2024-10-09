@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:emekteb_mobile/models/ucenik.dart';
 import 'package:emekteb_mobile/providers/base_provider.dart';
+import 'package:emekteb_mobile/providers/razred_korisnik_provider.dart';
 import 'package:http/http.dart' as http;
 
 class UceniciProvider extends BaseProvider<Ucenik>{
@@ -108,7 +109,6 @@ Ucenik fromJson(data) {
         'ucenikDatumRodjenja': datumRodjenja.toIso8601String(),
         'ucenikImeRoditelja': imeRoditelja,
         'ucenikMektebId': mektebId,
-        'ucenikRazredId': razredId,
         'ucenikPassword': password,
         'ucenikPasswordPotvrda': passwordPotvrda,
         'roditeljIme': imeRoditelja,
@@ -121,7 +121,6 @@ Ucenik fromJson(data) {
         'roditeljDatumRodjenja': datumRodjenja.toIso8601String(),
         'roditeljImeRoditelja': 'ime',
         'roditeljMektebId': mektebId,
-        'roditeljRazredId': razredId,
         'roditeljPassword': 'test',
         'roditeljPasswordPotvrda': 'test'
       }),
@@ -137,11 +136,19 @@ Ucenik fromJson(data) {
 
       bool parentRoleAdded = await _addRoleToKorisnik(parentId, 4);
 
-      return studentRoleAdded && parentRoleAdded;
+      if (studentRoleAdded && parentRoleAdded) {
+        RazredKorisnikProvider razredKorisnikProvider = RazredKorisnikProvider();
+        bool razredKorisnikInserted = await razredKorisnikProvider.insert(studentId, razredId, DateTime.now());
+
+        return razredKorisnikInserted;
+      } else {
+        return false;
+      }
     } else {
       return false;
     }
   }
+
 
   Future<bool> update(
       int? id,

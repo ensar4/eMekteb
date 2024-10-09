@@ -20,7 +20,7 @@ class AkademskaGodina{
       this.ukupnoMekteba,
       this.ukupnoUcenika,
       this.prosjecnaOcjena,
-      this.prosjecnoPrisustvo
+      this.prosjecnoPrisustvo,
       );
 
   factory AkademskaGodina.fromJson(Map<String, dynamic> json) => _$AkademskaGodinaFromJson(json);

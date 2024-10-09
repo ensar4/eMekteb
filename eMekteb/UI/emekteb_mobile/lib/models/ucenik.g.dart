@@ -17,7 +17,7 @@ Ucenik _$UcenikFromJson(Map<String, dynamic> json) => Ucenik(
       (json['mektebId'] as num?)?.toInt(),
       json['status'] as String?,
       json['spol'] as String?,
-      (json['razredId'] as num?)?.toInt(),
+      (json['idRazreda'] as num?)?.toInt(),
       json['datumRodjenja'] == null
           ? null
           : DateTime.parse(json['datumRodjenja'] as String),
@@ -38,7 +38,7 @@ Map<String, dynamic> _$UcenikToJson(Ucenik instance) => <String, dynamic>{
       'datumRodjenja': instance.datumRodjenja?.toIso8601String(),
       'imeRoditelja': instance.imeRoditelja,
       'mektebId': instance.mektebId,
-      'razredId': instance.razredId,
+      'idRazreda': instance.idRazreda,
       'nazivRazreda': instance.nazivRazreda,
       'prisustvo': instance.prisustvo,
       'prosjek': instance.prosjek,

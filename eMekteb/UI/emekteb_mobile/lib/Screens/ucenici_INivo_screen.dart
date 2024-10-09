@@ -293,7 +293,7 @@ class _UceniciINivoState extends State<UceniciINivo> {
     final _brojTelefonaController = TextEditingController(text: ucenik.telefon);
     final _mailController = TextEditingController(text: ucenik.mail);
     final _statusController = TextEditingController(text: ucenik.status);
-    int? nivoId = ucenik.razredId;
+    int? nivoId = 1;
     String? nivo = ucenik.nazivRazreda;
     final _datumRodjenjaController = TextEditingController(
       text: ucenik.datumRodjenja?.toLocal().toString().split(' ')[0] ?? "",

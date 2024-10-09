@@ -13,7 +13,7 @@ Prisustvo fromJson(data) {
     return Prisustvo.fromJson(data);
   }
 
-  Future<bool> insert(bool prisutan, DateTime datum, int? korisnikId, int? casId) async {
+  Future<bool> insert(bool prisutan, DateTime datum, int? korisnikId, int? casId, int? razredId) async {
     final url = Uri.parse(fullUrl);
     final headers = getHeaders();
 
@@ -25,12 +25,14 @@ Prisustvo fromJson(data) {
         'datum': datum.toIso8601String(),
         'korisnikId': korisnikId,
         'casId': casId,
+        'razredId': razredId
       }),
     );
 
     if (response.statusCode == 200) {
       return true;
     } else {
+      print(response.body);
       return false;
     }
   }

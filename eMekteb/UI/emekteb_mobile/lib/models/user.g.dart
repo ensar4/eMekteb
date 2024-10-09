@@ -24,6 +24,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       json['nazivRazreda'] as String?,
       (json['prosjek'] as num?)?.toDouble(),
       (json['prisustvo'] as num?)?.toDouble(),
+      (json['idRazreda'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -42,4 +43,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'nazivRazreda': instance.nazivRazreda,
       'prisustvo': instance.prisustvo,
       'prosjek': instance.prosjek,
+      'idRazreda': instance.idRazreda,
     };

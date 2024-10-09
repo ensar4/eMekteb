@@ -22,6 +22,7 @@ class User{
    String? nazivRazreda;
    double? prisustvo;
    double? prosjek;
+   int? idRazreda;
 
   User(
       this.id,
@@ -38,7 +39,8 @@ class User{
       this.razredId,
       this.nazivRazreda,
       this.prosjek,
-      this.prisustvo
+      this.prisustvo,
+      this.idRazreda
       );
    factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

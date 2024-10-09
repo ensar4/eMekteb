@@ -1,25 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'prisustvo.dart';
+part of 'razred_korisnik.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Prisustvo _$PrisustvoFromJson(Map<String, dynamic> json) => Prisustvo(
+RazredKorisnik _$RazredKorisnikFromJson(Map<String, dynamic> json) =>
+    RazredKorisnik(
       (json['id'] as num?)?.toInt(),
-      json['prisutan'] as bool?,
-      json['datum'] == null ? null : DateTime.parse(json['datum'] as String),
-      (json['casId'] as num?)?.toInt(),
       (json['korisnikId'] as num?)?.toInt(),
       (json['razredId'] as num?)?.toInt(),
+      DateTime.parse(json['datumUpisa'] as String),
     );
 
-Map<String, dynamic> _$PrisustvoToJson(Prisustvo instance) => <String, dynamic>{
+Map<String, dynamic> _$RazredKorisnikToJson(RazredKorisnik instance) =>
+    <String, dynamic>{
       'id': instance.id,
-      'prisutan': instance.prisutan,
-      'datum': instance.datum?.toIso8601String(),
       'korisnikId': instance.korisnikId,
-      'casId': instance.casId,
       'razredId': instance.razredId,
+      'datumUpisa': instance.datumUpisa.toIso8601String(),
     };

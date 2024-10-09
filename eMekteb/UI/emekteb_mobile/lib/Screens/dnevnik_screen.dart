@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../models/cas.dart';
 import '../models/korisnik.dart';
 import '../models/searches/search_result.dart';
+import '../providers/akademskagodina_provider.dart';
 import '../providers/cas_provider.dart';
 import '../providers/user_provider.dart';
 import 'cas_details_screen.dart';
@@ -25,7 +26,7 @@ class Dnevnik extends StatefulWidget {
 class _DnevnikState extends State<Dnevnik> {
   late CasProvider _casProvider;
   late UserProvider _userProvider;
-
+  late AkademskagodinaProvider _akademskagodinaProvider;
   int currentPage = 1;
   int numPages = 12;
   bool isLoading = false;
@@ -38,28 +39,29 @@ class _DnevnikState extends State<Dnevnik> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _casProvider = context.read<CasProvider>();
+    _akademskagodinaProvider = context.read<AkademskagodinaProvider>();
     _userProvider = context.read<UserProvider>();
-    fetchData();
+
+    fetchDataCasovi();
     if (_userProvider.user == null) {
       _userProvider.getKorisnik(Korisnik.id).then((_) {
-        fetchData();
+        fetchDataCasovi();
       });
     } else {
-      fetchData();
+      fetchDataCasovi();
     }
   }
-
-  Future<void> fetchData({String? filter}) async {
+  Future<void> fetchDataCasovi({String? filter}) async {
     if (!isLoading) {
       setState(() {
         isLoading = true;
-        // Clear existing data when the filter changes
         listaCasova = null;
         filteredList.clear();
       });
 
-      var data =
-      await _casProvider.getById2(_userProvider.user!.mektebId);
+      int? akademskaGodinaId = await _akademskagodinaProvider.getActiveId();
+
+      var data = await _casProvider.getById2(_userProvider.user!.mektebId);
 
       setState(() {
         if (listaCasova == null) {
@@ -68,11 +70,16 @@ class _DnevnikState extends State<Dnevnik> {
         } else {
           listaCasova!.result.addAll(data.result);
         }
-        filteredList = listaCasova?.result ?? [];
+
+        filteredList = listaCasova?.result
+            .where((item) => item.akademskaGodinaId == akademskaGodinaId)
+            .toList() ?? [];
+
         isLoading = false;
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

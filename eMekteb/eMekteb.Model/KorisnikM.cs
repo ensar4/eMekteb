@@ -26,7 +26,8 @@ namespace eMekteb.Services.Database
         public int MektebId { get; set; }
         public double? Prisustvo { get; set; }
         public string? NazivRazreda { get; set; }
-        public double? Prosjek { get; set; }          //svi ovi atributi mi trebaju za aktuelnu godinu
+        public double? Prosjek { get; set; }
+        public int? IdRazreda { get; set; }
 
 
 

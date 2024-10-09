@@ -21,7 +21,7 @@ namespace eMekteb.Services.Database
         public DateTime UcenikDatumRodjenja { get; set; }
         public string? UcenikImeRoditelja { get; set; }
         public int UcenikMektebId { get; set; }
-        public int? UcenikRazredId { get; set; }
+       // public int? UcenikRazredId { get; set; }
         public string? UcenikPassword { get; set; }
         public string? UcenikPasswordPotvrda { get; set; }
 
@@ -36,7 +36,7 @@ namespace eMekteb.Services.Database
         public DateTime RoditeljDatumRodjenja { get; set; }
         public string? RoditeljImeRoditelja { get; set; }
         public int RoditeljMektebId { get; set; }
-        public int? RoditeljRazredId { get; set; }
+       // public int? RoditeljRazredId { get; set; }
         public string? RoditeljPassword { get; set; }
         public string? RoditeljPasswordPotvrda { get; set; }
 

@@ -73,9 +73,7 @@ class _UceniciIIINivoState extends State<UceniciIIINivo> {
     setState(() {
       isLoading = true;
     });
-
-    var data = await _uceniciProvider.get(page: 1, pageSize: 100);
-
+    var data = await _uceniciProvider.getById2(_userProvider.user!.mektebId);
     setState(() {
       listaUcenika = data;
       filteredList = listaUcenika?.result.where((ucenik) => ucenik.nazivRazreda == "III nivo").toList() ?? [];
@@ -291,7 +289,7 @@ class _UceniciIIINivoState extends State<UceniciIIINivo> {
     final _brojTelefonaController = TextEditingController(text: ucenik.telefon);
     final _mailController = TextEditingController(text: ucenik.mail);
     final _statusController = TextEditingController(text: ucenik.status);
-    int? nivoId = ucenik.razredId;
+    int? nivoId = 1;
     String? nivo = ucenik.nazivRazreda;
     final _datumRodjenjaController = TextEditingController(
       text: ucenik.datumRodjenja?.toLocal().toString().split(' ')[0] ?? "",

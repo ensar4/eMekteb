@@ -12,5 +12,7 @@ namespace eMekteb.Services.Interfaces
 {
     public interface IRazredService : ICRUDService<RazredM, BaseSearchObject, RazredInsert, object>
     {
+        Task<PagedResult<RazredM>> GetByMektebId(int mektebId);
+
     }
 }

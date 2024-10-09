@@ -10,14 +10,15 @@ class Cas{
   String razred;
   String lekcija;
   int mektebId;
-
+  int? akademskaGodinaId;
 
   Cas(
       this.id,
       this.datum,
       this.razred,
       this.lekcija,
-      this.mektebId
+      this.mektebId,
+      this.akademskaGodinaId
       );
   factory Cas.fromJson(Map<String, dynamic> json) => _$CasFromJson(json);
 

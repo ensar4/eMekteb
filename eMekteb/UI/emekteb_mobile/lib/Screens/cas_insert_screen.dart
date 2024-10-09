@@ -1,5 +1,6 @@
 import 'package:emekteb_mobile/Screens/dnevnik_screen.dart';
 import 'package:emekteb_mobile/Widgets/master_screen.dart';
+import 'package:emekteb_mobile/providers/akademskagodina_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/razred.dart';
@@ -18,6 +19,7 @@ class _CasInsertState extends State<CasInsert> {
   final _formKey = GlobalKey<FormState>();
   late UserProvider _userProvider;
   late CasProvider _casProvider;
+  late AkademskagodinaProvider _akademskagodinaProvider;
   String lekcija = '';
   String? nivo;
   DateTime datum = DateTime.now();
@@ -37,6 +39,7 @@ class _CasInsertState extends State<CasInsert> {
     super.didChangeDependencies();
     _casProvider = context.read<CasProvider>();
     _userProvider = context.read<UserProvider>();
+    _akademskagodinaProvider = context.read<AkademskagodinaProvider>();
     _datumController.text = datum.toLocal().toString().split(' ')[0];
 
   }
@@ -85,13 +88,14 @@ class _CasInsertState extends State<CasInsert> {
   Future<void> _submitForm() async {
    if (_formKey.currentState!.validate()) {
      _formKey.currentState!.save();
-
+     int? akademskaGodinaId = await _akademskagodinaProvider.getActiveId();
 
      bool success = await _casProvider.insert(
        lekcija,
        datum, 
        nivo!,
-       _userProvider.user?.mektebId
+       _userProvider.user?.mektebId,
+       akademskaGodinaId
      );
 
      if (success) {

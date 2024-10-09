@@ -12,7 +12,7 @@ class CasProvider extends BaseProvider<Cas>{
     return Cas.fromJson(data);
   }
 
-  Future<bool> insert(String lekcija, DateTime datum, String razred, int? mektebId) async {
+  Future<bool> insert(String lekcija, DateTime datum, String razred, int? mektebId, int? akademskaGodinaId) async {
     final url = Uri.parse(fullUrl);
     final headers = getHeaders();
 
@@ -24,6 +24,7 @@ class CasProvider extends BaseProvider<Cas>{
         'razred': razred,
         'lekcija': lekcija,
         'mektebId': mektebId,
+        'akademskaGodinaId':akademskaGodinaId
       }),
     );
 

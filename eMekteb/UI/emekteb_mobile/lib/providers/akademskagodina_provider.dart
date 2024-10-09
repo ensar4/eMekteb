@@ -13,6 +13,22 @@ class AkademskagodinaProvider extends BaseProvider<AkademskaGodina>{
   }
 
 
+  Future<int?> getActiveId() async {
+    var url = "$baseOfUrl""AkademskaGodina/active";
+    var uri = Uri.parse(url);
+    var headers = getHeaders();
+
+    var response = await http.get(uri, headers: headers);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      // Assuming the data contains an 'id' field
+      return data['id'] as int?;
+    } else {
+      throw Exception("Error with response");
+    }
+  }
 
 
 }

@@ -20,9 +20,9 @@ class UceniciInsert extends StatefulWidget {
 
 class _InsertUceniciState extends State<UceniciInsert> {
   final _formKey = GlobalKey<FormState>();
-  late UserProvider _UserProvider;
+  late UserProvider _userProvider;
   late UceniciProvider _uceniciProvider;
-  late RazredProvider _nivoProvider;
+  late RazredProvider _razredProvider;
 
   TextEditingController _imeController = TextEditingController();
   TextEditingController _prezimeController = TextEditingController();
@@ -47,13 +47,13 @@ class _InsertUceniciState extends State<UceniciInsert> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _UserProvider = context.read<UserProvider>();
+    _userProvider = context.read<UserProvider>();
     _uceniciProvider = context.read<UceniciProvider>();
-    _nivoProvider = context.read<RazredProvider>();
-    fetchDataKategorije();
+    _razredProvider = context.read<RazredProvider>();
+    fetchDataRazredi();
   }
 
-  Future<void> fetchDataKategorije() async {
+  Future<void> fetchDataRazredi() async {
     if (!isLoading2) {
       setState(() {
         isLoading2 = true;
@@ -62,8 +62,8 @@ class _InsertUceniciState extends State<UceniciInsert> {
         filteredListNivo.clear();
       });
 
-      var data = await _nivoProvider.get(page: 1, pageSize: 100);
-
+      var data = await _razredProvider.getById2(_userProvider.user?.mektebId);
+      
       setState(() {
         if (listaNivo == null) {
           listaNivo = data;
@@ -161,8 +161,7 @@ class _InsertUceniciState extends State<UceniciInsert> {
           ),
           TextFormField(
             enabled: false,
-            //controller: _korisnickoImeController,
-            decoration: InputDecoration(labelText: 'Korisničko ime (automatski)'),
+            decoration: InputDecoration(labelText: 'Korisničko ime (automatski - ime.prezime)'),
             textCapitalization: TextCapitalization.sentences,
           //validator: (value) {
           //  if (value == null || value.isEmpty) {
@@ -340,7 +339,7 @@ class _InsertUceniciState extends State<UceniciInsert> {
               imeRoditelja,
               password,
               passwordPotvrda,
-              _UserProvider.user?.mektebId,
+              _userProvider.user?.mektebId,
               nivoId,
             );
 

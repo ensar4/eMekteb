@@ -9,6 +9,7 @@ import 'package:emekteb_mobile/Screens/ucenici_screen.dart';
 import 'package:emekteb_mobile/Screens/uspjeh_screen.dart';
 import 'package:emekteb_mobile/Screens/zadaca_screen.dart';
 import 'package:emekteb_mobile/Widgets/master_screen.dart';
+import 'package:emekteb_mobile/models/user.dart';
 import 'package:emekteb_mobile/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +31,7 @@ class _UcenikPocetnaState extends State<UcenikPocetna> {
   late UserProvider _userProvider;
   late SlikaProvider _slikaProvider;
   var samoIme = Korisnik.ime?.split(" ")[0] ?? "";
+
   int currentPage = 1;
   int numPages = 12;
   bool isLoading = false;

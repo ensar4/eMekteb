@@ -6,6 +6,7 @@ import 'package:emekteb_mobile/providers/kamp_provider.dart';
 import 'package:emekteb_mobile/providers/kampkorisnik_provider.dart';
 import 'package:emekteb_mobile/providers/kategorija_provider.dart';
 import 'package:emekteb_mobile/providers/obavijest_provider.dart';
+import 'package:emekteb_mobile/providers/razred_korisnik_provider.dart';
 import 'package:emekteb_mobile/providers/razred_provider.dart';
 import 'package:emekteb_mobile/providers/ocjene_provider.dart';
 import 'package:emekteb_mobile/providers/prisustvo_provider.dart';
@@ -50,6 +51,7 @@ void main() {
     ChangeNotifierProvider(create: (_)=> ZadacaProvider()),
     ChangeNotifierProvider(create: (_)=> ObavijestProvider()),
     ChangeNotifierProvider(create: (_)=> SlikaProvider()),
+    ChangeNotifierProvider(create: (_)=> RazredKorisnikProvider()),
 
 
 

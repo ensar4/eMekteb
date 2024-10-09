@@ -12,6 +12,7 @@ Cas _$CasFromJson(Map<String, dynamic> json) => Cas(
       json['razred'] as String,
       json['lekcija'] as String,
       (json['mektebId'] as num).toInt(),
+      (json['akademskaGodinaId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$CasToJson(Cas instance) => <String, dynamic>{
@@ -20,4 +21,5 @@ Map<String, dynamic> _$CasToJson(Cas instance) => <String, dynamic>{
       'razred': instance.razred,
       'lekcija': instance.lekcija,
       'mektebId': instance.mektebId,
+      'akademskaGodinaId': instance.akademskaGodinaId,
     };

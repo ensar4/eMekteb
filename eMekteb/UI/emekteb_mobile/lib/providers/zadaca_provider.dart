@@ -14,7 +14,7 @@ Zadaca fromJson(data) {
     return Zadaca.fromJson(data);
   }
 
-  Future<bool> insert(DateTime datumDodjele, String lekcija, int? korisnikId, int? ocjeneId) async {
+  Future<bool> insert(DateTime datumDodjele, String lekcija, int? korisnikId, int? ocjeneId, int? razredId) async {
     final url = Uri.parse(fullUrl);
     final headers = getHeaders();
 
@@ -26,6 +26,7 @@ Zadaca fromJson(data) {
         'korisnikId': korisnikId,
         'ocjeneId': ocjeneId,
         'lekcija': lekcija,
+        'razredId': razredId,
       }),
     );
 

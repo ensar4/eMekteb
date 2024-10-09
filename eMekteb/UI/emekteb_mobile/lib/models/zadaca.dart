@@ -9,13 +9,14 @@ class Zadaca{
   int korisnikId;
   int ocjeneId;
   String lekcija;
-
+  int? razredId;
 
   Zadaca(
       this.datumDodjele,
       this.korisnikId,
       this.ocjeneId,
-      this.lekcija
+      this.lekcija,
+      this.razredId
       );
 
   factory Zadaca.fromJson(Map<String, dynamic> json) => _$ZadacaFromJson(json);

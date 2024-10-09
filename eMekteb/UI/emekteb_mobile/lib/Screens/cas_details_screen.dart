@@ -194,6 +194,7 @@ class _CasDetaljiState extends State<CasDetalji> {
           DateTime.now(),
           ucenik.id,
           widget.cas?.id,
+          ucenik.idRazreda
         );
       } catch (error) {
         allSuccess = false; // If any insert fails, mark as failure
@@ -523,9 +524,10 @@ class _EditUcenikDialogState extends State<EditUcenikDialog> {
 
     bool success = await _zadacaProvider.insert(
       DateTime.now(),
-      widget.cas?.lekcija ?? '',
+      zadacaController.text,
       widget.ucenik.id,
       int.tryParse(selectedKategorija ?? ''),
+      widget.ucenik.idRazreda
     );
 
     setState(() {

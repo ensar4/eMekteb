@@ -17,7 +17,7 @@ class Ucenik{
   DateTime? datumRodjenja;
   String? imeRoditelja;
   int? mektebId;
-  int? razredId;
+  int? idRazreda;
   String? nazivRazreda;
   double? prisustvo;
   double? prosjek;
@@ -32,7 +32,7 @@ class Ucenik{
       this.mektebId,
       this.status,
       this.spol,
-      this.razredId,
+      this.idRazreda,
       this.datumRodjenja,
       this.prisustvo,
       this.prosjek,

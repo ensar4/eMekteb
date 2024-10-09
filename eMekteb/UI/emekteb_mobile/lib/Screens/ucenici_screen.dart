@@ -289,7 +289,7 @@ class _ProfilInfoState extends State<Ucenici> {
     final brojTelefonaController = TextEditingController(text: ucenik.telefon);
     final mailController = TextEditingController(text: ucenik.mail);
     final statusController = TextEditingController(text: ucenik.status);
-    int? nivoId = ucenik.razredId;
+    int? nivoId = 1;
     String? nivo = ucenik.nazivRazreda;
     final datumRodjenjaController = TextEditingController(
       text: ucenik.datumRodjenja?.toLocal().toString().split(' ')[0] ?? "",

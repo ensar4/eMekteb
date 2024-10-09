@@ -26,6 +26,7 @@ namespace eMekteb.Services.Database
         public double? Prisustvo { get; set; }
         public string? NazivRazreda { get; set; }
         public double? Prosjek { get; set; }
+        public int? IdRazreda { get; set; }
        
         [ForeignKey("Mekteb")]
         public int MektebId { get; set; }

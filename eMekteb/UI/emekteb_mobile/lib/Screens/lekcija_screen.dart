@@ -113,10 +113,12 @@ class _ProfilInfoState extends State<Lekcija> {
   Widget build(BuildContext context) {
     return MasterScreen(
       title: "Dodatne lekcije",
-      child: Column(
-        children: [
-          main(),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            main(),
+          ],
+        ),
       ),
     );
   }

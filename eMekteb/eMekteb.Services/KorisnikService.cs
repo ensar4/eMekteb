@@ -286,6 +286,7 @@ namespace eMekteb.Services
 
                 // Set the Razred name for the student
                 ucenik.NazivRazreda = razred.Naziv;
+                ucenik.IdRazreda = razred.Id;
             }
 
             PagedResult<KorisnikM> result = new PagedResult<KorisnikM>
@@ -446,120 +447,154 @@ namespace eMekteb.Services
             return _mapper.Map<KorisnikM>(korisnik);
         }
 
-        //public override async Task<PagedResult<KorisnikM>> Get(KorisnikSearchObject? search)
-        //{
-        //    var query = _dbContext.Set<Korisnik>().AsQueryable();
 
-        //    var uceniciWithAttendance = await query.ToListAsync();
+        public override async Task<PagedResult<KorisnikM>> Get(KorisnikSearchObject? search)
+        {
+            // Perform a left join so that ucenici are returned even if they don't have entries in RazredKorisnik
+            var uceniciQuery = _dbContext.Set<Korisnik>()
+                .GroupJoin(_dbContext.RazredKorisnik,
+                    k => k.Id,
+                    kr => kr.KorisnikId,
+                    (k, krGroup) => new { Korisnik = k, KorisnikRazredi = krGroup })
+                .SelectMany(
+                    kKr => kKr.KorisnikRazredi.DefaultIfEmpty(),
+                    (kKr, kr) => new { kKr.Korisnik, KorisnikRazred = kr })
+                .GroupJoin(_dbContext.Razred,
+                    kKr => kKr.KorisnikRazred.RazredId,
+                    r => r.Id,
+                    (kKr, rGroup) => new { kKr.Korisnik, Razred = rGroup.FirstOrDefault() });
 
-        //    foreach (var ucenik in uceniciWithAttendance)
-        //    {
-        //        var attendanceRecords = _dbContext.Prisustvo
-        //            .Where(p => p.KorisnikId == ucenik.Id)
-        //            .ToList();
+            var uceniciWithAttendance = await uceniciQuery.ToListAsync();
 
-        //        int totalClasses = attendanceRecords.Count;
-        //        if (totalClasses > 0)
-        //        {
-        //            int presentCount = attendanceRecords.Count(p => p.Prisutan == true);
-        //            double attendancePercentage = (double)presentCount / totalClasses * 100;
-        //            ucenik.Prisustvo = Math.Round(attendancePercentage, 0);
-        //        }
-        //        else
-        //        {
-        //            ucenik.Prisustvo = 0;
-        //        }
+            foreach (var ucenikData in uceniciWithAttendance)
+            {
+                var ucenik = ucenikData.Korisnik;
+                var razred = ucenikData.Razred;
 
-        //        var zadace = _dbContext.Zadaca
-        //            .Where(z => z.KorisnikId == ucenik.Id)
-        //            .Include(z => z.Ocjene)
-        //            .ToList();
+                // Fetch attendance records for the specific Ucenik and Razred if Razred exists
+                var attendanceRecords = razred != null
+                    ? await _dbContext.Prisustvo
+                        .Where(p => p.KorisnikId == ucenik.Id && p.RazredId == razred.Id)
+                        .ToListAsync()
+                    : new List<Prisustvo>(); // No Razred means no attendance records
 
-        //        if (zadace.Count > 0)
-        //        {
-        //            double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena);
-        //            ucenik.Prosjek = Math.Round(averageGrade, 1);
-        //        }
-        //        else
-        //        {
-        //            ucenik.Prosjek = 0;
-        //        }
+                int totalClasses = attendanceRecords.Count;
+                if (totalClasses > 0)
+                {
+                    int presentCount = attendanceRecords.Count(p => p.Prisutan == true);
+                    double attendancePercentage = (double)presentCount / totalClasses * 100;
+                    ucenik.Prisustvo = Math.Round(attendancePercentage, 0); // Round to 0 decimal places
+                }
+                else
+                {
+                    ucenik.Prisustvo = 0;
+                }
 
-        //        var razred = await _dbContext.Razred
-        //       .Where(r => r.Id == ucenik.RazredId)
-        //       .FirstOrDefaultAsync();
+                // Fetch zadace (assignments) for the Ucenik's Razred to calculate the average grade if Razred exists
+                var zadace = razred != null
+                    ? await _dbContext.Zadaca
+                        .Where(z => z.RazredId == razred.Id && z.KorisnikId == ucenik.Id)
+                        .Include(z => z.Ocjene)
+                        .ToListAsync()
+                    : new List<Zadaca>(); // No Razred means no zadace records
 
-        //        if (razred != null)
-        //        {
-        //            ucenik.NazivRazreda = razred.Naziv;
-        //        }
-        //        else
-        //        {
-        //            ucenik.NazivRazreda = null;
-        //        }
-        //    }
+                if (zadace.Count > 0)
+                {
+                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena); // Assuming Ocjene has a property 'Ocjena'
+                    ucenik.Prosjek = Math.Round(averageGrade, 1); // Round to 1 decimal place
+                }
+                else
+                {
+                    ucenik.Prosjek = 0; // No grades available
+                }
 
-        //    PagedResult<KorisnikM> result = new PagedResult<KorisnikM>
-        //    {
-        //        Count = uceniciWithAttendance.Count,
-        //        Result = _mapper.Map<List<KorisnikM>>(uceniciWithAttendance)
-        //    };
+                // Set the Razred name for the student, or "N/A" if no Razred exists
+                ucenik.NazivRazreda = razred?.Naziv ?? "N/A";
+            }
 
-        //    return result;
-        //}
+            // Map the result to KorisnikM and return the paged result
+            PagedResult<KorisnikM> result = new PagedResult<KorisnikM>
+            {
+                Count = uceniciWithAttendance.Count,
+                Result = _mapper.Map<List<KorisnikM>>(uceniciWithAttendance.Select(ud => ud.Korisnik).ToList())
+            };
 
-        //public override async Task<KorisnikM> GetById(int id)
-        //{
-        //    var ucenik = await _dbContext.Set<Korisnik>()
-        //        .Where(k => k.Id == id)
-        //        .FirstOrDefaultAsync();
+            return result;
+        }
 
-        //    if (ucenik == null)
-        //    {
-        //        throw new Exception("Korisnik not found");
-        //    }
 
-        //    var attendanceRecords = _dbContext.Prisustvo
-        //        .Where(p => p.KorisnikId == ucenik.Id)
-        //        .ToList();
 
-        //    int totalClasses = attendanceRecords.Count;
-        //    if (totalClasses > 0)
-        //    {
-        //        int presentCount = attendanceRecords.Count(p => p.Prisutan == true);
-        //        double attendancePercentage = (double)presentCount / totalClasses * 100;
-        //        ucenik.Prisustvo = Math.Round(attendancePercentage, 0); // Round to 0 decimal places
-        //    }
-        //    else
-        //    {
-        //        ucenik.Prisustvo = 0;
-        //    }
+        public override async Task<KorisnikM> GetById(int id)
+        {
+            // Query the ucenik through a left join to include Korisnik even if there's no matching RazredKorisnik entry
+            var ucenikQuery = await _dbContext.Set<Korisnik>()
+                .GroupJoin(_dbContext.RazredKorisnik,
+                    k => k.Id,
+                    kr => kr.KorisnikId,
+                    (k, krGroup) => new { Korisnik = k, KorisnikRazredi = krGroup })
+                .SelectMany(
+                    kKr => kKr.KorisnikRazredi.DefaultIfEmpty(),
+                    (kKr, kr) => new { kKr.Korisnik, KorisnikRazred = kr })
+                .GroupJoin(_dbContext.Razred,
+                    kKr => kKr.KorisnikRazred.RazredId,
+                    r => r.Id,
+                    (kKr, rGroup) => new { kKr.Korisnik, Razred = rGroup.FirstOrDefault() })
+                .Where(k => k.Korisnik.Id == id)
+                .FirstOrDefaultAsync();
 
-        //    var zadace = _dbContext.Zadaca
-        //        .Where(z => z.KorisnikId == ucenik.Id)
-        //        .Include(z => z.Ocjene)
-        //        .ToList();
+            if (ucenikQuery == null)
+            {
+                throw new Exception("Korisnik not found");
+            }
 
-        //    if (zadace.Count > 0)
-        //    {
-        //        double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena);
-        //        ucenik.Prosjek = Math.Round(averageGrade, 1); // Round to 1 decimal place
-        //    }
-        //    else
-        //    {
-        //        ucenik.Prosjek = 0;
-        //    }
+            var ucenik = ucenikQuery.Korisnik;
+            var razred = ucenikQuery.Razred;
 
-        //    var razred = await _dbContext.Razred
-        //        .Where(r => r.Id == ucenik.RazredId)
-        //        .FirstOrDefaultAsync();
+            // Fetch attendance records for the specific Ucenik and Razred if Razred exists
+            var attendanceRecords = razred != null
+                ? await _dbContext.Prisustvo
+                    .Where(p => p.KorisnikId == ucenik.Id && p.RazredId == razred.Id)
+                    .ToListAsync()
+                : new List<Prisustvo>(); // No Razred means no attendance records
 
-        //    ucenik.NazivRazreda = razred?.Naziv; // Set Razred name if it exists, otherwise null
+            int totalClasses = attendanceRecords.Count;
+            if (totalClasses > 0)
+            {
+                int presentCount = attendanceRecords.Count(p => p.Prisutan == true);
+                double attendancePercentage = (double)presentCount / totalClasses * 100;
+                ucenik.Prisustvo = Math.Round(attendancePercentage, 0); // Round to 0 decimal places
+            }
+            else
+            {
+                ucenik.Prisustvo = 0;
+            }
 
-        //    var result = _mapper.Map<KorisnikM>(ucenik);
+            // Fetch zadace (assignments) for the Ucenik's Razred to calculate the average grade if Razred exists
+            var zadace = razred != null
+                ? await _dbContext.Zadaca
+                    .Where(z => z.RazredId == razred.Id && z.KorisnikId == ucenik.Id)
+                    .Include(z => z.Ocjene)
+                    .ToListAsync()
+                : new List<Zadaca>(); // No Razred means no zadace records
 
-        //    return result;
-        //}
+            if (zadace.Count > 0)
+            {
+                double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena); // Assuming Ocjene has a property 'Ocjena'
+                ucenik.Prosjek = Math.Round(averageGrade, 1); // Round to 1 decimal place
+            }
+            else
+            {
+                ucenik.Prosjek = 0; // No grades available
+            }
+
+            ucenik.NazivRazreda = razred?.Naziv ?? "N/A"; // Set Razred name if it exists, otherwise "N/A"
+            ucenik.IdRazreda = razred?.Id ?? 0;
+
+            var result = _mapper.Map<KorisnikM>(ucenik);
+
+            return result;
+        }
+
 
 
     }
