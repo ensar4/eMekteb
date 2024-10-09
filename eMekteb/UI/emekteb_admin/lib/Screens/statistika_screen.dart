@@ -38,7 +38,7 @@ class _ProfilInfoState extends State<Statistika> {
   bool isSortAsc = false;
 
 
-  late AkademskagodinaProvider _godinaProvider;
+  late AkademskagodinaProvider _akademskaGodinaProvider;
   String dropdownValue2 = '1';
   SearchResult<AkademskaGodina>? listaGodina;
   int ukupnoGodina = 1;
@@ -54,7 +54,7 @@ class _ProfilInfoState extends State<Statistika> {
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
     _mektebProvider = context.read<MektebProvider>();
-    _godinaProvider = context.read<AkademskagodinaProvider>();
+    _akademskaGodinaProvider = context.read<AkademskagodinaProvider>();
     _medzlisProvider = context.read<MedzlisProvider>();
     await fetchDataMedzlis();
     await fetchDataMektebs();
@@ -94,7 +94,7 @@ class _ProfilInfoState extends State<Statistika> {
         filteredListGodine.clear();
       });
 
-      var data = await _godinaProvider.get(page: currentPage, pageSize: numPages, sort: isSortAsc);
+      var data = await _akademskaGodinaProvider.get(page: currentPage, pageSize: numPages, sort: isSortAsc);
 
       setState(() {
         if (listaGodina == null) {
@@ -344,7 +344,6 @@ class _ProfilInfoState extends State<Statistika> {
       ),
     );
   }
-
   Widget buttonGodinas() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),

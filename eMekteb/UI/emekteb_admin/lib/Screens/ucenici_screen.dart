@@ -32,8 +32,6 @@ class _ProfilInfoState extends State<Ucenici> {
   String dropdownValue = 'Prosjek';
   String dropdownValue2 = 'Prisustvo';
   String dropdownValue3 = 'Nivo';
-    // String dropdownValue4 = '1';
-  //List<String> mektebNames = [];
 
   SearchResult<Ucenik>? listaUcenika;
   SearchResult<Mekteb>? listaMekteba;
@@ -41,8 +39,8 @@ class _ProfilInfoState extends State<Ucenici> {
   List<Mekteb> filteredListMektebs = [];
   List<Ucenik> filteredList = [];
   TextEditingController searchController = TextEditingController();
-  int currentPage = 1; // Track the current page
-  int numPages = 12; // Adjust the page size according to your backend configuration
+  int currentPage = 1;
+  int numPages = 12;
   bool isLoading = false;
   bool isSortAsc = false;
   int ukupnoUcenika = 1;
@@ -83,17 +81,12 @@ class _ProfilInfoState extends State<Ucenici> {
     }
   }
 
-// void filterStudentsByMekteb(int mektebId) {
-//   setState(() {
-//     filteredList = filteredList.where((student) => student.mektebId == mektebId).toList();
-//   });
-// }
+
 
   Future<void> fetchDataMektebs({String? filter}) async {
     if (!isLoading) {
       setState(() {
         isLoading = true;
-        // Clear existing data when the filter changes
         listaMekteba = null;
         filteredList.clear();
       });
@@ -113,7 +106,6 @@ class _ProfilInfoState extends State<Ucenici> {
       });
     }
   }
-
 
 
   @override
@@ -203,7 +195,6 @@ class _ProfilInfoState extends State<Ucenici> {
           const SizedBox(
             width: 15,
           ),
-          //GetByMekteb(),
           const SizedBox(
             width: 15,
           ),
@@ -308,7 +299,7 @@ class _ProfilInfoState extends State<Ucenici> {
             filterByNivo(dropdownValue3);
           });
         },
-        items: ['Nivo', 'Prvi', 'Drugi', 'Treći', 'Sufara']
+        items: ['Nivo', 'I nivo', 'II nivo', 'III nivo', 'Sufara', 'Tedžvid', 'Hatma']
             .map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -318,38 +309,6 @@ class _ProfilInfoState extends State<Ucenici> {
       ),
     );
   }
- //Widget GetByMekteb() {
- //  return Container(
- //    padding: EdgeInsets.symmetric(horizontal: 12),
- //    height: 36,
- //    decoration: BoxDecoration(
- //      color: Colors.blueGrey[50],
- //      border: Border.all(color: Colors.black),
- //      borderRadius: BorderRadius.all(Radius.circular(4.0)),
- //    ),
- //    child: DropdownButton<String>(
- //      value: dropdownValue4,
- //      icon: const Icon(Icons.arrow_drop_down),
- //      elevation: 16,
- //      style: const TextStyle(color: Colors.black),
- //      underline: Container(),
- //      onChanged: (String? value) {
- //        setState(() {
- //          dropdownValue4 = value!;
- //          filterStudentsByMekteb(int.parse(dropdownValue4!)); // Parse the ID and filter students
- //        });
- //      },
- //      items: filteredListMektebs.map((item) {
- //        return DropdownMenuItem<String>(
- //          value: item.id.toString(), // Store Mekteb ID as value
- //          child: Text(item.naziv.toString()), // Display Mekteb name
- //        );
- //      }).toList(),
- //    ),
- //  );
- //}
-
-
 
   Widget SearchByName(){
     return Container(

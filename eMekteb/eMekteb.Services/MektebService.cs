@@ -20,6 +20,51 @@ namespace eMekteb.Services
         }
 
 
+        public override async Task<MektebM> Insert(MektebInsert insert)
+        {
+            // Call the base insert method to add the new Mekteb
+            var mekteb = await base.Insert(insert);
+
+            // Get the most recent academic year
+            var latestAcademicYear = await _dbContext.AkademskaGodina
+                .OrderByDescending(ag => ag.DatumPocetka)
+                .FirstOrDefaultAsync();
+
+            if (latestAcademicYear != null)
+            {
+                // List of razredi to be added
+                var razredi = new List<string> { "I nivo", "II nivo", "III nivo", "Sufara", "Tedžvid", "Hatma" };
+
+                // Insert new Razredi and associate them with the most recent academic year
+                foreach (var nazivRazreda in razredi)
+                {
+                    var razred = new Razred
+                    {
+                        Naziv = nazivRazreda,
+                        MektebId = mekteb.Id
+                    };
+
+                    _dbContext.Razred.Add(razred);
+                    await _dbContext.SaveChangesAsync();
+
+                    var razredAkademska = new AkademskaRazred
+                    {
+                        RazredId = razred.Id,
+                        AkademskaGodinaId = latestAcademicYear.Id
+                    };
+
+                    _dbContext.AkademskaRazred.Add(razredAkademska);
+                }
+
+                // Save the changes for the RazredAkademska
+                await _dbContext.SaveChangesAsync();
+            }
+
+            return mekteb;
+        }
+
+
+
         public override IQueryable<Mekteb> AddFilter(IQueryable<Mekteb> query, MektebSearchObject? search)
         {
             if (!string.IsNullOrWhiteSpace(search.naziv))
@@ -38,9 +83,6 @@ namespace eMekteb.Services
                 query = query.OrderByDescending(y => y.Korisnik.Count());
 
             return base.AddFilter(query, search);
-
-            
-
         }
 
 
@@ -113,7 +155,6 @@ namespace eMekteb.Services
 
             return result;
         }
-
 
 
 
