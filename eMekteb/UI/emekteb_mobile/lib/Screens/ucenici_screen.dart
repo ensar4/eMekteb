@@ -39,10 +39,10 @@ class _ProfilInfoState extends State<Ucenici> {
     _userProvider = context.read<UserProvider>();
     _nivoProvider = context.read<RazredProvider>();
     await fetchData();
-    await fetchDataKategorije();
+    await fetchDataRazredi();
   }
 
-  Future<void> fetchDataKategorije() async {
+  Future<void> fetchDataRazredi() async {
     if (!isLoading2) {
       setState(() {
         isLoading2 = true;
@@ -51,7 +51,7 @@ class _ProfilInfoState extends State<Ucenici> {
         filteredListNivo.clear();
       });
 
-      var data = await _nivoProvider.get(page: 1, pageSize: 100);
+      var data = await _nivoProvider.getById2(_userProvider.user?.mektebId);
 
       setState(() {
         if (listaNivo == null) {
@@ -289,7 +289,7 @@ class _ProfilInfoState extends State<Ucenici> {
     final brojTelefonaController = TextEditingController(text: ucenik.telefon);
     final mailController = TextEditingController(text: ucenik.mail);
     final statusController = TextEditingController(text: ucenik.status);
-    int? nivoId = 1;
+    int? nivoId = ucenik.idRazreda;
     String? nivo = ucenik.nazivRazreda;
     final datumRodjenjaController = TextEditingController(
       text: ucenik.datumRodjenja?.toLocal().toString().split(' ')[0] ?? "",

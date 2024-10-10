@@ -12,6 +12,7 @@ Zadaca _$ZadacaFromJson(Map<String, dynamic> json) => Zadaca(
       (json['ocjeneId'] as num).toInt(),
       json['lekcija'] as String,
       (json['razredId'] as num?)?.toInt(),
+      json['nazivRazreda'] as String,
     );
 
 Map<String, dynamic> _$ZadacaToJson(Zadaca instance) => <String, dynamic>{
@@ -20,4 +21,5 @@ Map<String, dynamic> _$ZadacaToJson(Zadaca instance) => <String, dynamic>{
       'ocjeneId': instance.ocjeneId,
       'lekcija': instance.lekcija,
       'razredId': instance.razredId,
+      'nazivRazreda': instance.nazivRazreda,
     };

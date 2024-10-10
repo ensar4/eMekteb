@@ -21,6 +21,8 @@ namespace eMekteb.Services.Interfaces
         Task<bool> ChangePassword(ChangePasswordRequest request);
         Task<UcenikRoditeljResponse> CreateStudentWithParentAsync(KorisnikInsert studentInsert, KorisnikInsert parentInsert);
         Task<PagedResult<KorisnikM>> GetByRoditeljId(int roditeljId);
+        Task<PagedResult<KorisnikM>> GetUcenikHistory(int? ucenikId);
+
 
 
 

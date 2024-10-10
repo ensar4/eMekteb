@@ -140,7 +140,7 @@ class _PocetnaState extends State<Pocetna> {
   Widget gridMenu() {
     final List<Map<String, dynamic>> menuItems = [
       {'title': 'Obavijesti', 'icon': Icons.lightbulb, 'color': Colors.yellow.shade600},
-      {'title': 'Rang lista', 'icon': Icons.emoji_events, 'color': Colors.orange},
+      {'title': 'Učenici', 'icon': Icons.emoji_events, 'color': Colors.orange},
       {'title': 'Dnevnik', 'icon': Icons.book, 'color': Colors.purple.shade600},
       {'title': 'Kamp', 'icon': Icons.sports_basketball_sharp, 'color': Colors.cyan.shade400},
       {'title': 'Upis u mekteb', 'icon': Icons.app_registration, 'color': Colors.green.shade600},
@@ -171,7 +171,7 @@ class _PocetnaState extends State<Pocetna> {
                     MaterialPageRoute(builder: (context) => const ObavijestiScreen()),
                   );
                   break;
-                case 'Rang lista':
+                case 'Učenici':
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const Ucenici()),

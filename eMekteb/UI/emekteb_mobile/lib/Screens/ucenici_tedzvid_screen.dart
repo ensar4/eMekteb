@@ -20,7 +20,7 @@ class UceniciTedzvid extends StatefulWidget {
 class _UceniciTedzvidState extends State<UceniciTedzvid> {
   late UceniciProvider _uceniciProvider;
   late UserProvider _userProvider;
-  late RazredProvider _nivoProvider;
+  late RazredProvider _razredProvider;
 
   final _formKey = GlobalKey<FormState>();
   SearchResult<Ucenik>? listaUcenika;
@@ -39,12 +39,12 @@ class _UceniciTedzvidState extends State<UceniciTedzvid> {
     super.didChangeDependencies();
     _uceniciProvider = context.read<UceniciProvider>();
     _userProvider = context.read<UserProvider>();
-    _nivoProvider = context.read<RazredProvider>();
+    _razredProvider = context.read<RazredProvider>();
     await fetchData();
-    await fetchDataKategorije();
+    await fetchDataRazredi();
   }
 
-  Future<void> fetchDataKategorije() async {
+  Future<void> fetchDataRazredi() async {
     if (!isLoading2) {
       setState(() {
         isLoading2 = true;
@@ -53,7 +53,7 @@ class _UceniciTedzvidState extends State<UceniciTedzvid> {
         filteredListNivo.clear();
       });
 
-      var data = await _nivoProvider.get(page: 1, pageSize: 100);
+      var data = await _razredProvider.getById2(_userProvider.user?.mektebId);
 
       setState(() {
         if (listaNivo == null) {
@@ -293,7 +293,7 @@ class _UceniciTedzvidState extends State<UceniciTedzvid> {
     final _brojTelefonaController = TextEditingController(text: ucenik.telefon);
     final _mailController = TextEditingController(text: ucenik.mail);
     final _statusController = TextEditingController(text: ucenik.status);
-    int? nivoId = 1;
+    int? nivoId = ucenik.idRazreda;
     String? nivo = ucenik.nazivRazreda;
     final _datumRodjenjaController = TextEditingController(
       text: ucenik.datumRodjenja?.toLocal().toString().split(' ')[0] ?? "",
@@ -425,7 +425,9 @@ class _UceniciTedzvidState extends State<UceniciTedzvid> {
                     value: filteredListNivo.any((item) => item.id.toString() == nivo) ? nivo : null, // Set value if it exists in the list
                     onChanged: (newValue) {
                       setState(() {
-                        nivo = newValue; // Update the selected category
+                        nivo = newValue;
+                        nivoId = filteredListNivo.firstWhere((item) => item.id.toString() == newValue).id;
+
                       });
                     },
                     items: filteredListNivo.map<DropdownMenuItem<String>>((nivoItem) {

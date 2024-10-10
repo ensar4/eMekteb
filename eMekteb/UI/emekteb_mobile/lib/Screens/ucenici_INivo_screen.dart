@@ -41,10 +41,11 @@ class _UceniciINivoState extends State<UceniciINivo> {
     _userProvider = context.read<UserProvider>();
     _nivoProvider = context.read<RazredProvider>();
     await fetchData();
-    await fetchDataKategorije();
+    await fetchDataRazredi();
   }
 
-  Future<void> fetchDataKategorije() async {
+
+  Future<void> fetchDataRazredi() async {
     if (!isLoading2) {
       setState(() {
         isLoading2 = true;
@@ -53,7 +54,7 @@ class _UceniciINivoState extends State<UceniciINivo> {
         filteredListNivo.clear();
       });
 
-      var data = await _nivoProvider.get(page: 1, pageSize: 100);
+      var data = await _nivoProvider.getById2(_userProvider.user?.mektebId);
 
       setState(() {
         if (listaNivo == null) {
@@ -293,7 +294,7 @@ class _UceniciINivoState extends State<UceniciINivo> {
     final _brojTelefonaController = TextEditingController(text: ucenik.telefon);
     final _mailController = TextEditingController(text: ucenik.mail);
     final _statusController = TextEditingController(text: ucenik.status);
-    int? nivoId = 1;
+    int? nivoId = ucenik.idRazreda;
     String? nivo = ucenik.nazivRazreda;
     final _datumRodjenjaController = TextEditingController(
       text: ucenik.datumRodjenja?.toLocal().toString().split(' ')[0] ?? "",
@@ -425,7 +426,9 @@ class _UceniciINivoState extends State<UceniciINivo> {
                     value: filteredListNivo.any((item) => item.id.toString() == nivo) ? nivo : null, // Set value if it exists in the list
                     onChanged: (newValue) {
                       setState(() {
-                        nivo = newValue; // Update the selected category
+                        nivo = newValue;
+                        nivoId = filteredListNivo.firstWhere((item) => item.id.toString() == newValue).id;
+
                       });
                     },
                     items: filteredListNivo.map<DropdownMenuItem<String>>((nivoItem) {

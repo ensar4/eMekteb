@@ -13,6 +13,7 @@ Prisustvo _$PrisustvoFromJson(Map<String, dynamic> json) => Prisustvo(
       (json['casId'] as num?)?.toInt(),
       (json['korisnikId'] as num?)?.toInt(),
       (json['razredId'] as num?)?.toInt(),
+      json['nazivRazreda'] as String,
     );
 
 Map<String, dynamic> _$PrisustvoToJson(Prisustvo instance) => <String, dynamic>{
@@ -22,4 +23,5 @@ Map<String, dynamic> _$PrisustvoToJson(Prisustvo instance) => <String, dynamic>{
       'korisnikId': instance.korisnikId,
       'casId': instance.casId,
       'razredId': instance.razredId,
+      'nazivRazreda': instance.nazivRazreda,
     };

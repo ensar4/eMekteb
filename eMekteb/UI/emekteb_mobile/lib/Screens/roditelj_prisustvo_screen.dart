@@ -44,13 +44,13 @@ class _RoditeljPrisustvoState extends State<RoditeljPrisustvoScreen> {
     super.didChangeDependencies();
     _UserProvider = context.read<UserProvider>();
     _prisustvoProvider = context.read<PrisustvoProvider>();
-     fetchDataZadace();
+     fetchDataPrisustvo();
 
 
 
   }
 
-  Future<void> fetchDataZadace({String? filter}) async {
+  Future<void> fetchDataPrisustvo({String? filter}) async {
     if (!isLoading) {
       setState(() {
         isLoading = true;

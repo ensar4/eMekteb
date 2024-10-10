@@ -41,26 +41,18 @@ class _RoditeljPocetnaState extends State<RoditeljPocetna> {
     super.didChangeDependencies();
     _userProvider = context.read<UserProvider>();
     _slikaProvider = context.read<SlikaProvider>();
-
     if (_userProvider.user == null) {
       _userProvider.getKorisnik(Korisnik.id).then((_) {
-        fetchData(_userProvider.user?.id);
         fetchDataUcenici(_userProvider.user?.id);
+
       });
     } else {
-      fetchData(_userProvider.user?.id);
       fetchDataUcenici(_userProvider.user?.id);
+
     }
+
   }
 
-  Future<void> fetchData(int? id) async {
-      SearchResult<dynamic> result = await _slikaProvider.getById2(id);
-      if (result.result.isNotEmpty) {
-        setState(() {
-          slikaBytes = result.result[0].slikaBytes;
-        });
-      }
-  }
 
   Future<void> fetchDataUcenici(int? id) async {
     setState(() {

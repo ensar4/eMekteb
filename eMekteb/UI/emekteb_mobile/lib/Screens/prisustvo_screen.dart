@@ -7,6 +7,7 @@ import 'package:emekteb_mobile/providers/prisustvo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:collection/collection.dart';
 
 import '../models/searches/search_result.dart';
 import '../providers/user_provider.dart';
@@ -30,6 +31,7 @@ class _PrisustvoState extends State<PrisustvoScreen> {
   int numPages = 12;
   bool isLoading = false;
   int ukupno = 1;
+  Map<String, bool> isExpandedRazred = {};
   bool isExpanded = false;
 
   SearchResult<Prisustvo>? listaPrisustva;
@@ -43,14 +45,14 @@ class _PrisustvoState extends State<PrisustvoScreen> {
 
     if (_UserProvider.user == null) {
       _UserProvider.getKorisnik(Korisnik.id).then((_) {
-        fetchDataZadace();
+        fetchDataPrisustvo();
       });
     } else {
-      fetchDataZadace();
+      fetchDataPrisustvo();
     }
   }
 
-  Future<void> fetchDataZadace({String? filter}) async {
+  Future<void> fetchDataPrisustvo({String? filter}) async {
     if (!isLoading) {
       setState(() {
         isLoading = true;
@@ -104,88 +106,107 @@ class _PrisustvoState extends State<PrisustvoScreen> {
     );
   }
 
+
   Widget prisustvoWidget() {
     final screenWidth = MediaQuery.of(context).size.width;
+
+    // Group the filteredList by nazivRazreda
+    var groupedByRazred = groupBy(filteredList, (uspjeh) => uspjeh.nazivRazreda);
+
     return Padding(
       padding: const EdgeInsets.only(left: 30, right: 30, top: 30),
-      child: Container(
-        padding: EdgeInsets.all(22),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10,
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            // Dropdown Header
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  isExpanded = !isExpanded;
-                });
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "${_UserProvider.user!.nazivRazreda.toString()} - prisustvo",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      child: Column(
+        children: groupedByRazred.entries.map((entry) {
+          String nazivRazreda = entry.key;
+          List prisustvoForRazred = entry.value;
+
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 20.0), // Space between Razreds
+            child: Container(
+              padding: EdgeInsets.all(22),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 10,
                   ),
-                  Icon(isExpanded
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down),
+                ],
+              ),
+              child: Column(
+                children: [
+                  // Dropdown Header for each Razred
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isExpandedRazred[nazivRazreda] =
+                        !(isExpandedRazred[nazivRazreda] ?? false);
+                      });
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "$nazivRazreda - prisustvo",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        Icon(isExpandedRazred[nazivRazreda] == true
+                            ? Icons.keyboard_arrow_up
+                            : Icons.keyboard_arrow_down),
+                      ],
+                    ),
+                  ),
+
+                  // Conditional Expanded ListView for showing items for this Razred
+                  if (isExpandedRazred[nazivRazreda] == true)
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: prisustvoForRazred.length,
+                      itemBuilder: (context, index) {
+                        var uspjeh = prisustvoForRazred[index];
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Display date and attendance status
+                              Row(
+                                children: [
+                                  Text(
+                                    DateFormat('d.M.yyyy')
+                                        .format(uspjeh.datum ?? DateTime.now()),
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    (uspjeh.prisutan == true)
+                                        ? 'Prisutan'
+                                        : 'Odsutan',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: (uspjeh.prisutan == true)
+                                          ? Colors.green
+                                          : Colors.red,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Divider(color: Colors.grey, thickness: 2),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                 ],
               ),
             ),
-            // Conditional Expanded ListView for showing items
-            if (isExpanded)
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: filteredList.length,
-                itemBuilder: (context, index) {
-                  var uspjeh = filteredList[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Lekcija name
-                        Row(
-                          children: [
-                            Text(
-                              DateFormat('d.M.yyyy')
-                                  .format(uspjeh.datum ?? DateTime.now()),
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            Spacer(),
-                            Text(
-                              (uspjeh.prisutan == true)
-                                  ? 'Prisutan'
-                                  : 'Odsutan',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: (uspjeh.prisutan == true)
-                                    ? Colors.green
-                                    : Colors.red,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Divider(color: Colors.grey, thickness: 2),
-                      ],
-                    ),
-                  );
-                },
-              ),
-          ],
-        ),
+          );
+        }).toList(),
       ),
     );
   }

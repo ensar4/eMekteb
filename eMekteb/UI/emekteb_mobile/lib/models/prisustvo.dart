@@ -11,6 +11,7 @@ class Prisustvo{
   int? korisnikId;
   int? casId;
   int? razredId;
+  String nazivRazreda;
 
 
   Prisustvo(
@@ -19,7 +20,8 @@ class Prisustvo{
       this.datum,
       this.casId,
       this.korisnikId,
-      this.razredId
+      this.razredId,
+      this.nazivRazreda
       );
   factory Prisustvo.fromJson(Map<String, dynamic> json) => _$PrisustvoFromJson(json);
 

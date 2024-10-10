@@ -1,24 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:emekteb_mobile/Screens/kamp_details_screen.dart';
-import 'package:emekteb_mobile/Screens/kamp_insert_screen.dart';
-import 'package:emekteb_mobile/Screens/lekcija_details_screen.dart';
-import 'package:emekteb_mobile/Screens/lekcija_insert_screen.dart';
 import 'package:emekteb_mobile/Widgets/master_screen.dart';
-import 'package:emekteb_mobile/models/dodatna_lekcija.dart';
 import 'package:emekteb_mobile/models/korisnik.dart';
-import 'package:emekteb_mobile/providers/dodatnalekcija_provider.dart';
-import 'package:emekteb_mobile/providers/kamp_provider.dart';
 import 'package:emekteb_mobile/providers/zadaca_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/searches/search_result.dart';
-import '../models/kamp.dart';
-import '../models/user.dart';
 import '../models/zadaca.dart';
 import '../providers/user_provider.dart';
 
@@ -121,8 +110,6 @@ class _ZadacaState extends State<ZadacaScreen> {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: Column(children: [
-        // Add the 'omiljene' button to the UI
-       // omiljene(),
         Container(
           width: screenWidth * 0.9,
           height: screenHeigh * 0.7,
@@ -161,7 +148,7 @@ class _ZadacaState extends State<ZadacaScreen> {
                                   ),
                                 ],
                               ), Text(
-                                _UserProvider.user?.nazivRazreda.toString() ?? "N/A",
+                                zadaca.nazivRazreda,
                                 style: const TextStyle(
                                   fontSize: 14.0,
                                 ),

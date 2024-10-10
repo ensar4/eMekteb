@@ -39,6 +39,13 @@ namespace eMekteb.Controllers
             return await service1.GetUcenici(MektebId);
         }
 
+        [HttpGet("/UcenikHistory/{ucenikId}")]
+        public async Task<PagedResult<KorisnikM>> GetUceniHistory(int? ucenikId)
+        {
+
+            return await service1.GetUcenikHistory(ucenikId);
+        }
+
         [HttpGet("/Mualimi")]
         public async Task<PagedResult<KorisnikM>> GetMualimi(int? MektebId)
         {

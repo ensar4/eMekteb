@@ -4,6 +4,8 @@ import 'package:emekteb_mobile/providers/base_provider.dart';
 import 'package:emekteb_mobile/providers/razred_korisnik_provider.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/searches/search_result.dart';
+
 class UceniciProvider extends BaseProvider<Ucenik>{
   UceniciProvider() : super("Ucenici");
 
@@ -13,6 +15,43 @@ Ucenik fromJson(data) {
     // TODO: implement fromJson
     return Ucenik.fromJson(data);
   }
+
+  Future<SearchResult<Ucenik>> getUcenikHistory(int? id) async {
+    var url = "$baseOfUrl""UcenikHistory/$id";
+
+    var uri = Uri.parse(url);
+    var headers = getHeaders();
+
+    var response = await http.get(uri, headers: headers);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      // Check if the JSON contains the "result" and "count" fields
+      if (data is! Map<String, dynamic> || !data.containsKey('result')) {
+        throw Exception("Unexpected JSON format");
+      }
+
+      var result = SearchResult<Ucenik>();
+
+      // Get the list from the "result" field
+      var resultList = data['result'];
+
+      if (resultList is List) {
+        for (var itemData in resultList) {
+          var item = fromJson(itemData);
+          result.result.add(item);
+        }
+      }
+
+      result.count = data['count'] ?? result.result.length;
+
+      return result;
+    } else {
+      throw Exception("Error with response");
+    }
+  }
+
 
   Future<bool> insert(
       String ime,
@@ -149,7 +188,6 @@ Ucenik fromJson(data) {
     }
   }
 
-
   Future<bool> update(
       int? id,
       String ime,
@@ -167,6 +205,7 @@ Ucenik fromJson(data) {
     final url = Uri.parse('$baseOfUrl''Korisnik/$id');
     final headers = getHeaders();
 
+    // First update the Ucenik data
     final response = await http.put(
       url,
       headers: headers,
@@ -181,15 +220,22 @@ Ucenik fromJson(data) {
         'datumRodjenja': datumRodjenja.toIso8601String(),
         'imeRoditelja': imeRoditelja,
         'mektebId': mektebId,
-        'razredId': razredId,
       }),
     );
 
     if (response.statusCode == 200) {
-      return true;
+      // If the Ucenik update is successful, update RazredKorisnik table
+      final razredKorisnikProvider = RazredKorisnikProvider();
+      DateTime currentDate = DateTime.now();
+
+      bool razredKorisnikUpdated = await razredKorisnikProvider.insert(id, razredId, currentDate);
+
+      return razredKorisnikUpdated;
     } else {
+      print(url);
       return false;
     }
   }
+
 
 }

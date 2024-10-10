@@ -1,4 +1,6 @@
+import 'package:emekteb_mobile/Screens/obavijesti_screen.dart';
 import 'package:emekteb_mobile/Screens/pocetna_screen.dart';
+import 'package:emekteb_mobile/Screens/postavke_screen.dart';
 import 'package:emekteb_mobile/Screens/roditelj_pocetna_screen.dart';
 import 'package:emekteb_mobile/Screens/ucenik_pocetna_screen.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +104,7 @@ class LoginPage extends StatelessWidget {
                             } else if (Korisnik.uloge.contains("Roditelj")) {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                  builder: (context) => const RoditeljPocetna(),
+                                  builder: (context) => const ObavijestiScreen(),
                                 ),
                               );
                             }
