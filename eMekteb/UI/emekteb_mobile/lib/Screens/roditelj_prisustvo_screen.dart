@@ -7,7 +7,7 @@ import 'package:emekteb_mobile/providers/prisustvo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
+import 'package:collection/collection.dart';
 import '../models/searches/search_result.dart';
 import '../models/user.dart';
 import '../providers/user_provider.dart';
@@ -35,6 +35,7 @@ class _RoditeljPrisustvoState extends State<RoditeljPrisustvoScreen> {
   bool isLoading = false;
   int ukupno = 1;
   bool isExpanded = false;
+  Map<String, bool> isExpandedRazred = {};
 
   SearchResult<Prisustvo>? listaPrisustva;
   List<Prisustvo> filteredList = [];
@@ -95,100 +96,115 @@ class _RoditeljPrisustvoState extends State<RoditeljPrisustvoScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          prisustvoWidget(),
           percents(
             prisustvoPercentage: widget.ucenik?.prisustvo, // Provide the actual value here
           ),
+          prisustvoWidget(),
         ],
       ),
     );
   }
 
+
   Widget prisustvoWidget() {
     final screenWidth = MediaQuery.of(context).size.width;
+    var groupedByRazred = groupBy(filteredList, (uspjeh) => uspjeh.nazivRazreda);
+
     return Padding(
       padding: const EdgeInsets.only(left: 30, right: 30, top: 30),
-      child: Container(
-        padding: EdgeInsets.all(22),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10,
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            // Dropdown Header
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  isExpanded = !isExpanded;
-                });
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "${widget.ucenik?.nazivRazreda.toString()} - prisustvo",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      child: Column(
+        children: groupedByRazred.entries.map((entry) {
+          String? nazivRazreda = entry.key;
+          List prisustvoForRazred = entry.value;
+
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: Container(
+              padding: EdgeInsets.all(22),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 10,
                   ),
-                  Icon(isExpanded
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down),
+                ],
+              ),
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isExpandedRazred[nazivRazreda ?? ''] = !(isExpandedRazred[nazivRazreda ?? ''] ?? false);
+                      });
+                    },
+
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "$nazivRazreda - prisustvo",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        Icon(isExpandedRazred[nazivRazreda] == true
+                            ? Icons.keyboard_arrow_up
+                            : Icons.keyboard_arrow_down),
+                      ],
+                    ),
+                  ),
+                  if (isExpandedRazred[nazivRazreda] == true)
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: prisustvoForRazred.length,
+                      itemBuilder: (context, index) {
+                        var uspjeh = prisustvoForRazred[index];
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Display date and attendance status
+                              Row(
+                                children: [
+                                  Text(
+                                    DateFormat('d.M.yyyy')
+                                        .format(uspjeh.datum ?? DateTime.now()),
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    (uspjeh.prisutan == true)
+                                        ? 'Prisutan'
+                                        : 'Odsutan',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: (uspjeh.prisutan == true)
+                                          ? Colors.green
+                                          : Colors.red,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Divider(color: Colors.grey, thickness: 2),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                 ],
               ),
             ),
-            // Conditional Expanded ListView for showing items
-            if (isExpanded)
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: filteredList.length,
-                itemBuilder: (context, index) {
-                  var uspjeh = filteredList[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Lekcija name
-                        Row(
-                          children: [
-                            Text(
-                              DateFormat('d.M.yyyy')
-                                  .format(uspjeh.datum ?? DateTime.now()),
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            Spacer(),
-                            Text(
-                              (uspjeh.prisutan == true)
-                                  ? 'Prisutan'
-                                  : 'Odsutan',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: (uspjeh.prisutan == true)
-                                    ? Colors.green
-                                    : Colors.red,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Divider(color: Colors.grey, thickness: 2),
-                      ],
-                    ),
-                  );
-                },
-              ),
-          ],
-        ),
+          );
+        }).toList(),
       ),
     );
   }
+
 
   Widget percents({required prisustvoPercentage}) {
     num odsustvoPercentage =
@@ -209,49 +225,67 @@ class _RoditeljPrisustvoState extends State<RoditeljPrisustvoScreen> {
             ),
           ],
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Column(
           children: [
-            // Green Checkmark
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                CircleAvatar(
-                  radius: 25,
-                  backgroundColor: Colors.green.withOpacity(0.2),
-                  child: Icon(Icons.check, color: Colors.green, size: 30),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  '${prisustvoPercentage.toStringAsFixed(0)}%', // Showing the percentage
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
+                // Green Checkmark
+                Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundColor: Colors.green.withOpacity(0.2),
+                      child: Icon(Icons.check, color: Colors.green, size: 30),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      '${prisustvoPercentage.toStringAsFixed(0)}%', // Showing the percentage
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
 
-            // Red Cross
-            Column(
-              children: [
-                CircleAvatar(
-                  radius: 25,
-                  backgroundColor: Colors.red.withOpacity(0.2),
-                  child: Icon(Icons.close, color: Colors.red, size: 30),
+                  ],
                 ),
-                SizedBox(height: 8),
-                Text(
-                  '${odsustvoPercentage.toStringAsFixed(0)}%', // Showing the absence percentage
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+
+                // Red Cross
+                Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundColor: Colors.red.withOpacity(0.2),
+                      child: Icon(Icons.close, color: Colors.red, size: 30),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      '${odsustvoPercentage.toStringAsFixed(0)}%', // Showing the absence percentage
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
+
               ],
             ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Text(
+                  "Trenutna godina",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black,
+                ),
+              ),
+            )
           ],
+
         ),
       ),
     );

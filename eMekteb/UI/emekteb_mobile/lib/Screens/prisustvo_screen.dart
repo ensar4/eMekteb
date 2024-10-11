@@ -117,7 +117,7 @@ class _PrisustvoState extends State<PrisustvoScreen> {
       padding: const EdgeInsets.only(left: 30, right: 30, top: 30),
       child: Column(
         children: groupedByRazred.entries.map((entry) {
-          String nazivRazreda = entry.key;
+          String? nazivRazreda = entry.key;
           List prisustvoForRazred = entry.value;
 
           return Padding(
@@ -140,10 +140,10 @@ class _PrisustvoState extends State<PrisustvoScreen> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        isExpandedRazred[nazivRazreda] =
-                        !(isExpandedRazred[nazivRazreda] ?? false);
+                        isExpandedRazred[nazivRazreda ?? ''] = !(isExpandedRazred[nazivRazreda ?? ''] ?? false);
                       });
                     },
+
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

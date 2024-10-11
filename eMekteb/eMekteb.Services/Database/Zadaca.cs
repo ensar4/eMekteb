@@ -11,6 +11,8 @@ namespace eMekteb.Services.Database
     {
         public int Id { get; set; }
         public DateTime DatumDodjele { get; set; }
+        public string? Lekcija { get; set; }
+        public string? ZaZadacu { get; set; }
 
         [ForeignKey("Korisnik")]
         public int KorisnikId { get; set; }
@@ -19,7 +21,7 @@ namespace eMekteb.Services.Database
         [ForeignKey("Ocjene")]
         public int OcjeneId { get; set; }
         public virtual Ocjene? Ocjene { get; set; }
-        public string? Lekcija { get; set; }
+
 
 
         [ForeignKey("Razred")]

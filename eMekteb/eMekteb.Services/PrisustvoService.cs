@@ -76,7 +76,6 @@ namespace eMekteb.Services
             return result;
         }
 
-
         public async Task<PagedResult<PrisustvoM>> GetByKorisnikId(int korisnikId)
         {
             var items = await _dbContext.Set<Prisustvo>()

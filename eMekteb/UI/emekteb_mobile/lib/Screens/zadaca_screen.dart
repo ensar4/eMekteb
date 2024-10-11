@@ -138,7 +138,7 @@ class _ZadacaState extends State<ZadacaScreen> {
                               Row(
                                 children: [
                                   Text(
-                                    zadaca.lekcija,
+                                    zadaca.zaZadacu ?? "",
                                     style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.normal,

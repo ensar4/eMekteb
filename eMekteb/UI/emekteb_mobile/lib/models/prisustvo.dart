@@ -11,7 +11,7 @@ class Prisustvo{
   int? korisnikId;
   int? casId;
   int? razredId;
-  String nazivRazreda;
+  String? nazivRazreda;
 
 
   Prisustvo(

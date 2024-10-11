@@ -2,7 +2,6 @@ import 'package:emekteb_mobile/Widgets/master_screen.dart';
 import 'package:emekteb_mobile/providers/kamp_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/user_provider.dart';
 
 class KampInsert extends StatefulWidget {
@@ -65,10 +64,10 @@ class _KampInsertState extends State<KampInsert> {
 
   Widget divider() {
     return SizedBox(
-      width: 280, // Set the desired width here
+      width: 280,
       child: Divider(
-        color: Colors.cyan.shade400, // You can change the color to your preference
-        thickness: 3, // Adjust the thickness as needed
+        color: Colors.cyan.shade400,
+        thickness: 3,
       ),
     );
   }

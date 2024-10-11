@@ -1,12 +1,10 @@
 import 'package:emekteb_mobile/Widgets/master_screen.dart';
-import 'package:emekteb_mobile/models/mekteb.dart';
 import 'package:emekteb_mobile/providers/ucenici_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/searches/search_result.dart';
 import '../models/ucenik.dart';
-import '../providers/mekteb_provider.dart';
 import '../providers/razred_provider.dart';
 import '../providers/user_provider.dart';
 

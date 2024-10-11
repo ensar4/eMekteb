@@ -11,7 +11,7 @@ import '../models/user.dart';
 import '../providers/ucenici_provider.dart';
 import '../providers/prisustvo_provider.dart';
 import '../providers/user_provider.dart';
-import '../providers/zadaca_provider.dart'; // Import PrisustvoProvider
+import '../providers/zadaca_provider.dart';
 
 void main() {
   runApp(const CasDetalji(
@@ -183,25 +183,32 @@ class _CasDetaljiState extends State<CasDetalji> {
 
     });
     }
+
   Future<void> _confirmSelection() async {
     bool allSuccess = true; // Track overall success
 
     for (Ucenik ucenik in filteredList) {
       bool isSelected = selectedUcenici.contains(ucenik);
+
+      bool alreadyExists = filteredListUcenici.any((existingUcenik) => existingUcenik.id == ucenik.id);
+
+      if (alreadyExists) {
+        continue;
+      }
+
       try {
         await _prisustvoProvider.insert(
-          isSelected,
-          DateTime.now(),
-          ucenik.id,
-          widget.cas?.id,
-          ucenik.idRazreda
+            isSelected,
+            DateTime.now(),
+            ucenik.id,
+            widget.cas?.id,
+            ucenik.idRazreda
         );
       } catch (error) {
-        allSuccess = false; // If any insert fails, mark as failure
+        allSuccess = false;
       }
     }
 
-    // Show a single message based on success or failure
     if (allSuccess) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Prisustvo uspješno zabilježeno.')),
@@ -213,9 +220,8 @@ class _CasDetaljiState extends State<CasDetalji> {
     }
 
     await fetchDataPrisustva();
-    await fetchDataPrisutniUcenici(); // Wait for fetchDataPrisutniUcenici to complete
+    await fetchDataPrisutniUcenici();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -437,7 +443,8 @@ class EditUcenikDialog extends StatefulWidget {
 
 class _EditUcenikDialogState extends State<EditUcenikDialog> {
   String? selectedKategorija;
-  final TextEditingController zadacaController = TextEditingController();
+  final TextEditingController lekcijaKontroler = TextEditingController();
+  final TextEditingController zadacaKontroler = TextEditingController();
   bool isLoading = false;
 
   // Initialize ZadacaProvider
@@ -456,47 +463,57 @@ class _EditUcenikDialogState extends State<EditUcenikDialog> {
         padding: const EdgeInsets.only(left: 45.0),
         child: Text('${widget.ucenik.ime} ${widget.ucenik.prezime}'),
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Lekcija: ${widget.cas?.lekcija}', style: const TextStyle(fontSize: 16),),
-          const SizedBox(height: 16),
-          DropdownButtonFormField<String>(
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Ocjena',
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Lekcija: ${widget.cas?.lekcija}', style: const TextStyle(fontSize: 16),),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Ocjena',
+              ),
+              hint: const Text('Odaberite ocjenu'),
+              value: selectedKategorija,
+              onChanged: (newValue) {
+                setState(() {
+                  selectedKategorija = newValue;
+                });
+              },
+              items: widget.filteredListKategorija
+                  .map<DropdownMenuItem<String>>((kategorija) {
+                return DropdownMenuItem<String>(
+                  value: kategorija.id.toString(),
+                  child: Text('${kategorija.ocjena}'),
+                );
+              }).toList(),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Odaberite ocjenu';
+                }
+                return null;
+              },
             ),
-            hint: const Text('Odaberite ocjenu'),
-            value: selectedKategorija,
-            onChanged: (newValue) {
-              setState(() {
-                selectedKategorija = newValue;
-              });
-            },
-            items: widget.filteredListKategorija
-                .map<DropdownMenuItem<String>>((kategorija) {
-              return DropdownMenuItem<String>(
-                value: kategorija.id.toString(),
-                child: Text('${kategorija.ocjena}'),
-              );
-            }).toList(),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Odaberite ocjenu';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: zadacaController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Zadaća',
+            const SizedBox(height: 16),
+            TextField(
+              controller: lekcijaKontroler,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Lekcija',
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            TextField(
+              controller: zadacaKontroler,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Zadaća',
+              ),
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(
@@ -524,10 +541,11 @@ class _EditUcenikDialogState extends State<EditUcenikDialog> {
 
     bool success = await _zadacaProvider.insert(
       DateTime.now(),
-      zadacaController.text,
+      lekcijaKontroler.text,
       widget.ucenik.id,
       int.tryParse(selectedKategorija ?? ''),
-      widget.ucenik.idRazreda
+      widget.ucenik.idRazreda,
+      zadacaKontroler.text
     );
 
     setState(() {
@@ -536,12 +554,12 @@ class _EditUcenikDialogState extends State<EditUcenikDialog> {
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Zadaća uspješno spašena!')),
+        const SnackBar(content: Text('Zadaća i ocjena uspješno spašene!')),
       );
-      Navigator.of(context).pop();// Close the dialog
+      Navigator.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Greška pri spremanju zadaće!')),
+        const SnackBar(content: Text('Greška pri spremanju!')),
       );
     }
   }

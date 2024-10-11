@@ -3,7 +3,6 @@ import 'package:emekteb_mobile/models/zadaca.dart';
 import 'package:emekteb_mobile/providers/base_provider.dart';
 import 'package:http/http.dart' as http;
 
-
 class ZadacaProvider extends BaseProvider<Zadaca>{
   ZadacaProvider() : super("Zadaca");
 
@@ -14,7 +13,7 @@ Zadaca fromJson(data) {
     return Zadaca.fromJson(data);
   }
 
-  Future<bool> insert(DateTime datumDodjele, String lekcija, int? korisnikId, int? ocjeneId, int? razredId) async {
+  Future<bool> insert(DateTime datumDodjele, String lekcija, int? korisnikId, int? ocjeneId, int? razredId, String zadaca) async {
     final url = Uri.parse(fullUrl);
     final headers = getHeaders();
 
@@ -27,6 +26,7 @@ Zadaca fromJson(data) {
         'ocjeneId': ocjeneId,
         'lekcija': lekcija,
         'razredId': razredId,
+        'zaZadacu': zadaca
       }),
     );
 
@@ -36,7 +36,4 @@ Zadaca fromJson(data) {
       return false;
     }
   }
-
-
-
 }

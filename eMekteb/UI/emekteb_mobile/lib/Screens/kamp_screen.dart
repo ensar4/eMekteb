@@ -25,7 +25,7 @@ class Kamps extends StatefulWidget {
 }
 
 class _ProfilInfoState extends State<Kamps> {
-  late KampProvider _KampProvider;
+  late KampProvider _kampProvider;
   late UserProvider _UserProvider;
 
   int currentPage = 1;
@@ -39,7 +39,7 @@ class _ProfilInfoState extends State<Kamps> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _KampProvider = context.read<KampProvider>();
+    _kampProvider = context.read<KampProvider>();
     _UserProvider = context.read<UserProvider>();
     if (_UserProvider.user == null) {
       _UserProvider.getKorisnik(Korisnik.id).then((_) {
@@ -54,12 +54,11 @@ class _ProfilInfoState extends State<Kamps> {
     if (!isLoading) {
       setState(() {
         isLoading = true;
-        // Clear existing data when the filter changes
         listaKamp = null;
         filteredList.clear();
       });
 
-      var data = await _KampProvider.getById2(_UserProvider.user!.mektebId);
+      var data = await _kampProvider.getById2(_UserProvider.user!.mektebId);
 
       setState(() {
         if (listaKamp == null) {
@@ -69,7 +68,6 @@ class _ProfilInfoState extends State<Kamps> {
           listaKamp!.result.addAll(data.result);
         }
         filteredList = listaKamp?.result ?? [];
-       // print(filteredList.isNotEmpty ? filteredList[0].naziv : 'No data');
         isLoading = false;
       });
     }
@@ -115,14 +113,6 @@ class _ProfilInfoState extends State<Kamps> {
         height: 500,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-         //boxShadow: [
-         //  BoxShadow(
-         //    color: Colors.grey.withOpacity(0.5),
-         //    spreadRadius: 5,
-         //    blurRadius: 7,
-         //    offset: Offset(0, 3),
-         //  ),
-         //],
         ),
         child: isLoading
             ? Center(child: CircularProgressIndicator())
@@ -166,7 +156,7 @@ class _ProfilInfoState extends State<Kamps> {
       width: 180,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.cyan.shade400, // Set the button color to orange
+          backgroundColor: Colors.cyan.shade400,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
@@ -179,7 +169,7 @@ class _ProfilInfoState extends State<Kamps> {
             ),
           );
           if (result == true) {
-            fetchData(); // Refresh data if a new kamp was added
+            fetchData();
           }
         },
         child: const Row(
@@ -196,140 +186,6 @@ class _ProfilInfoState extends State<Kamps> {
           ],
         ),
       ),
-    );
-  }
-
-  void _showCreateForm(BuildContext context, KampProvider provider) {
-    final formKey = GlobalKey<FormState>();
-    String lokacija = '';
-    String vrijemePocetka = '';
-    String info = '';
-    DateTime datumOdrzavanja = DateTime.now();
-
-    final TextEditingController datumOdrzavanjaController =
-        TextEditingController();
-
-    // Initializing the text fields with the current date values
-    datumOdrzavanjaController.text =
-        datumOdrzavanja.toLocal().toString().split(' ')[0];
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Novi kamp'),
-          content: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Godina'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Unesite godinu takmičenja';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                  },
-                ),
-                TextFormField(
-                  decoration:
-                      const InputDecoration(labelText: 'Lokacija održavanja'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Unesite lokaciju održavanja';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    lokacija = value!;
-                  },
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Vrijeme'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Unesite vrijeme početka';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    vrijemePocetka = value!;
-                  },
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Dodatni info'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Unesite dodatne informacije';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    info = value!;
-                  },
-                ),
-                TextFormField(
-                  controller: datumOdrzavanjaController,
-                  decoration: const InputDecoration(labelText: 'Datum'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Unesite datum takmičenja';
-                    }
-                    return null;
-                  },
-                  onTap: () async {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    DateTime? picked = await showDatePicker(
-                      context: context,
-                      initialDate: datumOdrzavanja,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
-                    if (picked != null && picked != datumOdrzavanja) {
-                      setState(() {
-                        datumOdrzavanja = picked;
-                        datumOdrzavanjaController.text =
-                            datumOdrzavanja.toLocal().toString().split(' ')[0];
-                      });
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: const Text('Odustani'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Spremi'),
-              onPressed: () async {
-                //if (formKey.currentState!.validate()) {
-                //  formKey.currentState!.save();
-                //  bool result = await provider.createTakmicenje(naziv, datumOdrzavanja, lokacija, vrijemePocetka, info);
-                //  if (result) {
-                //    ScaffoldMessenger.of(context).showSnackBar(
-                //      const SnackBar(content: Text('Takmičenje uspješno dodano')),
-                //    );
-                //    fetchData();
-                //    Navigator.of(context).pop();
-                //  } else {
-                //    ScaffoldMessenger.of(context).showSnackBar(
-                //      const SnackBar(content: Text('Greška pri dodavanju takmičenja')),
-                //    );
-                //  }
-                //}
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }

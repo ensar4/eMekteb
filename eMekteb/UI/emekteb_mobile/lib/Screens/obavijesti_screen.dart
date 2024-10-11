@@ -1,26 +1,15 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:emekteb_mobile/Screens/kamp_details_screen.dart';
-import 'package:emekteb_mobile/Screens/kamp_insert_screen.dart';
-import 'package:emekteb_mobile/Screens/lekcija_details_screen.dart';
-import 'package:emekteb_mobile/Screens/lekcija_insert_screen.dart';
 import 'package:emekteb_mobile/Screens/obavijest_details_screen.dart';
 import 'package:emekteb_mobile/Screens/obavijest_insert_screen.dart';
 import 'package:emekteb_mobile/Widgets/master_screen.dart';
-import 'package:emekteb_mobile/models/dodatna_lekcija.dart';
 import 'package:emekteb_mobile/models/korisnik.dart';
-import 'package:emekteb_mobile/providers/dodatnalekcija_provider.dart';
-import 'package:emekteb_mobile/providers/kamp_provider.dart';
 import 'package:emekteb_mobile/providers/obavijest_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
-
 import '../models/obavijest.dart';
 import '../models/searches/search_result.dart';
-import '../models/kamp.dart';
-import '../models/user.dart';
 import '../providers/user_provider.dart';
 
 void main() {
@@ -59,7 +48,6 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
     if (!isLoading) {
       setState(() {
         isLoading = true;
-        // Clear existing data when the filter changes
         listaObavijesti = null;
         filteredList.clear();
       });
@@ -75,7 +63,6 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
           listaObavijesti!.result.addAll(data.result);
         }
         filteredList = listaObavijesti?.result ?? [];
-        // print(filteredList.isNotEmpty ? filteredList[0].naziv : 'No data');
         isLoading = false;
       });
     }
@@ -83,9 +70,9 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
   String _getFirstThreeWords(String text) {
     List<String> words = text.split(' ');
     if (words.length <= 3) {
-      return text; // Return the full text if it has 3 or fewer words
+      return text;
     }
-    return '${words.take(3).join(' ')}...'; // Take the first 3 words and append "..."
+    return '${words.take(3).join(' ')}...';
   }
   void searchByName(String query) {
     setState(() {
@@ -148,20 +135,20 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
 
   Widget _buildSearchField() {
     return Container(
-      width: 140, // Explicit width to avoid issues in Row/Column
+      width: 140,
       height: 45,
       child: TextField(
         controller: searchController,
         onChanged: searchByName,
-        style: const TextStyle(fontSize: 14), // Smaller font size
+        style: const TextStyle(fontSize: 14),
         decoration: InputDecoration(
           hintText: "...",
-          isDense: true, // Reduces the height
-          contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16), // Custom padding
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10), // Rounded corners if desired
+            borderRadius: BorderRadius.circular(10),
           ),
-          prefixIcon: const Icon(Icons.search, size: 20), // Smaller icon size
+          prefixIcon: const Icon(Icons.search, size: 20),
         ),
       ),
     );
@@ -177,8 +164,8 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: Container(
-        width: screenWidth * 0.9, // 80% of the screen width
-        height: 500,
+        width: screenWidth * 0.9,
+        height: 550,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -354,7 +341,7 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
       width: 150,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.yellow.shade800, // Set the button color to orange
+          backgroundColor: Colors.yellow.shade800,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14.0),
           ),
@@ -367,7 +354,7 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
             ),
           );
           if (result == true) {
-            fetchData(); // Refresh data if a new kamp was added
+            fetchData();
           }
         },
         child: const Row(
@@ -476,5 +463,4 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
       ),
     );
   }
-
 }

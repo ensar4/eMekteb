@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:emekteb_mobile/Screens/ucenici_screen.dart';
 import 'package:emekteb_mobile/Widgets/master_screen.dart';
 import 'package:emekteb_mobile/models/korisnik.dart';
 import 'package:emekteb_mobile/models/ocjene.dart';
@@ -259,8 +258,6 @@ class _UspjehState extends State<UspjehScreen> {
 
   Widget ocjeneWidget() {
     final screenWidth = MediaQuery.of(context).size.width;
-
-    // Group the filteredList by nazivRazreda (Razred name)
     var groupedByRazred = groupBy(filteredList, (zadaca) => zadaca.nazivRazreda);
 
     return Padding(

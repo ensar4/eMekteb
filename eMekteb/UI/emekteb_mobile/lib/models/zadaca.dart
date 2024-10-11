@@ -9,6 +9,7 @@ class Zadaca{
   int korisnikId;
   int ocjeneId;
   String lekcija;
+  String? zaZadacu;
   int? razredId;
   String nazivRazreda;
   Zadaca(
@@ -17,7 +18,8 @@ class Zadaca{
       this.ocjeneId,
       this.lekcija,
       this.razredId,
-      this.nazivRazreda
+      this.nazivRazreda,
+      this.zaZadacu
       );
 
   factory Zadaca.fromJson(Map<String, dynamic> json) => _$ZadacaFromJson(json);

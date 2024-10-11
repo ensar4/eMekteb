@@ -27,13 +27,11 @@ namespace eMekteb.Services
                 throw new ArgumentNullException(nameof(ucenikId), "UcenikId cannot be null");
             }
 
-            // Get the latest AkademskaGodina (to exclude the current class)
             var lastAkademskaGodinaId = await _dbContext.AkademskaGodina
                 .OrderByDescending(ag => ag.Id)
                 .Select(ag => ag.Id)
                 .FirstOrDefaultAsync();
 
-            // Fetch all Razredi that the Ucenik has attended, excluding the current year
             var razrediHistory = await _dbContext.RazredKorisnik
                 .Where(kr => kr.KorisnikId == ucenikId)
                 .Join(_dbContext.Razred,
@@ -44,7 +42,7 @@ namespace eMekteb.Services
                       r => r.Razred.Id,
                       ra => ra.RazredId,
                       (r, ra) => new { r.Razred, ra.AkademskaGodinaId })
-                .Where(ra => ra.AkademskaGodinaId < lastAkademskaGodinaId) // Exclude current year
+                .Where(ra => ra.AkademskaGodinaId < lastAkademskaGodinaId) 
                 .Select(ra => new { ra.Razred.Id, ra.Razred.Naziv })
                 .Distinct().OrderByDescending(r => r.Id)  
                 .ToListAsync();
@@ -53,7 +51,6 @@ namespace eMekteb.Services
 
             foreach (var razred in razrediHistory)
             {
-                // Fetch attendance records for each Razred
                 var attendanceRecords = await _dbContext.Prisustvo
                     .Where(p => p.KorisnikId == ucenikId && p.RazredId == razred.Id)
                     .ToListAsync();
@@ -66,7 +63,6 @@ namespace eMekteb.Services
                     attendancePercentage = (double)presentCount / totalClasses * 100;
                 }
 
-                // Fetch grades for Zadace in the past Razred
                 var zadace = await _dbContext.Zadaca
                     .Where(z => z.KorisnikId == ucenikId && z.RazredId == razred.Id)
                     .Include(z => z.Ocjene)
@@ -78,19 +74,17 @@ namespace eMekteb.Services
                     averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena);
                 }
 
-                // Map the results to KorisnikM
                 var korisnikM = new KorisnikM
                 {
                     NazivRazreda = razred.Naziv,
                     IdRazreda = razred.Id,
-                    Prosjek = Math.Round(averageGrade, 1), // Rounding to 1 decimal place
-                    Prisustvo = Math.Round(attendancePercentage, 1) // Rounding to 1 decimal place
+                    Prosjek = Math.Round(averageGrade, 1), 
+                    Prisustvo = Math.Round(attendancePercentage, 1) 
                 };
 
                 resultList.Add(korisnikM);
             }
 
-            // Prepare the final result
             var result = new PagedResult<KorisnikM>
             {
                 Count = resultList.Count,
@@ -166,7 +160,7 @@ namespace eMekteb.Services
                 int totalzadace = zadace.Count;
                 if (zadace.Count > 0)
                 {
-                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena); // Assuming Ocjene has 'Ocjena'
+                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena); 
                     ucenik.Prosjek = averageGrade;
                 }
                 else
@@ -187,85 +181,7 @@ namespace eMekteb.Services
             return result;
         }
 
-        //public async Task<PagedResult<KorisnikM>> GetByRoditeljId(int roditeljId)
-        //{
-        //    var lastAkademskaGodina = await _dbContext.AkademskaGodina
-        //        .OrderByDescending(ag => ag.DatumPocetka)
-        //        .FirstOrDefaultAsync();
-
-        //    if (lastAkademskaGodina == null)
-        //    {
-        //        throw new Exception("No academic years found");
-        //    }
-
-        //    var items = await _dbContext.Korisnik
-        //        .Where(k => k.RoditeljId == roditeljId)
-        //        .Join(_dbContext.RazredKorisnik,
-        //            k => k.Id,
-        //            kr => kr.KorisnikId,
-        //            (k, kr) => new { Korisnik = k, KorisnikRazred = kr })
-        //        .Join(_dbContext.Razred,
-        //            kr => kr.KorisnikRazred.RazredId,
-        //            r => r.Id,
-        //            (kr, r) => new { kr.Korisnik, Razred = r })
-        //        .Join(_dbContext.AkademskaRazred,
-        //            r => r.Razred.Id,
-        //            agr => agr.RazredId,
-        //            (r, agr) => new { r.Korisnik, Razred = r.Razred, agr.AkademskaGodinaId })
-        //        .Where(agr => agr.AkademskaGodinaId == lastAkademskaGodina.Id)
-        //        .Select(agr => new KorisnikM
-        //        {
-        //            Id = agr.Korisnik.Id, // Assuming KorisnikM has an Id field
-        //            Ime = agr.Korisnik.Ime, // Add other fields from Korisnik if necessary
-        //            IdRazreda = agr.Razred.Id,
-        //            NazivRazreda = agr.Razred.Naziv,
-        //            Prisustvo = 0, // Initialize to 0 for now, will be updated below
-        //            Prosjek = 0 // Initialize to 0 for now, will be updated below
-        //        })
-        //        .ToListAsync();
-
-        //    foreach (var item in items)
-        //    {
-        //        var ucenikId = item.Id;
-        //        var razredId = item.IdRazreda;
-
-        //        // Calculate attendance percentage
-        //        var attendanceRecords = await _dbContext.Prisustvo
-        //            .Where(p => p.KorisnikId == ucenikId && p.RazredId == razredId)
-        //            .ToListAsync();
-
-        //        int totalClasses = attendanceRecords.Count;
-        //        if (totalClasses > 0)
-        //        {
-        //            int presentCount = attendanceRecords.Count(p => p.Prisutan == true);
-        //            double attendancePercentage = (double)presentCount / totalClasses * 100;
-        //            item.Prisustvo = attendancePercentage;
-        //        }
-
-        //        // Calculate average grade
-        //        var zadace = await _dbContext.Zadaca
-        //            .Where(z => z.KorisnikId == ucenikId && z.RazredId == razredId)
-        //            .Include(z => z.Ocjene) // Assuming Ocjene is a navigation property to grades
-        //            .ToListAsync();
-
-        //        int totalZadace = zadace.Count;
-        //        if (totalZadace > 0)
-        //        {
-        //            double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena); // Assuming Ocjene has 'Ocjena'
-        //            item.Prosjek = averageGrade;
-        //        }
-
-        //        // Update the item in items list with calculated values
-        //    }
-
-        //    var result = new PagedResult<KorisnikM>
-        //    {
-        //        Count = items.Count,
-        //        Result = items
-        //    };
-
-        //    return result;
-        //}
+       
 
 
         public async Task<UcenikRoditeljResponse> CreateStudentWithParentAsync(KorisnikInsert studentInsert, KorisnikInsert parentInsert)

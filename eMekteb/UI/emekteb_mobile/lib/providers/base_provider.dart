@@ -132,7 +132,7 @@ T fromJson (data){
       result.result.add(item);
 
       result.count = item != null ? 1 : 0;
-
+      print(url);
       return result;
     } else {
       throw Exception("Error with response");

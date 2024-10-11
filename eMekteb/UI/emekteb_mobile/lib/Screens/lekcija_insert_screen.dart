@@ -2,7 +2,6 @@ import 'package:emekteb_mobile/Widgets/master_screen.dart';
 import 'package:emekteb_mobile/providers/dodatnalekcija_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/user_provider.dart';
 
 class DodatnaLekcijaInsert extends StatefulWidget {
@@ -60,10 +59,10 @@ class _DodatnaLekcijaInsertState extends State<DodatnaLekcijaInsert> {
 
   Widget divider() {
     return const SizedBox(
-      width: 280, // Set the desired width here
+      width: 280,
       child: Divider(
-        color: Colors.blue, // You can change the color to your preference
-        thickness: 3, // Adjust the thickness as needed
+        color: Colors.blue,
+        thickness: 3,
       ),
     );
   }
@@ -125,7 +124,7 @@ class _DodatnaLekcijaInsertState extends State<DodatnaLekcijaInsert> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Lekcija uspješno dodana')),
               );
-              Navigator.of(context).pop(true); // Close the form after saving
+              Navigator.of(context).pop(true);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Greška pri dodavanju lekcije')),

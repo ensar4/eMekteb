@@ -1,21 +1,11 @@
-import 'package:emekteb_mobile/Screens/kamp_screen.dart';
 import 'package:emekteb_mobile/Widgets/master_screen.dart';
-import 'package:emekteb_mobile/models/dodatna_lekcija.dart';
-import 'package:emekteb_mobile/models/kamp_korisnik.dart';
-import 'package:emekteb_mobile/models/korisnik.dart';
 import 'package:emekteb_mobile/models/obavijest.dart';
-import 'package:emekteb_mobile/models/user.dart';
-import 'package:emekteb_mobile/providers/kampkorisnik_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
-import '../models/kamp.dart';
-import '../models/searches/search_result.dart';
-import '../providers/user_provider.dart';
 
 void main() {
-  runApp(ObavijestDetalji(
+  runApp(const ObavijestDetalji(
     obavijest: null,
   ));
 }
@@ -60,11 +50,11 @@ class _ObavijestDetaljiState extends State<ObavijestDetalji> {
           children: [
             Text(
               widget.obavijest!.naslov.toString(),
-              style: TextStyle(fontSize: 24),
+              style: const TextStyle(fontSize: 24),
             ),
             Text(
-              "${DateFormat('d.M.yyyy').format( widget.obavijest!.datumObjave)}",
-              style: TextStyle(fontSize: 18),
+              DateFormat('d.M.yyyy').format( widget.obavijest!.datumObjave),
+              style: const TextStyle(fontSize: 18),
             ),
           ],
         ),
@@ -86,12 +76,9 @@ class _ObavijestDetaljiState extends State<ObavijestDetalji> {
   Widget showText(){
     return Padding(
       padding: const EdgeInsets.all(12.0),
-      child: Container(
-        child:
-        Text(
-          widget.obavijest!.opis.toString(),
-          style: TextStyle(fontSize: 18,),
-        ),
+      child: Text(
+        widget.obavijest!.opis.toString(),
+        style: const TextStyle(fontSize: 18,),
       ),
     );
   }

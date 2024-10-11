@@ -23,7 +23,7 @@ namespace eMekteb.Services
         {
 
             var items = await _dbContext.Set<DodatneLekcije>()
-                                   .Where(y => y.MektebId == mektebId)
+                                   .Where(y => y.MektebId == mektebId).OrderByDescending(y=>y.Id)
                                    .ToListAsync();
             PagedResult<DodatneLekcijeM> result = new PagedResult<DodatneLekcijeM>();
             result.Count = items.Count();

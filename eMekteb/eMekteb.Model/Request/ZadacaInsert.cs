@@ -13,6 +13,7 @@ namespace eMekteb.Services.Database
         public int KorisnikId { get; set; }
         public int OcjeneId { get; set; }
         public string? Lekcija { get; set; }
+        public string? ZaZadacu { get; set; }
         public int RazredId { get; set; }
 
 

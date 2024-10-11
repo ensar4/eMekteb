@@ -3,7 +3,6 @@ import 'package:emekteb_mobile/Widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import '../models/cas.dart';
 import '../models/korisnik.dart';
 import '../models/searches/search_result.dart';
@@ -51,6 +50,7 @@ class _DnevnikState extends State<Dnevnik> {
       fetchDataCasovi();
     }
   }
+
   Future<void> fetchDataCasovi({String? filter}) async {
     if (!isLoading) {
       setState(() {
@@ -114,7 +114,7 @@ class _DnevnikState extends State<Dnevnik> {
 
   Widget _buildAddButton() {
     final screenWidth = MediaQuery.of(context).size.width;
-    return Container(
+    return SizedBox(
       width: screenWidth * 0.4,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(

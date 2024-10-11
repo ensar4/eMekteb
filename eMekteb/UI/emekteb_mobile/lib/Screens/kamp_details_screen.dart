@@ -4,13 +4,12 @@ import 'package:emekteb_mobile/models/user.dart';
 import 'package:emekteb_mobile/providers/kampkorisnik_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../models/kamp.dart';
 import '../models/searches/search_result.dart';
 import '../providers/user_provider.dart';
 
 void main() {
-  runApp(KampDetalji(
+  runApp(const KampDetalji(
     kamp: null,
   ));
 }

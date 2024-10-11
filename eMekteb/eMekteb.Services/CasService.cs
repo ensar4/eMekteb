@@ -24,7 +24,7 @@ namespace eMekteb.Services
         public async Task<PagedResult<CasM>> GetByMektebId(int mektebId)
         {
             var items = await _dbContext.Set<Cas>()
-                                   .Where(y => y.MektebId == mektebId)
+                                   .Where(y => y.MektebId == mektebId).OrderByDescending(y=>y.Id)
                                    .ToListAsync();
             PagedResult<CasM> result = new PagedResult<CasM>();
             result.Count = items.Count();

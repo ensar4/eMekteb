@@ -1,8 +1,6 @@
 import 'package:emekteb_mobile/Widgets/master_screen.dart';
-import 'package:emekteb_mobile/providers/dodatnalekcija_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/obavijest_provider.dart';
 import '../providers/user_provider.dart';
 
@@ -15,7 +13,7 @@ class ObavijestInsert extends StatefulWidget {
 
 class _ObavijestInsertState extends State<ObavijestInsert> {
   final _formKey = GlobalKey<FormState>();
-  late UserProvider _UserProvider;
+  late UserProvider _userProvider;
   late ObavijestProvider _obavijestProvider;
   String naslov = '';
   String opis = '';
@@ -25,7 +23,7 @@ class _ObavijestInsertState extends State<ObavijestInsert> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _obavijestProvider= context.read<ObavijestProvider>();
-    _UserProvider = context.read<UserProvider>();
+    _userProvider = context.read<UserProvider>();
   }
 
   @override
@@ -48,8 +46,8 @@ class _ObavijestInsertState extends State<ObavijestInsert> {
   }
 
   Widget nazivSection() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 25.0, bottom: 20.0),
+    return const Padding(
+      padding: EdgeInsets.only(top: 25.0, bottom: 20.0),
       child: Center(
         child: Text(
           "Nova obavijest",
@@ -61,10 +59,10 @@ class _ObavijestInsertState extends State<ObavijestInsert> {
 
   Widget divider() {
     return SizedBox(
-      width: 280, // Set the desired width here
+      width: 280, 
       child: Divider(
-        color: Colors.yellow.shade600, // You can change the color to your preference
-        thickness: 3, // Adjust the thickness as needed
+        color: Colors.yellow.shade600, 
+        thickness: 3, 
       ),
     );
   }
@@ -75,7 +73,7 @@ class _ObavijestInsertState extends State<ObavijestInsert> {
       child: Column(
         children: [
           TextFormField(
-            decoration: InputDecoration(labelText: 'Naslov'),
+            decoration: const InputDecoration(labelText: 'Naslov'),
             textCapitalization: TextCapitalization.sentences,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -88,7 +86,7 @@ class _ObavijestInsertState extends State<ObavijestInsert> {
             },
           ),
           TextFormField(
-            decoration: InputDecoration(labelText: 'Opis'),
+            decoration: const InputDecoration(labelText: 'Opis'),
             textCapitalization: TextCapitalization.sentences,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -121,7 +119,7 @@ class _ObavijestInsertState extends State<ObavijestInsert> {
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
             _formKey.currentState!.save();
-            bool result = await _obavijestProvider.insert(naslov, opis, datumObjave, _UserProvider.user!.mektebId);
+            bool result = await _obavijestProvider.insert(naslov, opis, datumObjave, _userProvider.user!.mektebId);
             if (result) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Obavijest uspješno dodana.')),
@@ -134,7 +132,7 @@ class _ObavijestInsertState extends State<ObavijestInsert> {
             }
           }
         },
-        child: Text(
+        child: const Text(
           'SPASI',
           style: TextStyle(fontSize: 18, color: Colors.white),
         ),

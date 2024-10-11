@@ -1,11 +1,8 @@
 import 'package:emekteb_mobile/Screens/obavijesti_screen.dart';
 import 'package:emekteb_mobile/Screens/pocetna_screen.dart';
-import 'package:emekteb_mobile/Screens/postavke_screen.dart';
-import 'package:emekteb_mobile/Screens/roditelj_pocetna_screen.dart';
 import 'package:emekteb_mobile/Screens/ucenik_pocetna_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../models/korisnik.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user_provider.dart';
@@ -22,7 +19,6 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     _authProvider = context.read<AuthProvider>();
     _userProvider = context.read<UserProvider>();
-   // _baseProvider = context.read<BaseProvider>();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Center(
@@ -40,7 +36,6 @@ class LoginPage extends StatelessWidget {
                     decoration: const InputDecoration(
                       labelText: "Korisničko ime",
                       border: OutlineInputBorder(
-                        //borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
                     controller: _usernameController,
@@ -50,11 +45,10 @@ class LoginPage extends StatelessWidget {
                     decoration: const InputDecoration(
                       labelText: "Lozinka",
                       border: OutlineInputBorder(
-                        //borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
                     controller: _passwordController,
-                    obscureText: true, // set this property to true
+                    obscureText: true,
                   ),
                   const SizedBox(height: 30,),
                   SizedBox(
@@ -62,12 +56,11 @@ class LoginPage extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (_usernameController.text.isEmpty) {
-                          // Show dialog if the username is empty
                           showDialog(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                               title: const Text("Greška"),
-                              content: const Text("Korisničko ime ne može biti prazno."), // Message for empty username
+                              content: const Text("Korisničko ime ne može biti prazno."),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(context),
@@ -76,7 +69,7 @@ class LoginPage extends StatelessWidget {
                               ],
                             ),
                           );
-                          return; // Return early to prevent further execution
+                          return;
                         }
 
                         try {
@@ -84,10 +77,8 @@ class LoginPage extends StatelessWidget {
                             _usernameController.text,
                             _passwordController.text,
                           );
-
                           _authProvider.getUser(token!);
                           _userProvider.getKorisnik(Korisnik.id);
-                          // Check if the user has the "Admin" role
                           if (Korisnik.uloge.contains("Imam") || Korisnik.uloge.contains("Ucenik") || Korisnik.uloge.contains("Roditelj")) {
                             if (Korisnik.uloge.contains("Imam")) {
                               Navigator.of(context).pushReplacement(

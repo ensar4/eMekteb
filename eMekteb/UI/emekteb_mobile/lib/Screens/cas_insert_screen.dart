@@ -30,8 +30,8 @@ class _CasInsertState extends State<CasInsert> {
   bool isLoading = false;
   int ukupno = 0;
   TextEditingController searchController = TextEditingController();
-  int currentPage = 1; // Track the current page
-  int numPages = 12; // Adjust the page size according to your backend configuration
+  int currentPage = 1;
+  int numPages = 12;
   bool isSortAsc = false;
 
   @override

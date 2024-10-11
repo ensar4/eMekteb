@@ -1,19 +1,10 @@
-import 'package:emekteb_mobile/Screens/kamp_screen.dart';
 import 'package:emekteb_mobile/Widgets/master_screen.dart';
 import 'package:emekteb_mobile/models/dodatna_lekcija.dart';
-import 'package:emekteb_mobile/models/kamp_korisnik.dart';
-import 'package:emekteb_mobile/models/korisnik.dart';
-import 'package:emekteb_mobile/models/user.dart';
-import 'package:emekteb_mobile/providers/kampkorisnik_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../models/kamp.dart';
 import '../models/searches/search_result.dart';
-import '../providers/user_provider.dart';
 
 void main() {
-  runApp(LekcijaDetalji(
+  runApp(const LekcijaDetalji(
     lekcija: null,
   ));
 }
@@ -28,7 +19,6 @@ class LekcijaDetalji extends StatefulWidget {
 
 class _LekcijaDetaljiState extends State<LekcijaDetalji> {
 
-  late UserProvider _userProvider;
 
   int currentPage = 1;
   int numPages = 12;
@@ -41,8 +31,6 @@ class _LekcijaDetaljiState extends State<LekcijaDetalji> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _userProvider = context.read<UserProvider>();
-   // fetchData();
   }
 
   @override
