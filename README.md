@@ -2,13 +2,13 @@
 
 ### Kredencijali za prijavu
 
-DESKTOP (uloge administrator i komisija):
-
-- username: admin 
-- password: test
-
-- username: komisija
-- password: test
+DESKTOP:
+1. Uloga administrator
+  - username: admin 
+  - password: test
+2. Uloga komisija
+  - username: komisija
+  - password: test
 
 
 MOBILE (uloge imam, ucenik i roditelj):
