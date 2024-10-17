@@ -1,5 +1,3 @@
-import 'package:emekteb_admin/Screens/mektebii_screen.dart';
-import 'package:emekteb_admin/Screens/takmicari_adminView.dart';
 import 'package:emekteb_admin/Screens/takmicenja_screen.dart';
 import 'package:emekteb_admin/models/korisnik.dart';
 import 'package:emekteb_admin/providers/admin_provider.dart';
@@ -18,36 +16,78 @@ import 'package:emekteb_admin/providers/takmicar_provider.dart';
 import 'package:emekteb_admin/providers/takmicenja_provider.dart';
 import 'package:emekteb_admin/providers/ucenici_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:window_manager/window_manager.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_)=> AuthProvider()),
-    ChangeNotifierProvider(create: (_)=> MektebProvider()),
-    ChangeNotifierProvider(create: (_)=> AkademskagodinaProvider()),
-    ChangeNotifierProvider(create: (_)=> TakmicenjaProvider()),
-    ChangeNotifierProvider(create: (_)=> KategorijaProvider()),
-    ChangeNotifierProvider(create: (_)=> TakmicarProvider()),
-    ChangeNotifierProvider(create: (_)=> UceniciProvider()),
-    ChangeNotifierProvider(create: (_)=> MualimProvider()),
-    ChangeNotifierProvider(create: (_)=> MedzlisProvider()),
-    ChangeNotifierProvider(create: (_)=> PasswordProvider()),
-    ChangeNotifierProvider(create: (_)=> KomisijaProvider()),
-    ChangeNotifierProvider(create: (_)=> AdminProvider()),
-    ChangeNotifierProvider(create: (_)=> AkademskaMektebProvider()),
-    ChangeNotifierProvider(create: (_)=> AkademskaRazredProvider()),
-    ChangeNotifierProvider(create: (_)=> RazredProvider()),
+//void main() {
+//  runApp(MultiProvider(providers: [
+//    ChangeNotifierProvider(create: (_)=> AuthProvider()),
+//    ChangeNotifierProvider(create: (_)=> MektebProvider()),
+//    ChangeNotifierProvider(create: (_)=> AkademskagodinaProvider()),
+//    ChangeNotifierProvider(create: (_)=> TakmicenjaProvider()),
+//    ChangeNotifierProvider(create: (_)=> KategorijaProvider()),
+//    ChangeNotifierProvider(create: (_)=> TakmicarProvider()),
+//    ChangeNotifierProvider(create: (_)=> UceniciProvider()),
+//    ChangeNotifierProvider(create: (_)=> MualimProvider()),
+//    ChangeNotifierProvider(create: (_)=> MedzlisProvider()),
+//    ChangeNotifierProvider(create: (_)=> PasswordProvider()),
+//    ChangeNotifierProvider(create: (_)=> KomisijaProvider()),
+//    ChangeNotifierProvider(create: (_)=> AdminProvider()),
+//    ChangeNotifierProvider(create: (_)=> AkademskaMektebProvider()),
+//    ChangeNotifierProvider(create: (_)=> AkademskaRazredProvider()),
+//    ChangeNotifierProvider(create: (_)=> RazredProvider()),
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//  ],
+//
+//  child: const MyApp(),));
+//}
 
 
+void main() async {
+  // Ensure all bindings are initialized
+  WidgetsFlutterBinding.ensureInitialized();
 
+  // Initialize the window manager
+  await windowManager.ensureInitialized();
 
+  // Set the window to full-screen when ready
+  windowManager.waitUntilReadyToShow().then((_) async {
+    await windowManager.setMinimumSize(const Size(1400, 800));
+    await windowManager.setMaximizable(true);
 
+    windowManager.show(); // Show the window
+  });
 
-
-
-
-  ],
-  child: const MyApp(),));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => MektebProvider()),
+        ChangeNotifierProvider(create: (_) => AkademskagodinaProvider()),
+        ChangeNotifierProvider(create: (_) => TakmicenjaProvider()),
+        ChangeNotifierProvider(create: (_) => KategorijaProvider()),
+        ChangeNotifierProvider(create: (_) => TakmicarProvider()),
+        ChangeNotifierProvider(create: (_) => UceniciProvider()),
+        ChangeNotifierProvider(create: (_) => MualimProvider()),
+        ChangeNotifierProvider(create: (_) => MedzlisProvider()),
+        ChangeNotifierProvider(create: (_) => PasswordProvider()),
+        ChangeNotifierProvider(create: (_) => KomisijaProvider()),
+        ChangeNotifierProvider(create: (_) => AdminProvider()),
+        ChangeNotifierProvider(create: (_) => AkademskaMektebProvider()),
+        ChangeNotifierProvider(create: (_) => AkademskaRazredProvider()),
+        ChangeNotifierProvider(create: (_) => RazredProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -71,13 +111,12 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 class LoginPage extends StatelessWidget {
    LoginPage({super.key});
 
    late AuthProvider _authProvider;
-  final _usernameController = new TextEditingController();
-  final _passwordController = new TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +129,7 @@ class LoginPage extends StatelessWidget {
              padding: const EdgeInsets.only(top: 30.0),
              child: Column(
               children: [
-                Image.asset("assets/images/login.jpg", width: 200, height: 200,),
+                Image.asset("assets/images/login.png", width: 200, height: 200,),
                 const Text("e-Mekteb", style: TextStyle(fontSize: 40),),
                 const SizedBox(height: 80,),
                 TextField(
@@ -135,12 +174,12 @@ class LoginPage extends StatelessWidget {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
-                              title: Text("Greška"),
-                              content: Text("Prijava nije moguća."),
+                              title: const Text("Greška"),
+                              content: const Text("Prijava nije moguća."),
                               actions: [
                                 TextButton(
                                     onPressed: () => Navigator.pop(context),
-                                    child: Text("OK"))
+                                    child: const Text("OK"))
                               ],
                             ));
                             _usernameController.clear();
@@ -150,12 +189,12 @@ class LoginPage extends StatelessWidget {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            title: Text("Greška"),
+                            title: const Text("Greška"),
                             content: Text("$e"),
                             actions: [
                               TextButton(
                                   onPressed: () => Navigator.pop(context),
-                                  child: Text("OK"))
+                                  child: const Text("OK"))
                             ],
                           ));
                       _usernameController.clear();

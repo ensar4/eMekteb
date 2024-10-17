@@ -17,22 +17,123 @@ namespace eObavijest.Services.Seed
                 new Obavijest
                 {
                     Id = 1,
-                    Naslov="Izlet",
-                    DatumObjave = DateTime.Now,
-                    VrstaObjave = "Vijest",
-                    MektebId = 1
-
+                    Naslov = "eMekteb aplikacija ",
+                    Opis = "Dobrodošli na novu platformu za mektebsku nastavu, nadamo se da cete uzivati u koristenju i da će vam koristiti u sticanju korisnog znanja. \r\nHairli vam bila nova mektebska godina!",
+                    DatumObjave = new DateTime(2024, 09, 12),
+                    VrstaObjave = "Obavijest",
+                    MektebId = 1,
+                    StateMachine = "active"
                 },
                 new Obavijest
                 {
                     Id = 2,
-                    Naslov = "Odgoda nastave",
-                    DatumObjave = DateTime.Now,
-                    VrstaObjave = "Vijest",
-                    MektebId = 1
-
+                    Naslov = "Promijeni password!",
+                    Opis= "Radi sigurnosti i pristupa aplikaciji napravite novi password.",
+                    DatumObjave = new DateTime(2024, 09, 12),
+                    VrstaObjave = "Obavijest",
+                    MektebId = 1,
+                    StateMachine = "active"
+                },        
+                new Obavijest
+                {
+                    Id = 3,
+                    Naslov = "eMekteb aplikacija ",
+                    Opis = "Dobrodošli na novu platformu za mektebsku nastavu, nadamo se da cete uzivati u koristenju i da će vam koristiti u sticanju korisnog znanja. \r\nHairli vam bila nova mektebska godina!",
+                    DatumObjave = new DateTime(2024, 09, 12),
+                    VrstaObjave = "Obavijest",
+                    MektebId = 2,
+                    StateMachine = "active"
+                },
+                new Obavijest
+                {
+                    Id = 4,
+                    Naslov = "Promijeni password!",
+                    Opis= "Radi sigurnosti i pristupa aplikaciji napravite novi password.",
+                    DatumObjave = new DateTime(2024, 09, 12),
+                    VrstaObjave = "Obavijest",
+                    MektebId = 2,
+                    StateMachine = "active"
+                },        
+                new Obavijest
+                {
+                    Id = 5,
+                    Naslov = "eMekteb aplikacija ",
+                    Opis = "Dobrodošli na novu platformu za mektebsku nastavu, nadamo se da cete uzivati u koristenju i da će vam koristiti u sticanju korisnog znanja. \r\nHairli vam bila nova mektebska godina!",
+                    DatumObjave = new DateTime(2024, 09, 12),
+                    VrstaObjave = "Obavijest",
+                    MektebId = 3,
+                    StateMachine = "active"
+                },
+                new Obavijest
+                {
+                    Id = 6,
+                    Naslov = "Promijeni password!",
+                    Opis= "Radi sigurnosti i pristupa aplikaciji napravite novi password.",
+                    DatumObjave = new DateTime(2024, 09, 12),
+                    VrstaObjave = "Obavijest",
+                    MektebId = 3,
+                    StateMachine = "active"
+                },        
+                new Obavijest
+                {
+                    Id = 7,
+                    Naslov = "eMekteb aplikacija ",
+                    Opis = "Dobrodošli na novu platformu za mektebsku nastavu, nadamo se da cete uzivati u koristenju i da će vam koristiti u sticanju korisnog znanja. \r\nHairli vam bila nova mektebska godina!",
+                    DatumObjave = new DateTime(2024, 09, 12),
+                    VrstaObjave = "Obavijest",
+                    MektebId = 4,
+                    StateMachine = "active"
+                },
+                new Obavijest
+                {
+                    Id = 8,
+                    Naslov = "Promijeni password!",
+                    Opis= "Radi sigurnosti i pristupa aplikaciji napravite novi password.",
+                    DatumObjave = new DateTime(2024, 09, 12),
+                    VrstaObjave = "Obavijest",
+                    MektebId = 4,
+                    StateMachine = "active"
+                },        
+                new Obavijest
+                {
+                    Id = 9,
+                    Naslov = "eMekteb aplikacija ",
+                    Opis = "Dobrodošli na novu platformu za mektebsku nastavu, nadamo se da cete uzivati u koristenju i da će vam koristiti u sticanju korisnog znanja. \r\nHairli vam bila nova mektebska godina!",
+                    DatumObjave = new DateTime(2024, 09, 12),
+                    VrstaObjave = "Obavijest",
+                    MektebId = 5,
+                    StateMachine = "active"
+                },
+                new Obavijest
+                {
+                    Id = 10,
+                    Naslov = "Promijeni password!",
+                    Opis= "Radi sigurnosti i pristupa aplikaciji napravite novi password.",
+                    DatumObjave = new DateTime(2024, 09, 12),
+                    VrstaObjave = "Obavijest",
+                    MektebId = 5,
+                    StateMachine = "active"
+                },        
+                new Obavijest
+                {
+                    Id = 11,
+                    Naslov = "eMekteb aplikacija ",
+                    Opis = "Dobrodošli na novu platformu za mektebsku nastavu, nadamo se da cete uzivati u koristenju i da će vam koristiti u sticanju korisnog znanja. \r\nHairli vam bila nova mektebska godina!",
+                    DatumObjave = new DateTime(2024, 09, 12),
+                    VrstaObjave = "Obavijest",
+                    MektebId = 6,
+                    StateMachine = "active"
+                },
+                new Obavijest
+                {
+                    Id = 12,
+                    Naslov = "Promijeni password!",
+                    Opis= "Radi sigurnosti i pristupa aplikaciji napravite novi password.",
+                    DatumObjave = new DateTime(2024, 09, 12),
+                    VrstaObjave = "Obavijest",
+                    MektebId = 6,
+                    StateMachine = "active"
                 }
-
             );
         }
     }

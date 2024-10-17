@@ -17,9 +17,10 @@ namespace eMedzlis.Services.Seed
                 new Medzlis
                 {
                     Id = 1,
-                    Adresa = "Mostar",
-                    Telefon= "08464634",
-                    Naziv = "Medzlis Mostar"
+                    Adresa = "Čiče Miličevića, Mostar 88000",
+                    Telefon= "036 550-727",
+                    Naziv = "Medzlis Mostar",
+                    Mail = "medzlismostar@gmail.com"
                 }
               
             );

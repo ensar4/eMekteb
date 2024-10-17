@@ -57,8 +57,8 @@ services:
       - RABBITMQ_USER=guest
       - RABBITMQ_PASS=guest
       - SERVER_ADDRESS=smtp.gmail.com
-      - MAIL_SENDER=ensarlizde@gmail.com
-      - MAIL_PASS=butaumlpokptcnez
+      - MAIL_SENDER=emektebmail@gmail.com
+      - MAIL_PASS=dkbehufjdusohlpw
       - MAIL_PORT=587
     ports:
       - ${API_PORT}:7160
@@ -78,8 +78,8 @@ services:
       - RABBITMQ_USER=guest
       - RABBITMQ_PASS=guest
       - SERVER_ADDRESS=smtp.gmail.com
-      - MAIL_SENDER=ensarlizde@gmail.com
-      - MAIL_PASS=butaumlpokptcnez
+      - MAIL_SENDER=emektebmail@gmail.com
+      - MAIL_PASS=dkbehufjdusohlpw
       - MAIL_PORT=587
     networks:
       - emekteb

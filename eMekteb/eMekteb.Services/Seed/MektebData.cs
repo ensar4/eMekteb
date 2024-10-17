@@ -18,7 +18,7 @@ namespace eMekteb.Services.Seed
                     Id = 1,
                     MedzlisId = 1,
                     Adresa = "Mostar",
-                    Telefon= "08464634",
+                    Telefon= "036 585-964",
                     Naziv = "Mekteb Opine"
                 },
                 new Mekteb
@@ -26,7 +26,7 @@ namespace eMekteb.Services.Seed
                     Id = 2,
                     MedzlisId = 1,
                     Adresa = "Mostar",
-                    Telefon = "08464634",
+                    Telefon = "036 585-967",
                     Naziv = "Mekteb Zalik"
                 },
                 new Mekteb
@@ -34,7 +34,7 @@ namespace eMekteb.Services.Seed
                     Id = 3,
                     MedzlisId = 1,
                     Adresa = "Mostar",
-                    Telefon = "08464634",
+                    Telefon = "036 585-963",
                     Naziv = "Mekteb Luka"
                 },
                 new Mekteb
@@ -42,10 +42,25 @@ namespace eMekteb.Services.Seed
                     Id = 4,
                     MedzlisId = 1,
                     Adresa = "Mostar",
-                    Telefon = "08464634",
+                    Telefon = "036 585-962",
                     Naziv = "Mekteb Musala"
+                },
+                new Mekteb
+                {
+                    Id = 5,
+                    MedzlisId = 1,
+                    Adresa = "Mostar",
+                    Telefon = "036 585-961",
+                    Naziv = "Mekteb Blagaj"
+                },
+                new Mekteb
+                {
+                    Id = 6,
+                    MedzlisId = 1,
+                    Adresa = "Mostar",
+                    Telefon = "036 585-965",
+                    Naziv = "Mekteb Vrapčići"
                 }
-              
             );
         }
     }

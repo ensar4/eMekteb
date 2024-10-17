@@ -103,7 +103,6 @@ namespace eMekteb.Controllers
         {
             if (dto == null) return BadRequest("Invalid data.");
 
-            // Map the DTOs to insert objects
             var studentInsert = new KorisnikInsert
             {
                 Ime = dto.UcenikIme,

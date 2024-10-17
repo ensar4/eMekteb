@@ -17,9 +17,5 @@ namespace eMekteb.Services.Database
         public bool? isAktivna { get; set; }
         public ICollection<AkademskaMekteb>? AkademskaMekteb { get; set; } 
 
-
-
-
-
     }
 }

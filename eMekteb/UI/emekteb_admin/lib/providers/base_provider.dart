@@ -47,7 +47,6 @@ abstract class BaseProvider<T> with ChangeNotifier{
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
       var result = SearchResult<T>();
-      print(url);
       result.count = data['count'];
 
       for (var item in data['result']) {
