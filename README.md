@@ -11,7 +11,7 @@ DESKTOP:
     - password: test
 
 
-MOBILE (uloge imam, ucenik i roditelj):
+MOBILE:
 1. Uloga imam
     - username: imam
     - password: test
