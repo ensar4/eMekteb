@@ -12,15 +12,15 @@ DESKTOP:
 
 
 MOBILE (uloge imam, ucenik i roditelj):
-
-- username: imam
-- password: test
-
-- username: ucenik
-- password: test
-
-- username: roditelj
-- password: test
+1. Uloga imam
+    - username: imam
+    - password: test
+2. Uloga učenik
+    - username: ucenik
+    - password: test
+3. Uloga roditelj
+    - username: roditelj
+    - password: test
 
 ### RabbitMq
 RabbitMQ komunikacija se uspostavlja na desktop dijelu kada admin doda korisnika sa ulogom "komisija" 
