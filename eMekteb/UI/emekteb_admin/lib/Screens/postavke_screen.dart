@@ -278,32 +278,54 @@ class _ProfilInfoState extends State<Postavke> {
               alignment: Alignment.centerRight,
               child: ElevatedButton(
                 onPressed: () async {
-                  if (_newPasswordController.text == _confirmPasswordController.text) {
-                    try {
-                      var request = ChangePasswordRequest(
-                        userId: Korisnik.id, // Replace with the actual userId
-                        oldPassword: _oldPasswordController.text,
-                        newPassword: _newPasswordController.text,
-                      );
-                      await _passwordProvider.changePassword(request);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Lozinka uspješno promijenjena')),
-                      );
-                      _oldPasswordController.clear();
-                      _newPasswordController.clear();
-                      _confirmPasswordController.clear();
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Nije moguće promjeniti lozinku: $e')),
-                      );
-                    }
-                  } else {
+                  // Check if any field is empty
+                  if (_oldPasswordController.text.isEmpty ||
+                      _newPasswordController.text.isEmpty ||
+                      _confirmPasswordController.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Netačna potvrda lozinke')),
+                      const SnackBar(content: Text('Sva polja moraju biti popunjena!')),
+                    );
+                    return;
+                  }
 
+                  // Check if the new password has at least 4 characters
+                  if (_newPasswordController.text.length < 4) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Nova lozinka mora imati najmanje 4 karaktera!')),
                     );
                     _newPasswordController.clear();
                     _confirmPasswordController.clear();
+                    return;
+                  }
+
+                  // Check if the new password matches the confirmation
+                  if (_newPasswordController.text != _confirmPasswordController.text) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Netačna potvrda lozinke!')),
+                    );
+                    _newPasswordController.clear();
+                    _confirmPasswordController.clear();
+                    return;
+                  }
+
+                  // Proceed with the password change request
+                  try {
+                    var request = ChangePasswordRequest(
+                      userId: Korisnik.id, // Replace with the actual userId
+                      oldPassword: _oldPasswordController.text,
+                      newPassword: _newPasswordController.text,
+                    );
+                    await _passwordProvider.changePassword(request);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Lozinka uspješno promijenjena!')),
+                    );
+                    _oldPasswordController.clear();
+                    _newPasswordController.clear();
+                    _confirmPasswordController.clear();
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('$e')),
+                    );
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -311,7 +333,10 @@ class _ProfilInfoState extends State<Postavke> {
                   padding: const EdgeInsets.only(
                       left: 18.0, right: 18.0, top: 16.0, bottom: 16.0),
                 ),
-                child: const Text('SPASI', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
+                child: const Text(
+                  'SPASI',
+                  style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],
@@ -319,6 +344,7 @@ class _ProfilInfoState extends State<Postavke> {
       ),
     );
   }
+
   Widget _boxKomisija() {
     return Visibility(
       visible: _isCommissionBoxVisible,

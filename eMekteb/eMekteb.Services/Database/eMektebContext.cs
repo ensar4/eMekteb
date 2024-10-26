@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using eMekteb.Services.Seed;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -41,5 +43,33 @@ namespace eMekteb.Services.Database
         public DbSet<Slika> Slika { get; set; }
         public DbSet<DodatneLekcije> DodatneLekcije { get; set; }
 
+
+         protected override void OnModelCreating(ModelBuilder modelBuilder){
+
+                modelBuilder.ApplyConfigurationsFromAssembly(typeof(eMektebContext).Assembly);
+
+                modelBuilder.Entity<AkademskaGodina>().SeedData();
+                modelBuilder.Entity<AkademskaMekteb>().SeedData();
+                modelBuilder.Entity<AkademskaRazred>().SeedData();
+                modelBuilder.Entity<Cas>().SeedData();
+                modelBuilder.Entity<DodatneLekcije>().SeedData();
+                modelBuilder.Entity<Kamp>().SeedData();
+                modelBuilder.Entity<KampKorisnik>().SeedData();
+                modelBuilder.Entity<Kategorija>().SeedData();
+                modelBuilder.Entity<KorisniciUloge>().SeedData();
+                modelBuilder.Entity<Korisnik>().SeedData();
+                modelBuilder.Entity<Medzlis>().SeedData();
+                modelBuilder.Entity<Mekteb>().SeedData();
+                modelBuilder.Entity<Obavijest>().SeedData();
+                modelBuilder.Entity<Ocjene>().SeedData();
+                modelBuilder.Entity<Prisustvo>().SeedData();
+                modelBuilder.Entity<Razred>().SeedData();
+                modelBuilder.Entity<RazredKorisnik>().SeedData();
+                modelBuilder.Entity<Takmicar>().SeedData();
+                modelBuilder.Entity<Takmicenje>().SeedData();
+                modelBuilder.Entity<Uloga>().SeedData();
+                modelBuilder.Entity<Zadaca>().SeedData();
+ 
+          }
     }
 }

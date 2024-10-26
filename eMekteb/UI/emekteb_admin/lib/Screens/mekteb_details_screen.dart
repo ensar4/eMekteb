@@ -126,65 +126,52 @@ class _MektebDetaljiState extends State<MektebDetalji> {
             _filteri(),
             Padding(
               padding: const EdgeInsets.only(left: 30.0, right: 30, bottom: 30),
-              child: Expanded(child: _tabela()),
+              child: _tabela(),
             ),
           ],
         ),
       ),
     );
   }
-
   Widget _rutaDugme() {
-    //breadCrumb i button print
     return Padding(
-      //Button for add new and search
       padding: const EdgeInsets.all(30.0),
       child: Row(
-        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           BackButton(
             onPressed: () {
               Navigator.of(context).pushReplacement(
-                //pushReplacement  ili   push
                 MaterialPageRoute(
                   builder: (context) => const Mektebi(),
                 ),
               );
             },
           ),
-          const SizedBox(
-            width: 20,
-          ),
-          SizedBox(
-            width: 63,
-            child: Expanded(
-              child: GestureDetector(
-                child: const Text(
-                  "Mektebi",
-                  style: TextStyle(fontSize: 16),
-                ),
-                onTap: () {
-                  Navigator.of(context).pushReplacement(
-                    //pushReplacement  ili   push
-                    MaterialPageRoute(
-                      builder: (context) => const Mektebi(),
-                    ),
-                  );
-                },
-              ),
+          const SizedBox(width: 20),
+          GestureDetector(
+            child: const Text(
+              "Mektebi",
+              style: TextStyle(fontSize: 16),
             ),
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const Mektebi(),
+                ),
+              );
+            },
           ),
+          const SizedBox(width: 10), // Adjusted spacing
           Text(
             "/ ${widget.mekteb?.naziv}",
             style: const TextStyle(fontSize: 16),
           ),
-          const Spacer(),
+          const Spacer(), // Creates space between breadcrumb and buttons
           ElevatedButton(
             onPressed: () => _showCreateForm(context, _mualimProvider),
             style: ElevatedButton.styleFrom(
               shape: const RoundedRectangleBorder(),
-              padding: const EdgeInsets.only(
-                  left: 18.0, right: 18.0, top: 16.0, bottom: 16.0),
+              padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 18.0),
             ),
             child: const Row(
               children: [
@@ -197,38 +184,33 @@ class _MektebDetaljiState extends State<MektebDetalji> {
               ],
             ),
           ),
-          const SizedBox(width: 20,),
+          const SizedBox(width: 20),
           ElevatedButton(
             onPressed: () {
               _createPdfReport(context, filteredList, widget.mekteb?.naziv as String, filteredListMualims);
             },
             style: ElevatedButton.styleFrom(
               shape: const RoundedRectangleBorder(),
-              padding: const EdgeInsets.only(
-                  left: 18.0, right: 18.0, top: 16.0, bottom: 16.0),
+              padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 18.0),
             ),
             child: const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Icon(Icons.download),
-                SizedBox(
-                  width: 10,
-                ),
+                SizedBox(width: 10),
                 Text(
                   "IZVJEŠTAJ",
                   style: TextStyle(fontSize: 16),
                 ),
               ],
             ),
-          )
-        ], //Buttons for sort filtering
+          ),
+        ],
       ),
     );
   }
-
   Widget _mualimiBox() {
     return Padding(
-      padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
       child: Container(
         color: Colors.blueGrey[100],
         height: 150,
@@ -238,8 +220,10 @@ class _MektebDetaljiState extends State<MektebDetalji> {
           children: [
             const Padding(
               padding: EdgeInsets.all(20.0),
-              child: Text("Muallimi",
-              style: (TextStyle(fontSize: 22)),),
+              child: Text(
+                "Muallimi",
+                style: TextStyle(fontSize: 22),
+              ),
             ),
             Expanded(
               child: Padding(
@@ -248,19 +232,19 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                   itemCount: filteredListMualims.length,
                   itemBuilder: (context, index) {
                     return Text(
-                      "• ${filteredListMualims[index].ime} ${filteredListMualims[index].prezime}", // Adjust property name based on your data model
+                      "• ${filteredListMualims[index].ime} ${filteredListMualims[index].prezime}",
                       style: const TextStyle(fontSize: 20),
                     );
                   },
                 ),
               ),
             ),
-
           ],
         ),
       ),
     );
   }
+
 
   Widget _filteri(){
     return Padding(
@@ -388,24 +372,22 @@ class _MektebDetaljiState extends State<MektebDetalji> {
   Widget SearchByName(){
     return Container(
       width: 250,
-      child: Expanded(
-        child: TextField(
-          controller: searchController,
-          onChanged: (value) {
-            searchByName(value);
-          },
-          decoration: const InputDecoration(
-            hintText: "Pretraga",
-            isDense: true, // Visina fielda
-            contentPadding:
-            EdgeInsets.only(left: 20, right: 20), // Visina fielda
-            border: OutlineInputBorder(),
-            prefixIcon: Align(
-              widthFactor: 1.0,
-              heightFactor: 1.0,
-              child: Icon(
-                Icons.search,
-              ),
+      child: TextField(
+        controller: searchController,
+        onChanged: (value) {
+          searchByName(value);
+        },
+        decoration: const InputDecoration(
+          hintText: "Pretraga",
+          isDense: true, // Visina fielda
+          contentPadding:
+          EdgeInsets.only(left: 20, right: 20), // Visina fielda
+          border: OutlineInputBorder(),
+          prefixIcon: Align(
+            widthFactor: 1.0,
+            heightFactor: 1.0,
+            child: Icon(
+              Icons.search,
             ),
           ),
         ),
@@ -441,7 +423,7 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                   DataCell(Text(item.prezime.toString())),
                   DataCell(Text(item.nazivRazreda.toString())),
                   DataCell(Text(item.prosjek?.toStringAsFixed(1) ?? '0.00')),
-                  DataCell(Text('${item.prisustvo?.toStringAsFixed(1) ?? '0.00'} %')),
+                  DataCell(Text('${item.prisustvo?.toStringAsFixed(0) ?? '0.00'}%')),
                 ],
               );
             }).toList(),

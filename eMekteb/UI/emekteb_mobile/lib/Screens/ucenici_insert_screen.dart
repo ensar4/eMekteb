@@ -234,7 +234,7 @@ class _InsertUceniciState extends State<UceniciInsert> {
           ),
           TextFormField(
             controller: _brojTelefonaController,
-            decoration: InputDecoration(labelText: 'Broj telefona:'),
+            decoration: InputDecoration(labelText: 'Broj telefona roditelja:'),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Unesite broj telefona';

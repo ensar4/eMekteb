@@ -240,9 +240,9 @@ class _ProfilInfoState extends State<Takmicenja> {
       },
     );
   }
-  
-  Widget gridView(){
-    return Padding(padding: EdgeInsets.all(30),
+  Widget gridView() {
+    return Padding(
+      padding: EdgeInsets.all(30),
       child: GridView.builder(
         itemCount: filteredList.length, // Ensure the item count is set
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -256,7 +256,7 @@ class _ProfilInfoState extends State<Takmicenja> {
           return InkWell(
             onTap: () {
               Navigator.of(context).pushReplacement(
-                //pushReplacement  ili   push
+                // pushReplacement or push
                 MaterialPageRoute(
                   builder: (context) => TakmicenjeDetalji(takmicenje: takmicenje),
                 ),
@@ -264,130 +264,117 @@ class _ProfilInfoState extends State<Takmicenja> {
             },
             child: Card(
               child: Container(
-                width: 50,
                 decoration: BoxDecoration(color: Colors.blueGrey[100]),
-
                 padding: const EdgeInsets.all(8.0),
-                child: Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 15),
-                              child: Text("Takmičenje - ${takmicenje.godina.toString()}",
-                                style: const TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            const Spacer(),
-                            PopupMenuButton<int>(
-                              icon: const Icon(Icons.more_vert),
-                              itemBuilder: (BuildContext context) =>
-                              <PopupMenuEntry<int>>[
-                                const PopupMenuItem<int>(
-                                  value: 1,
-                                  child: Text(
-                                    "Izbriši",
-                                  ),
-                                ),
-                                // Add more options as needed
-                              ],
-                              onSelected: (int value) async {
-                                if (value == 1) {
-                                  bool confirmDelete = await showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text("Potvrda brisanja"),
-                                        content: const Text("Jeste li sigurni da želite izbrisati ovo takmičenje?"),
-                                        actions: [
-                                          TextButton(
-                                            child: const Text("Ne"),
-                                            onPressed: () {
-                                              Navigator.of(context).pop(false);
-                                            },
-                                          ),
-                                          TextButton(
-                                            child: const Text("Da"),
-                                            onPressed: () {
-                                              Navigator.of(context).pop(true);
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                
-                                  if (confirmDelete) {
-                                    try {
-                                      bool result = await _takmicenjaProvider.delete(takmicenje.id);
-                                      if (result) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(content: Text('Takmičenje uspješno izbrisano')),
-                                
-                                        );
-                                        await fetchData();
-                                      }
-                                    } catch (e) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('Greška pri brisanju takmičenja: $e')),
-                                      );
-                                    }
-                                  }
-                                }
-                              },
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Text(
+                            "Takmičenje - ${takmicenje.godina.toString()}",
+                            style: const TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        const Spacer(),
+                        PopupMenuButton<int>(
+                          icon: const Icon(Icons.more_vert),
+                          itemBuilder: (BuildContext context) =>
+                          <PopupMenuEntry<int>>[
+                            const PopupMenuItem<int>(
+                              value: 1,
+                              child: Text("Izbriši"),
                             ),
                           ],
-                        ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        Flexible(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 15),
-                            child: Text.rich(
-                              TextSpan(
-                                text: "Ukupno takmičara: ",
-                                style: const TextStyle(fontSize: 16),
-                                children: [
-                                  TextSpan(
-                                    text: takmicenje.ukupnoUcenika.toString(),
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.blue, // Change this to your desired color
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 15),
-                            child: Text.rich(
-                                TextSpan(
-                                    text: "Mjesto takmicenja: ",
-                                    style: const TextStyle(fontSize: 16),
-                                    children: [
-                                      TextSpan(
-                                          text: (takmicenje.lokacija ?? 0).toString(),
-                                          style: const TextStyle(color: Colors.blue)
-                                      )
-                                    ]
-                                )
-                                  
-                                  
-                            ),
-                          ),
+                          onSelected: (int value) async {
+                            if (value == 1) {
+                              bool confirmDelete = await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text("Potvrda brisanja"),
+                                    content: const Text(
+                                        "Jeste li sigurni da želite izbrisati ovo takmičenje?"),
+                                    actions: [
+                                      TextButton(
+                                        child: const Text("Ne"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(false);
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: const Text("Da"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(true);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+
+                              if (confirmDelete) {
+                                try {
+                                  bool result = await _takmicenjaProvider
+                                      .delete(takmicenje.id);
+                                  if (result) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text('Takmičenje uspješno izbrisano')),
+                                    );
+                                    await fetchData();
+                                  }
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Greška pri brisanju takmičenja: $e')),
+                                  );
+                                }
+                              }
+                            }
+                          },
                         ),
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: Text.rich(
+                        TextSpan(
+                          text: "Ukupno takmičara: ",
+                          style: const TextStyle(fontSize: 16),
+                          children: [
+                            TextSpan(
+                              text: takmicenje.ukupnoUcenika.toString(),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.blue, // Change this to your desired color
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15, top: 8.0),
+                      child: Text.rich(
+                        TextSpan(
+                          text: "Mjesto takmičenja: ",
+                          style: const TextStyle(fontSize: 16),
+                          children: [
+                            TextSpan(
+                              text: (takmicenje.lokacija ?? 'Nepoznato').toString(),
+                              style: const TextStyle(color: Colors.blue),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

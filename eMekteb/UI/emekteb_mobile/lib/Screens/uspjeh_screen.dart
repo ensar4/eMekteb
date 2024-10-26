@@ -232,7 +232,7 @@ class _UspjehState extends State<UspjehScreen> {
                     ),
                     children: [
                       TextSpan(
-                        text: '${historyItem.prisustvo?.toStringAsFixed(1)}%',
+                        text: '${historyItem.prisustvo?.toStringAsFixed(0)}%',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),

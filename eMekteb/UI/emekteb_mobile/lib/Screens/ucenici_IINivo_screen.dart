@@ -157,7 +157,7 @@ class _UceniciIINivoState extends State<UceniciIINivo> {
             return DataRow(
               cells: [
                 DataCell(Text('${ucenik.ime} ${ucenik.prezime}')),
-                DataCell(Text('${ucenik.prisustvo!.toStringAsFixed(1)}%')),
+                DataCell(Text('${ucenik.prisustvo!.toStringAsFixed(0)}%')),
                 DataCell(
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -266,7 +266,7 @@ class _UceniciIINivoState extends State<UceniciIINivo> {
               Text('Datum rođenja: ${ucenik.datumRodjenja != null ? ucenik.datumRodjenja!.toLocal().toString().split(' ')[0] : "N/A"}'),
               Text('Ime roditelja: ${ucenik.imeRoditelja ?? "N/A"}'),
               Text('Naziv razreda: ${ucenik.nazivRazreda ?? "N/A"}'),
-              Text('Prisustvo: ${ucenik.prisustvo != null ? ucenik.prisustvo!.toStringAsFixed(1) + "%" : "N/A"}'),
+              Text('Prisustvo: ${ucenik.prisustvo != null ? ucenik.prisustvo!.toStringAsFixed(0) + "%" : "N/A"}'),
               Text('Prosjek: ${ucenik.prosjek != null ? ucenik.prosjek!.toStringAsFixed(2) : "N/A"}'),
             ],
           ),

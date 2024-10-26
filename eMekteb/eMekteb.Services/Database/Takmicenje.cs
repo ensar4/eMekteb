@@ -23,7 +23,6 @@ namespace eMekteb.Services.Database
         public virtual Medzlis? Medzlis { get; set; }
 
 
-        public virtual ICollection<TakmicenjeKategorija> TakmicenjeKategorije { get; set; } = new List<TakmicenjeKategorija>();
 
     }
 }

@@ -58,10 +58,6 @@ namespace eMekteb.Services
             CreateMap<KategorijaM, Kategorija>();
             CreateMap<KategorijaInsert, Kategorija>();
 
-            CreateMap<TakmicenjeKategorija, TakmicenjeKategorijaM>();
-            CreateMap<TakmicenjeKategorijaM, TakmicenjeKategorija>();
-            CreateMap<TakmicenjeKategorijaInsert, TakmicenjeKategorija>();
-
             CreateMap<Uloga, UlogaM>();
             CreateMap<UlogaM, Uloga>();
             CreateMap<UlogaInsert, Uloga>();

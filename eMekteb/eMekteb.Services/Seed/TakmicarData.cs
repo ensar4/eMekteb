@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eTakmicar.Services.Seed
+namespace eMekteb.Services.Seed
 {
     public static class TakmicarData
     {
@@ -133,7 +133,7 @@ namespace eTakmicar.Services.Seed
                 },
                 new Takmicar
                 {
-                    Id = 13,
+                    Id = 20,
                     Ime = "Amna",
                     Prezime = "Baralija",
                     DatumRodjenja = new DateTime(2002, 02, 01),

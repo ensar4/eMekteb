@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eDodatneLekcije.Services.Seed
+namespace eMekteb.Services.Seed
 {
     public static class DodatneLekcijeData
     {

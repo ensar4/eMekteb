@@ -1,3 +1,4 @@
+import 'package:emekteb_admin/Screens/mektebii_screen.dart';
 import 'package:emekteb_admin/Screens/takmicenja_screen.dart';
 import 'package:emekteb_admin/models/korisnik.dart';
 import 'package:emekteb_admin/providers/admin_provider.dart';
@@ -60,7 +61,7 @@ void main() async {
 
   // Set the window to full-screen when ready
   windowManager.waitUntilReadyToShow().then((_) async {
-    await windowManager.setMinimumSize(const Size(1400, 800));
+    await windowManager.setMinimumSize(const Size(1600, 900));
     await windowManager.setMaximizable(true);
 
     windowManager.show(); // Show the window
@@ -162,12 +163,17 @@ class LoginPage extends StatelessWidget {
                       );
 
                        _authProvider.getUser(token);
-
-                      // Check if the user has the "Admin" role
-                      if (Korisnik.uloge.contains("Admin") || Korisnik.uloge.contains("Komisija")){
+                      if( Korisnik.uloge.contains("Komisija")){
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
                             builder: (context) => const Takmicenja(),
+                          ),
+                        );
+                      }
+                      else if (Korisnik.uloge.contains("Admin")){
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => const Mektebi(),
                           ),
                         );
                       } else {

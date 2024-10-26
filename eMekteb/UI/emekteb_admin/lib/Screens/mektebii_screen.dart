@@ -98,13 +98,13 @@ class _ProfilInfoState extends State<Mektebi> {
                   "Ukupno mekteba: $ukupnoMekteba",
                   style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.w400), //-----UkupnoMekteba
+                      fontWeight: FontWeight.w400),
                 ),
               ],
             ),
           ),
           Expanded(
-            child: gridView(), //-------Grid view
+            child: gridView(),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5),
@@ -114,37 +114,25 @@ class _ProfilInfoState extends State<Mektebi> {
       ),
     );
   }
-
   Widget headerPretraga_Dodaj() {
     return Padding(
-      //Button for add new and search box
       padding: const EdgeInsets.all(30.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
+          SizedBox(
             width: 250,
-            child: Expanded(
-              child: TextField(
-                controller: searchController,
-                onChanged: (value) {
-                  //print("Ukupno nakon pretrage: ${filteredList.length}");
-                  fetchData();
-                },
-                decoration: InputDecoration(
-                  hintText: "Pretraga",
-                  isDense: true, // Visina fielda
-                  contentPadding:
-                      EdgeInsets.only(left: 20, right: 20), // Visina fielda
-                  border: OutlineInputBorder(),
-                  prefixIcon: Align(
-                    widthFactor: 1.0,
-                    heightFactor: 1.0,
-                    child: Icon(
-                      Icons.search,
-                    ),
-                  ),
-                ),
+            child: TextField(
+              controller: searchController,
+              onChanged: (value) {
+                fetchData();
+              },
+              decoration: InputDecoration(
+                hintText: "Pretraga",
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.search),
               ),
             ),
           ),
@@ -154,15 +142,12 @@ class _ProfilInfoState extends State<Mektebi> {
             },
             style: ElevatedButton.styleFrom(
               shape: const RoundedRectangleBorder(),
-              padding: const EdgeInsets.only(
-                  left: 26.0, right: 26.0, top: 16.0, bottom: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 26.0, vertical: 16.0),
             ),
             child: Row(
               children: const [
                 Icon(Icons.add),
-                SizedBox(
-                  width: 10,
-                ),
+                SizedBox(width: 10),
                 Text(
                   "MEKTEB",
                   style: TextStyle(
@@ -171,8 +156,8 @@ class _ProfilInfoState extends State<Mektebi> {
                 ),
               ],
             ),
-          )
-        ], //Buttons for sort filtering
+          ),
+        ],
       ),
     );
   }
@@ -248,20 +233,18 @@ class _ProfilInfoState extends State<Mektebi> {
     return Padding(
       padding: const EdgeInsets.only(left: 30, right: 30, bottom: 30, top: 10),
       child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4, // Set the number of columns
-            crossAxisSpacing: 22.0, // Set the spacing between columns
-            mainAxisSpacing: 22.0, // Set the spacing between rows
-            childAspectRatio: 2.5),
-       // scrollDirection: Axis.vertical,
-       // shrinkWrap: true,
-        itemCount: filteredList.length, //apiData.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4, // Number of columns
+          crossAxisSpacing: 22.0, // Spacing between columns
+          mainAxisSpacing: 22.0, // Spacing between rows
+          childAspectRatio: 2.5,
+        ),
+        itemCount: filteredList.length,
         itemBuilder: (BuildContext context, int index) {
-          Mekteb? mekteb = filteredList[index];
+          Mekteb mekteb = filteredList[index];
           return InkWell(
             onTap: () {
               Navigator.of(context).pushReplacement(
-                //pushReplacement  ili   push
                 MaterialPageRoute(
                   builder: (context) => MektebDetalji(mekteb: mekteb),
                 ),
@@ -269,146 +252,113 @@ class _ProfilInfoState extends State<Mektebi> {
             },
             child: Card(
               child: Container(
-                width: 100,
                 decoration: BoxDecoration(
                   color: Colors.blueGrey[100],
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: Colors.grey.shade400,
-                  //     blurRadius: 3,
-                  //     offset: Offset(3, 6),
-                  //   ),
-                  // ],
                 ),
-                child: Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 24, top: 12, right: 12, bottom: 12),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-
-                            Row(
-                              children: [
-                                Text(
-                                  mekteb.naziv.toString(),
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                Spacer(),
-                                PopupMenuButton<int>(
-                                  icon: const Icon(Icons.more_vert),
-                                  itemBuilder: (BuildContext context) =>
-                                  <PopupMenuEntry<int>>[
-                                    const PopupMenuItem<int>(
-                                      value: 1,
-                                      child: Text(
-                                        "Izbriši",
-                                      ),
-                                    ),
-                                    // Add more options as needed
-                                  ],
-                                  onSelected: (int value) async {
-                                    if (value == 1) {
-                                      bool confirmDelete = await showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: const Text("Potvrda brisanja"),
-                                            content: const Text("Jeste li sigurni da želite izbrisati mekteb?"),
-                                            actions: [
-                                              TextButton(
-                                                child: const Text("Ne"),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop(false);
-                                                },
-                                              ),
-                                              TextButton(
-                                                child: const Text("Da"),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop(true);
-                                                },
-                                              ),
-                                            ],
-                                          );
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          mekteb.naziv ?? "N/A",
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        const Spacer(),
+                        PopupMenuButton<int>(
+                          icon: const Icon(Icons.more_vert),
+                          itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
+                            const PopupMenuItem<int>(
+                              value: 1,
+                              child: Text("Izbriši"),
+                            ),
+                          ],
+                          onSelected: (int value) async {
+                            if (value == 1) {
+                              bool confirmDelete = await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text("Potvrda brisanja"),
+                                    content: const Text("Jeste li sigurni da želite izbrisati mekteb?"),
+                                    actions: [
+                                      TextButton(
+                                        child: const Text("Ne"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(false);
                                         },
-                                      );
+                                      ),
+                                      TextButton(
+                                        child: const Text("Da"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(true);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
 
-                                      if (confirmDelete) {
-                                        try {
-                                          bool result = await _mektebProvider.delete(mekteb.id);
-                                          if (result) {
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              const SnackBar(content: Text('Mekteb uspješno izbrisan')),
-
-                                            );
-                                            await fetchData();
-                                          }
-                                        } catch (e) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(content: Text('Greška pri brisanju mekteba: $e')),
-                                          );
-                                        }
-                                      }
-                                    }
-                                  },
-                                ),
-                                ]
-                            ),
-
-
-                          SizedBox(
-                            height: 22,
+                              if (confirmDelete) {
+                                try {
+                                  bool result = await _mektebProvider.delete(mekteb.id);
+                                  if (result) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Mekteb uspješno izbrisan')),
+                                    );
+                                    await fetchData();
+                                  }
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Greška pri brisanju mekteba: $e')),
+                                  );
+                                }
+                              }
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 22),
+                    Flexible(
+                      child: Row(
+                        children: [
+                          const Text(
+                            "Broj učenika: ",
+                            style: TextStyle(fontSize: 16),
                           ),
-                          // Expanded(
-                          //  child:
-                          Flexible(
-                            child: Row(
-                              children: [
-                                Text(
-                                  "Broj učenika: ",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    // fontWeight: FontWeight.w400
-                                  ),
-                                ),
-                                Text(
-                                  mekteb.ukupnoUcenika.toString(),
-                                  style: TextStyle(
-                                    color: Colors.indigoAccent,
-                                    fontSize: 16,
-                                    // fontWeight: FontWeight.w400
-                                  ),
-                                ),
-                              ],
+                          Text(
+                            mekteb.ukupnoUcenika.toString(),
+                            style: const TextStyle(
+                              color: Colors.indigoAccent,
+                              fontSize: 16,
                             ),
                           ),
-                          //),
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Text(
-                                  "Muallim: ",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    // fontWeight: FontWeight.w400
-                                  ),
-                                ),
-                                Text(
-                                  mekteb.mualim.toString(),
-                                  style: TextStyle(
-                                    color: Colors.indigoAccent,
-                                    fontSize: 16,
-                                    // fontWeight: FontWeight.w400
-                                  ),
-                                ),
-                              ],
+                        ],
+                      ),
+                    ),
+                    Flexible(
+                      child: Row(
+                        children: [
+                          const Text(
+                            "Muallim: ",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Text(
+                            mekteb.mualim?.toString() ?? "N/A",
+                            style: const TextStyle(
+                              color: Colors.indigoAccent,
+                              fontSize: 16,
                             ),
                           ),
-                        ]),
-                  ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

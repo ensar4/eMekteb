@@ -148,6 +148,145 @@ class _ProfilInfoState extends State<AkGodine> {
       ),
     );
   }
+  Widget gridView() {
+    return Padding(
+      padding: const EdgeInsets.all(30),
+      child: GridView.builder(
+        itemCount: filteredList.length, // Ensure the item count is set
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4, // Set the number of columns
+          crossAxisSpacing: 22.0, // Set the spacing between columns
+          mainAxisSpacing: 22.0, // Set the spacing between rows
+          childAspectRatio: 2.5,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          AkademskaGodina akGodina = filteredList[index];
+          return Card(
+            child: Container(
+              width: 50,
+              decoration: BoxDecoration(color: Colors.blueGrey[100]),
+              padding: const EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Text(
+                            akGodina.naziv.toString(),
+                            style: const TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        const Spacer(),
+                        PopupMenuButton<int>(
+                          icon: const Icon(Icons.more_vert),
+                          itemBuilder: (BuildContext context) =>
+                          <PopupMenuEntry<int>>[
+                            const PopupMenuItem<int>(
+                              value: 1,
+                              child: Text("Izbriši"),
+                            ),
+                            // Add more options as needed
+                          ],
+                          onSelected: (int value) async {
+                            if (value == 1) {
+                              bool confirmDelete = await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text("Potvrda brisanja"),
+                                    content: const Text("Jeste li sigurni da želite izbrisati ovu akademsku godinu?"),
+                                    actions: [
+                                      TextButton(
+                                        child: const Text("Ne"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(false);
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: const Text("Da"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(true);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+
+                              if (confirmDelete) {
+                                try {
+                                  bool result = await _akademskaProvider.delete(akGodina.id);
+                                  if (result) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Akademska godina uspješno izbrisana')),
+                                    );
+                                    await fetchData();
+                                  }
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Greška pri brisanju akademske godine: $e')),
+                                  );
+                                }
+                              }
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: Text.rich(
+                          TextSpan(
+                            text: "Ukupno mekteba: ",
+                            style: const TextStyle(fontSize: 16),
+                            children: [
+                              TextSpan(
+                                text: akGodina.ukupnoMekteba.toString(),
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.blue, // Change this to your desired color
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: Text.rich(
+                        TextSpan(
+                          text: "Ukupno učenika: ",
+                          style: const TextStyle(fontSize: 16),
+                          children: [
+                            TextSpan(
+                              text: (akGodina.ukupnoUcenika ?? 0).toString(),
+                              style: const TextStyle(color: Colors.blue),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+
 
   Widget headerButtons() {
     return Padding(
@@ -360,150 +499,6 @@ class _ProfilInfoState extends State<AkGodine> {
 
 
 
-  Widget gridView() {
-    return Padding(
-      padding: const EdgeInsets.all(30),
-      child: GridView.builder(
-        itemCount: filteredList.length, // Ensure the item count is set
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4, // Set the number of columns
-          crossAxisSpacing: 22.0, // Set the spacing between columns
-          mainAxisSpacing: 22.0, // Set the spacing between rows
-          childAspectRatio: 2.5,
-        ),
-        itemBuilder: (BuildContext context, int index) {
-          AkademskaGodina akGodina = filteredList[index];
-          return Card(
-            child: Container(
-              width: 50,
-              decoration: BoxDecoration(color: Colors.blueGrey[100]),
-              padding: const EdgeInsets.all(8.0),
-              child: Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15),
-                            child: Text(
-                              akGodina.naziv.toString(),
-                              style: const TextStyle(
-                                  fontSize: 22, fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                          const Spacer(),
-                          PopupMenuButton<int>(
-                            icon: const Icon(Icons.more_vert),
-                            itemBuilder: (BuildContext context) =>
-                            <PopupMenuEntry<int>>[
-                               const PopupMenuItem<int>(
-                                value: 1,
-                                child: Text(
-                                 "Izbriši",
-                                ),
-                              ),
-                              // Add more options as needed
-                            ],
-                            onSelected: (int value) async {
-                              if (value == 1) {
-                                bool confirmDelete = await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text("Potvrda brisanja"),
-                                      content: const Text("Jeste li sigurni da želite izbrisati ovu akademsku godinu?"),
-                                      actions: [
-                                        TextButton(
-                                          child: const Text("Ne"),
-                                          onPressed: () {
-                                            Navigator.of(context).pop(false);
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: const Text("Da"),
-                                          onPressed: () {
-                                            Navigator.of(context).pop(true);
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-
-                                if (confirmDelete) {
-                                  try {
-                                    bool result = await _akademskaProvider.delete(akGodina.id);
-                                    if (result) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Akademska godina uspješno izbrisana')),
-
-                                      );
-                                      await fetchData();
-                                    }
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Greška pri brisanju akademske godine: $e')),
-                                    );
-                                  }
-                                }
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                       Flexible(
-                         child: Padding(
-                          padding: const EdgeInsets.only(left: 15),
-                          child: Text.rich(
-                            TextSpan(
-                              text: "Ukupno mekteba: ",
-                              style: const TextStyle(fontSize: 16),
-                              children: [
-                                TextSpan(
-                                  text: akGodina.ukupnoMekteba.toString(),
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.blue, // Change this to your desired color
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                                               ),
-                       ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 15),
-                            child: Text.rich(
-                              TextSpan(
-                                text: "Ukupno učenika: ",
-                                style: const TextStyle(fontSize: 16),
-                                children: [
-                                  TextSpan(
-                                    text: (akGodina.ukupnoUcenika ?? 0).toString(),
-                                    style: const TextStyle(color: Colors.blue)
-                                  )
-                                ]
-                              )
-                            ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
 
   Widget pageNumbers() {
     return Padding(

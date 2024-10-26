@@ -29,7 +29,6 @@ builder.Services.AddTransient<IRazredService, RazredService>();
 builder.Services.AddTransient<ITakmicarService, TakmicarService>();
 builder.Services.AddTransient<ITakmicenjeService, TakmicenjeService>();
 builder.Services.AddTransient<IKategorijaService, KategorijaService>();
-builder.Services.AddTransient<ITakmicenjeKategorijaService, TakmicenjeKategorijaService>();
 builder.Services.AddTransient<IUlogaService, UlogaService>();
 builder.Services.AddTransient<IZadacaService, ZadacaService>();
 builder.Services.AddTransient<IAkademskaGodinaService, AkademskaGodinaService>();
@@ -112,10 +111,16 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+//using (var scope = app.Services.CreateScope())
+//{
+//    var context = scope.ServiceProvider.GetRequiredService<eMektebContext>();
+//    context.Database.Migrate();
+//}
 
 app.Run();

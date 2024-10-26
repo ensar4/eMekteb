@@ -324,7 +324,7 @@ class _RoditeljUspjehState extends State<RoditeljUspjehScreen> {
                     ),
                     children: [
                       TextSpan(
-                        text: '${historyItem.prisustvo?.toStringAsFixed(1)}%',
+                        text: '${historyItem.prisustvo?.toStringAsFixed(0)}%',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),

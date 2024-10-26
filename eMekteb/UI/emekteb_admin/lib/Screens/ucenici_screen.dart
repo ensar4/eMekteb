@@ -309,34 +309,31 @@ class _ProfilInfoState extends State<Ucenici> {
       ),
     );
   }
-
-  Widget SearchByName(){
+  Widget SearchByName() {
     return Container(
-      width: 250,
-      child: Expanded(
-        child: TextField(
-          controller: searchController,
-          onChanged: (value) {
-            searchByName(value);
-          },
-          decoration: const InputDecoration(
-            hintText: "Pretraga",
-            isDense: true, // Visina fielda
-            contentPadding:
-            EdgeInsets.only(left: 20, right: 20), // Visina fielda
-            border: OutlineInputBorder(),
-            prefixIcon: Align(
-              widthFactor: 1.0,
-              heightFactor: 1.0,
-              child: Icon(
-                Icons.search,
-              ),
+      width: 250, // Set a fixed width for the search box
+      child: TextField(
+        controller: searchController,
+        onChanged: (value) {
+          searchByName(value); // Perform search when text changes
+        },
+        decoration: const InputDecoration(
+          hintText: "Pretraga",
+          isDense: true, // Reduce vertical padding
+          contentPadding: EdgeInsets.only(left: 20, right: 20), // Control padding
+          border: OutlineInputBorder(), // Standard border for the TextField
+          prefixIcon: Align(
+            widthFactor: 1.0,
+            heightFactor: 1.0,
+            child: Icon(
+              Icons.search, // Search icon
             ),
           ),
         ),
       ),
     );
   }
+
 
   Widget Ukupno(){
     return Text(
@@ -375,7 +372,7 @@ class _ProfilInfoState extends State<Ucenici> {
                   DataCell(Text(item.prezime.toString())),
                   DataCell(Text(item.nazivRazreda.toString())),
                   DataCell(Text(item.prosjek?.toStringAsFixed(1) ?? '0.00')),
-                  DataCell(Text('${item.prisustvo?.toStringAsFixed(1) ?? '0.00'} %')),
+                  DataCell(Text('${item.prisustvo?.toStringAsFixed(0) ?? '0.00'}%')),
                   ],
               );
             }).toList(),
