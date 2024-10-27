@@ -26,7 +26,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certificate.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=ensar
       - ConnectionStrings:DefaultConnection=Server=emekteb-sql,1433;Database=200119;User=employee;Password=Mostar2017;ConnectRetryCount=0;TrustServerCertificate=True
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - 7049:443
     depends_on:
