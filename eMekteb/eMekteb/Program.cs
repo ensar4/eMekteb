@@ -10,8 +10,10 @@ using eMekteb.Services.ObavijestStateMachine;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Security.Authentication;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -78,16 +80,17 @@ builder.Services.AddControllersWithViews();
 //    });
 
 
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         // Korišćenje IConfiguration objekta
         var configuration = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
 
-        options.Authority = configuration.GetValue<string>("IdentityServerUrl")!;
-        options.MetadataAddress = configuration.GetValue<string>("IdentityServerMetaDataUrl")!;
+       // options.Authority = configuration.GetValue<string>("IdentityServerUrl")!;
+       // options.MetadataAddress = configuration.GetValue<string>("IdentityServerMetaDataUrl")!;    //visak dvije linije options.authority & metaadress
         options.RequireHttpsMetadata = false;
-
+        IdentityModelEventSource.ShowPII = true;
         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("IdentityServerJWTSecret")!));
 
         options.TokenValidationParameters.ValidateAudience = false;

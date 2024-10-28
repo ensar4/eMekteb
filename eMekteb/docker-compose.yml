@@ -54,8 +54,8 @@ services:
     build:
       context: .
     environment:
-      - IdentityServerUrl=http://emekteb-ids:7049
-      - IdentityServerMetaDataUrl=http://emekteb-ids:7049/.well-known/openid-configuration
+      - IdentityServerUrl=https://localhost:7049
+      - IdentityServerMetaDataUrl=https://localhost:7049/.well-known/openid-configuration
       - ConnectionStrings:DefaultConnection=Server=emekteb-sql,1433;Database=200119;User=sa;Password=Mostar2017;ConnectRetryCount=0;TrustServerCertificate=True
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+;http://+
