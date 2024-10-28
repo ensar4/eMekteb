@@ -25,7 +25,7 @@ services:
       - ASPNETCORE_HTTPS_PORT=7049
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certificate.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=ensar
-      - ConnectionStrings:DefaultConnection=Server=emekteb-sql,1433;Database=200119;User=employee;Password=Mostar2017;ConnectRetryCount=0;TrustServerCertificate=True
+      - ConnectionStrings:DefaultConnection=Server=emekteb-sql,1433;Database=200119;User=sa;Password=Mostar2017;ConnectRetryCount=0;TrustServerCertificate=True
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - 7049:443
@@ -56,7 +56,7 @@ services:
     environment:
       - IdentityServerUrl=http://emekteb-ids:7049
       - IdentityServerMetaDataUrl=http://emekteb-ids:7049/.well-known/openid-configuration
-      - ConnectionStrings:DefaultConnection=Server=emekteb-sql,1433;Database=200119;User=employee;Password=Mostar2017;ConnectRetryCount=0;TrustServerCertificate=True
+      - ConnectionStrings:DefaultConnection=Server=emekteb-sql,1433;Database=200119;User=sa;Password=Mostar2017;ConnectRetryCount=0;TrustServerCertificate=True
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+;http://+
       - ASPNETCORE_HTTPS_PORT=7160

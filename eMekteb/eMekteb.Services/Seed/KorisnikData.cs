@@ -76,8 +76,8 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(1981, 09, 12),
                     ImeRoditelja = "Aner",
                     MektebId = 1,
-                    LozinkaHash = "AM3voFixj70K2UEq0c+7KnPEoaU=",
-                    LozinkaSalt = "jmK1d1xnmg2DC0svh3UvRw=="
+                    LozinkaHash = "AtSGH/z7qvkVdWoRnHgpVjtiw+M=",
+                    LozinkaSalt = "XPD7niYAxH0Rify963NJDA=="
                 },
                 new Korisnik
                 {
