@@ -150,7 +150,7 @@ class _UceniciHatmaState extends State<UceniciHatma> {
           columns: [
             DataColumn(label: Text('Ime i prezime')),
             DataColumn(label: Text('Prisustvo')),
-            DataColumn(label: Text('Detalji')),
+            DataColumn(label: Text('Uredi')),
           ],
           rows: filteredList.map((ucenik) {
             return DataRow(
@@ -364,6 +364,9 @@ class _UceniciHatmaState extends State<UceniciHatma> {
                       if (value == null || value.isEmpty) {
                         return 'Unesite broj telefona';
                       }
+                      else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                        return 'Neispravan format, unesite samo brojeve!';
+                      }
                       return null;
                     },
                   ),
@@ -373,6 +376,8 @@ class _UceniciHatmaState extends State<UceniciHatma> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Unesite mail';
+                      } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                        return 'Neispravan format maila!';
                       }
                       return null;
                     },
@@ -446,7 +451,7 @@ class _UceniciHatmaState extends State<UceniciHatma> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: Text('Odustani'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -476,6 +481,7 @@ class _UceniciHatmaState extends State<UceniciHatma> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Učenik uspješno ažuriran')),
                     );
+                    fetchData();
                     Navigator.of(context).pop();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(

@@ -75,7 +75,7 @@ class _ObavijestDetaljiState extends State<ObavijestDetalji> {
 
   Widget showText(){
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(18.0),
       child: Text(
         widget.obavijest!.opis.toString(),
         style: const TextStyle(fontSize: 18,),

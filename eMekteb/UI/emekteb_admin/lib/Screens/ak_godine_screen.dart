@@ -202,13 +202,13 @@ class _ProfilInfoState extends State<AkGodine> {
                                     content: const Text("Jeste li sigurni da želite izbrisati ovu akademsku godinu?"),
                                     actions: [
                                       TextButton(
-                                        child: const Text("Ne"),
+                                        child: const Text("Ne", style: TextStyle(fontSize: 18),),
                                         onPressed: () {
                                           Navigator.of(context).pop(false);
                                         },
                                       ),
                                       TextButton(
-                                        child: const Text("Da"),
+                                        child: const Text("Da", style: TextStyle(color: Colors.red, fontSize: 18),),
                                         onPressed: () {
                                           Navigator.of(context).pop(true);
                                         },
@@ -395,6 +395,8 @@ class _ProfilInfoState extends State<AkGodine> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Unesite naziv';
+                    } else if (!RegExp(r'^\d{4}/\d{2}$').hasMatch(value)) {
+                      return 'Unesite naziv u formatu "2022/23"';
                     }
                     return null;
                   },

@@ -137,6 +137,8 @@ class _ProfilInfoState extends State<Takmicenja> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Unesite godinu takmičenja';
+                    }else if (!RegExp(r'^\d{4}$').hasMatch(value)) {
+                      return 'Neispravan format, unesite 4 cifre!';
                     }
                     return null;
                   },
@@ -300,13 +302,13 @@ class _ProfilInfoState extends State<Takmicenja> {
                                         "Jeste li sigurni da želite izbrisati ovo takmičenje?"),
                                     actions: [
                                       TextButton(
-                                        child: const Text("Ne"),
+                                        child: const Text("Ne", style: TextStyle(fontSize: 18),),
                                         onPressed: () {
                                           Navigator.of(context).pop(false);
                                         },
                                       ),
                                       TextButton(
-                                        child: const Text("Da"),
+                                        child: const Text("Da", style: TextStyle(color: Colors.red, fontSize: 18),),
                                         onPressed: () {
                                           Navigator.of(context).pop(true);
                                         },

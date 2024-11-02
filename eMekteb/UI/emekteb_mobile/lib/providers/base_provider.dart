@@ -105,7 +105,6 @@ T fromJson (data){
     if (response?.statusCode == 200) {
       return true;
     } else {
-      // Handle errors (optional: parse error response)
       throw Exception('Failed to delete item: ${response?.statusCode}');
     }
   }
@@ -132,7 +131,6 @@ T fromJson (data){
       result.result.add(item);
 
       result.count = item != null ? 1 : 0;
-      print(url);
       return result;
     } else {
       throw Exception("Error with response");
@@ -150,7 +148,6 @@ T fromJson (data){
 
     if (isValidResponse(response!)) {
       var data = jsonDecode(response.body);
-
       if (data is! Map<String, dynamic>) {
         throw Exception("Unexpected JSON format");
       }

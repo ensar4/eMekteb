@@ -14,6 +14,7 @@ class Mualim{
   String? status;
   String? mail;
   String? spol;
+  String? imeRoditelja;
   DateTime? datumRodjenja;
   int? mektebId;
 
@@ -28,7 +29,8 @@ class Mualim{
       this.datumRodjenja,
       this.username,
       this.mail,
-      this.spol
+      this.spol,
+      this.imeRoditelja
       );
   factory Mualim.fromJson(Map<String, dynamic> json) => _$MualimFromJson(json);
 

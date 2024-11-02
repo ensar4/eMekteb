@@ -12,8 +12,8 @@ DodatnaLekcija _$DodatnaLekcijaFromJson(Map<String, dynamic> json) =>
       json['naziv'] as String,
       json['tekst'] as String,
       (json['mektebId'] as num?)?.toInt(),
-      (json['likes'] as num).toInt(),
-      (json['dislikes'] as num).toInt(),
+      (json['likes'] as num?)?.toInt(),
+      (json['dislikes'] as num?)?.toInt(),
     )..datumObjavljivanja = json['datumObjavljivanja'] == null
         ? null
         : DateTime.parse(json['datumObjavljivanja'] as String);

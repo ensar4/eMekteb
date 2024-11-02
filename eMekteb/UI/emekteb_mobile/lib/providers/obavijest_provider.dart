@@ -35,6 +35,32 @@ Obavijest fromJson(data) {
     }
   }
 
+  Future<bool> update(int? id, String opis, DateTime datumObjave, String naslov) async {
+    final url = Uri.parse('$baseOfUrl''Obavijest/$id');
+    final headers = getHeaders();
+
+    final response = await http.put(
+      url,
+      headers: headers,
+      body: json.encode({
+        'naslov': naslov,
+        'opis': opis,
+        'datumObjave': datumObjave.toIso8601String(),
+        'vrstaObjave':'obavijest',
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+    else if (response.statusCode == 400){
+      throw "Nije moguće editovati aktivnu obavijest!";
+      }
+    else {
+      throw "Došlo je do greške pri ažuriranju obavijesti.";
+    }
+  }
+
   Future<bool> activateObavijest(int? obavijestId) async {
     final url = Uri.parse('$baseOfUrl''Obavijest/$obavijestId/activate');
     final headers = getHeaders();

@@ -105,8 +105,8 @@ class _ProfilInfoState extends State<Muallimi> {
               DataColumn(label: Text('Prezime')),
               DataColumn(label: Text('Telefon')),
               DataColumn(label: Text('Mail')),
+              DataColumn(label: Text('Uredi')),
               DataColumn(label: Text('Izbriši')),
-
             ],
             rows: filteredList.map<DataRow>((item) {
               return DataRow(
@@ -115,6 +115,14 @@ class _ProfilInfoState extends State<Muallimi> {
                   DataCell(Text(item.prezime.toString())),
                   DataCell(Text((item.telefon.toString())),),
                   DataCell(Text((item.mail.toString())),),
+                  DataCell(
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () async {
+                        _showUpdateForm(context, _mualimProvider, item.id, item);
+                      },
+                    ),
+                  ),
                   DataCell(
                     IconButton(
                       icon: const Icon(Icons.delete),
@@ -168,4 +176,228 @@ class _ProfilInfoState extends State<Muallimi> {
       },
     )) ?? false;
   }
+
+  void _showUpdateForm(BuildContext context, MualimProvider provider, int? userId, Mualim userData) {
+    final formKey = GlobalKey<FormState>();
+    String? ime = userData.ime;
+    String? prezime = userData.prezime;
+    String? username = userData.username;
+    String? telefon = userData.telefon;
+    String? mail = userData.mail;
+    String? spol = userData.spol;
+    String? status = userData.status;
+    DateTime? datumRodjenja = userData.datumRodjenja;
+    String? imeRoditelja = userData.imeRoditelja;
+    int? mektebId = userData.mektebId;
+
+    final TextEditingController datumRodjenjaController = TextEditingController();
+    datumRodjenjaController.text = datumRodjenja!.toLocal().toString().split(' ')[0];
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Uredi mualima'),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.2,
+            child: SingleChildScrollView(
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      initialValue: ime,
+                      decoration: const InputDecoration(labelText: 'Ime'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Unesite ime mualima';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        ime = value!;
+                      },
+                    ),
+                    TextFormField(
+                      initialValue: prezime,
+                      decoration: const InputDecoration(labelText: 'Prezime'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Unesite prezime mualima';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        prezime = value!;
+                      },
+                    ),
+                    TextFormField(
+                      initialValue: username,
+                      decoration: const InputDecoration(labelText: 'Korisničko ime'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Unesite korisničko ime za mualima';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        username = value!;
+                      },
+                    ),
+                    TextFormField(
+                      initialValue: telefon,
+                      decoration: const InputDecoration(labelText: 'Telefon'),
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Unesite telefon';
+                        } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                          return 'Neispravan format, unesite samo brojeve!';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        telefon = value!;
+                      },
+                    ),
+                    TextFormField(
+                      initialValue: mail,
+                      decoration: const InputDecoration(labelText: 'Mail'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Unesite mail mualima';
+                        } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                          return 'Neispravan format maila!';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        mail = value!;
+                      },
+                    ),
+                    DropdownButtonFormField<String>(
+                      decoration: const InputDecoration(labelText: 'Spol'),
+                      value: spol,
+                      items: ['M', 'Ž'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        spol = newValue!;
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Unesite spol';
+                        }
+                        return null;
+                      },
+                    ),
+                    DropdownButtonFormField<String>(
+                      decoration: const InputDecoration(labelText: 'Status'),
+                      value: status,
+                      items: ['Aktivan', 'Neaktivan'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        status = newValue!;
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Unesite status mualima';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: datumRodjenjaController,
+                      decoration: const InputDecoration(labelText: 'Datum rođenja'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Unesite datum rođenja mualima';
+                        }
+                        return null;
+                      },
+                      onTap: () async {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: datumRodjenja,
+                          firstDate: DateTime(1900),
+                          lastDate: DateTime(2101),
+                        );
+                        if (picked != null && picked != datumRodjenja) {
+                          datumRodjenja = picked;
+                          datumRodjenjaController.text = datumRodjenja!.toLocal().toString().split(' ')[0];
+                        }
+                      },
+                    ),
+                    TextFormField(
+                      initialValue: imeRoditelja,
+                      decoration: const InputDecoration(labelText: 'Ime roditelja'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Unesite ime jednog roditelja';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        imeRoditelja = value!;
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Odustani'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Spremi'),
+              onPressed: () async {
+                if (formKey.currentState!.validate()) {
+                  formKey.currentState!.save();
+                  bool result = await provider.update(
+                    userId,
+                    ime!,
+                    prezime!,
+                    username!,
+                    telefon!,
+                    mail!,
+                    spol!,
+                    status!,
+                    datumRodjenja!,
+                    imeRoditelja!,
+                    mektebId,
+                  );
+                  if (result) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Mualim uspješno ažuriran')),
+                    );
+                    fetchData();
+                    Navigator.of(context).pop();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Greška pri ažuriranju mualima')),
+                    );
+                  }
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }

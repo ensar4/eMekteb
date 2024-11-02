@@ -92,4 +92,44 @@ Mualim fromJson(data) {
   }
 
 
+  Future<bool> update(
+      int? id,
+      String ime,
+      String prezime,
+      String username,
+      String telefon,
+      String mail,
+      String spol,
+      String status,
+      DateTime datumRodjenja,
+      String imeRoditelja,
+      int? mektebId,
+      ) async {
+    final url = Uri.parse('$baseOfUrl''Korisnik/$id');
+    final headers = getHeaders();
+
+    final response = await http.put(
+      url,
+      headers: headers,
+      body: json.encode({
+        'ime': ime,
+        'prezime': prezime,
+        'username': username,
+        'telefon': telefon,
+        'mail': mail,
+        'spol': spol,
+        'status': status,
+        'datumRodjenja': datumRodjenja.toIso8601String(),
+        'imeRoditelja': imeRoditelja,
+        'mektebId': mektebId,
+      }),
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 405){
+      throw Exception('Failed: ${response.statusCode}');
+    }
+    return false;
+  }
+
 }

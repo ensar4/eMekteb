@@ -153,7 +153,7 @@ class _UceniciTedzvidState extends State<UceniciTedzvid> {
           columns: [
             DataColumn(label: Text('Ime i prezime')),
             DataColumn(label: Text('Prisustvo')),
-            DataColumn(label: Text('Detalji')),
+            DataColumn(label: Text('Uredi')),
           ],
           rows: filteredList.map((ucenik) {
             return DataRow(
@@ -367,6 +367,9 @@ class _UceniciTedzvidState extends State<UceniciTedzvid> {
                       if (value == null || value.isEmpty) {
                         return 'Unesite broj telefona';
                       }
+                      else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                        return 'Neispravan format, unesite samo brojeve!';
+                      }
                       return null;
                     },
                   ),
@@ -376,6 +379,8 @@ class _UceniciTedzvidState extends State<UceniciTedzvid> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Unesite mail';
+                      } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                        return 'Neispravan format maila!';
                       }
                       return null;
                     },
@@ -450,7 +455,7 @@ class _UceniciTedzvidState extends State<UceniciTedzvid> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: Text('Odustani'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -480,6 +485,7 @@ class _UceniciTedzvidState extends State<UceniciTedzvid> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Učenik uspješno ažuriran')),
                     );
+                    fetchData();
                     Navigator.of(context).pop();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(

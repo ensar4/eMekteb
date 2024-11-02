@@ -14,6 +14,7 @@ class Admin{
   String? status;
   String? mail;
   String? spol;
+  String? imeRoditelja;
   DateTime? datumRodjenja;
   int? mektebId;
 
@@ -27,7 +28,8 @@ class Admin{
       this.datumRodjenja,
       this.username,
       this.mail,
-      this.spol
+      this.spol,
+      this.imeRoditelja
       );
   factory Admin.fromJson(Map<String, dynamic> json) => _$AdminFromJson(json);
 

@@ -480,6 +480,7 @@ class _MektebDetaljiState extends State<MektebDetalji> {
       }
     });
   }
+
   void _showCreateForm(BuildContext context, MualimProvider provider) {
     final formKey = GlobalKey<FormState>();
     String ime = '';
@@ -551,9 +552,12 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                     ),
                     TextFormField(
                       decoration: const InputDecoration(labelText: 'Telefon'),
+                      keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Unesite telefon mualima';
+                          return 'Unesite telefon';
+                        } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                          return 'Neispravan format, unesite samo brojeve!';
                         }
                         return null;
                       },
@@ -566,6 +570,8 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Unesite mail mualima';
+                        } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                          return 'Neispravan format maila!';
                         }
                         return null;
                       },
@@ -625,7 +631,7 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                         DateTime? picked = await showDatePicker(
                           context: context,
                           initialDate: datumRodjenja,
-                          firstDate: DateTime(2000),
+                          firstDate: DateTime(1900),
                           lastDate: DateTime(2101),
                         );
                         if (picked != null && picked != datumRodjenja) {

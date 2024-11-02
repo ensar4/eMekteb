@@ -81,11 +81,11 @@ T fromJson (data){
 
   Future<bool> delete(int? id) async {
     final url = Uri.parse('$_baseUrl$_endpoint/$id');
+    var headers = getHeaders();
+
     final response = await http.delete(
       url,
-      headers: {
-        'accept': '*/*',
-      },
+      headers: headers
     );
 
     if (response.statusCode == 200) {

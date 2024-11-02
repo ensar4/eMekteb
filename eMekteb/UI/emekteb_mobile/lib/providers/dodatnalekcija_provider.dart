@@ -35,6 +35,38 @@ class DodatnaLekcijaProvider extends BaseProvider<DodatnaLekcija> {
     }
   }
 
+  Future<bool> update(
+      int? id,
+      String naziv,
+      String tekst,
+      DateTime? datumObjavljivanja,
+      int likes,
+      int dislikes,
+      int? mektebId,
+      ) async {
+    final url = Uri.parse('$baseOfUrl''DodatneLekcije/$id');
+    final headers = getHeaders();
+
+    final response = await http.put(
+      url,
+      headers: headers,
+      body: json.encode({
+        'naziv': naziv,
+        'tekst': tekst,
+        'datumObjavljivanja': datumObjavljivanja?.toIso8601String(),
+        'likes': likes,
+        'dislikes': dislikes,
+        'mektebId': mektebId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<bool> addLike(int? lekcijaId, int like) async {
     final url = Uri.parse('$fullUrl/$lekcijaId/likes');
     final headers = getHeaders();

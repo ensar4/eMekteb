@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:emekteb_mobile/Screens/obavijest_details_screen.dart';
+import 'package:emekteb_mobile/Screens/obavijest_edit_screen.dart';
 import 'package:emekteb_mobile/Screens/obavijest_insert_screen.dart';
 import 'package:emekteb_mobile/Widgets/master_screen.dart';
 import 'package:emekteb_mobile/models/korisnik.dart';
@@ -41,7 +42,6 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
     _obavijestProviderProvider = context.read<ObavijestProvider>();
     _userProvider = context.read<UserProvider>();
     fetchData();
-
   }
 
   Future<void> fetchData({String? filter}) async {
@@ -52,8 +52,8 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
         filteredList.clear();
       });
 
-      var data =
-          await _obavijestProviderProvider.getById2(_userProvider.user!.mektebId);
+      var data = await _obavijestProviderProvider
+          .getById2(_userProvider.user!.mektebId);
 
       setState(() {
         if (listaObavijesti == null) {
@@ -67,6 +67,7 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
       });
     }
   }
+
   String _getFirstThreeWords(String text) {
     List<String> words = text.split(' ');
     if (words.length <= 3) {
@@ -74,20 +75,22 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
     }
     return '${words.take(3).join(' ')}...';
   }
+
   void searchByName(String query) {
     setState(() {
       if (query.isEmpty) {
         filteredList = listaObavijesti?.result ?? [];
       } else {
         filteredList = listaObavijesti?.result
-            .where((ob) =>
-        (ob.naslov.toLowerCase().contains(query.toLowerCase())) ||
-            (ob.opis.toLowerCase().contains(query.toLowerCase())))
-            .toList() ??
+                .where((ob) =>
+                    (ob.naslov.toLowerCase().contains(query.toLowerCase())) ||
+                    (ob.opis.toLowerCase().contains(query.toLowerCase())))
+                .toList() ??
             [];
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return MasterScreen(
@@ -101,13 +104,16 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
       ),
     );
   }
+
   Widget main() {
     String userRole = getCurrentUserRole();
     bool isUcenik = userRole == "Ucenik";
     bool isRoditelj = userRole == "Roditelj";
     bool isImam = userRole == "Imam";
-    return Center( // Ensures the content is centered
-      child: SingleChildScrollView( // Allows scrolling if needed
+    return Center(
+      // Ensures the content is centered
+      child: SingleChildScrollView(
+        // Allows scrolling if needed
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -117,16 +123,15 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _buildSearchField(),
-                  SizedBox(width: 20,),
-                  if (!isUcenik && !isRoditelj)
-                    btnAdd(),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  if (!isUcenik && !isRoditelj) btnAdd(),
                 ],
               ),
             ),
-            if(!isImam)
-            listaForUcenici(),
-            if (!isUcenik && !isRoditelj)
-            lista(),
+            if (!isImam) listaForUcenici(),
+            if (!isUcenik && !isRoditelj) lista(),
           ],
         ),
       ),
@@ -144,7 +149,8 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
         decoration: InputDecoration(
           hintText: "...",
           isDense: true,
-          contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -153,7 +159,6 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
       ),
     );
   }
-
 
   Widget lista() {
     String userRole = getCurrentUserRole();
@@ -180,7 +185,8 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ObavijestDetalji(obavijest: obavijest),
+                      builder: (context) =>
+                          ObavijestDetalji(obavijest: obavijest),
                     ),
                   );
                 },
@@ -195,12 +201,38 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          obavijest.naslov,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.normal,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              obavijest.naslov,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () {
+                                if (obavijest.stateMachine == "active") {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Nije moguće editovati aktivnu obavijest!')),
+                                  );
+                                } else {
+                                  // Navigate to the edit page if not active
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ObavijestEdit(obavijest: obavijest),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
                         ),
                         Text(
                           "${DateFormat('d.M.yyyy').format(obavijest.datumObjave)}",
@@ -229,47 +261,64 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
                                 onPressed: () async {
                                   if (obavijest.stateMachine == "draft") {
                                     // Activate obavijest
-                                    bool success = await _obavijestProviderProvider.activateObavijest(obavijest.id);
+                                    bool success =
+                                        await _obavijestProviderProvider
+                                            .activateObavijest(obavijest.id);
                                     if (success) {
                                       setState(() {
                                         obavijest.stateMachine = "active";
                                       });
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         SnackBar(
-                                          content: Text('Obavijest aktivirana.'),
+                                          content:
+                                              Text('Obavijest aktivirana.'),
                                         ),
                                       );
                                     } else {
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         SnackBar(
-                                          content: Text('Greška pri aktiviranju obavijesti.'),
+                                          content: Text(
+                                              'Greška pri aktiviranju obavijesti.'),
                                         ),
                                       );
                                     }
-                                  } else if (obavijest.stateMachine == "active") {
+                                  } else if (obavijest.stateMachine ==
+                                      "active") {
                                     // Hide obavijest
-                                    bool success = await _obavijestProviderProvider.hideObavijest(obavijest.id);
+                                    bool success =
+                                        await _obavijestProviderProvider
+                                            .hideObavijest(obavijest.id);
                                     if (success) {
                                       setState(() {
                                         obavijest.stateMachine = "draft";
                                       });
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         SnackBar(
                                           content: Text('Obavijest skrivena.'),
                                         ),
                                       );
                                     } else {
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         SnackBar(
-                                          content: Text('Greška pri skrivanju obavijesti.'),
+                                          content: Text(
+                                              'Greška pri skrivanju obavijesti.'),
                                         ),
                                       );
                                     }
                                   }
                                 },
-                                child: Text(obavijest.stateMachine == "draft" ? "Aktiviraj" : "Sakrij"),
+                                child: Text(obavijest.stateMachine == "draft"
+                                    ? "Aktiviraj"
+                                    : "Sakrij"),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: obavijest.stateMachine == "draft" ? Colors.green : Colors.red,
+                                  backgroundColor:
+                                      obavijest.stateMachine == "draft"
+                                          ? Colors.green
+                                          : Colors.red,
                                 ),
                               ),
                               IconButton(
@@ -279,19 +328,24 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: Text('Potvrda'),
-                                        content: Text('Da li ste sigurni da želite izbrisati obavijest?'),
+                                        title: Text('Potvrda brisanja'),
+                                        content: Text(
+                                            'Da li ste sigurni da želite izbrisati obavijest?'),
                                         actions: [
                                           TextButton(
-                                            child: Text('Ne'),
+                                            child: Text('Odustani'),
                                             onPressed: () {
-                                              Navigator.of(context).pop(false); // Return false if "No" is pressed
+                                              Navigator.of(context).pop(
+                                                  false); // Return false if "No" is pressed
                                             },
                                           ),
                                           TextButton(
-                                            child: Text('Da'),
+                                            child: Text('DA',
+                                                style: TextStyle(
+                                                    color: Colors.red)),
                                             onPressed: () {
-                                              Navigator.of(context).pop(true); // Return true if "Yes" is pressed
+                                              Navigator.of(context).pop(
+                                                  true); // Return true if "Yes" is pressed
                                             },
                                           ),
                                         ],
@@ -300,19 +354,23 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
                                   );
 
                                   if (confirmed == true) {
-                                    bool success = await _obavijestProviderProvider.delete(obavijest.id);
+                                    bool success =
+                                        await _obavijestProviderProvider
+                                            .delete(obavijest.id);
                                     if (success) {
                                       // Remove the item from the list
                                       setState(() {
                                         filteredList.removeAt(index);
                                       });
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         SnackBar(
                                           content: Text('Uspješno izbrisano.'),
                                         ),
                                       );
                                     } else {
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         SnackBar(
                                           content: Text('Greška pri brisanju.'),
                                         ),
@@ -387,7 +445,9 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
 
   Widget listaForUcenici() {
     final screenWidth = MediaQuery.of(context).size.width;
-    var activeObavijesti = filteredList.where((obavijest) => obavijest.stateMachine == "active").toList();
+    var activeObavijesti = filteredList
+        .where((obavijest) => obavijest.stateMachine == "active")
+        .toList();
 
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
@@ -408,7 +468,8 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ObavijestDetalji(obavijest: obavijest),
+                      builder: (context) =>
+                          ObavijestDetalji(obavijest: obavijest),
                     ),
                   );
                 },
@@ -423,12 +484,16 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          obavijest.naslov,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.normal,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              obavijest.naslov,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ],
                         ),
                         Text(
                           "${DateFormat('d.M.yyyy').format(obavijest.datumObjave)}",

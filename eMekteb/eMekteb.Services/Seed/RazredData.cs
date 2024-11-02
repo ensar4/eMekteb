@@ -40,7 +40,7 @@ namespace eMekteb.Services.Seed
                 new Razred
                 {
                     Id = 5,
-                    Naziv = "Tedzvid",
+                    Naziv = "Tedžvid",
                     MektebId = 1,
                 },
                 new Razred
@@ -76,7 +76,7 @@ namespace eMekteb.Services.Seed
                 new Razred
                 {
                     Id = 11,
-                    Naziv = "Tedzvid",
+                    Naziv = "Tedžvid",
                     MektebId = 2,
                 },
                 new Razred
@@ -112,7 +112,7 @@ namespace eMekteb.Services.Seed
                 new Razred
                 {
                     Id = 17,
-                    Naziv = "Tedzvid",
+                    Naziv = "Tedžvid",
                     MektebId = 3,
                 },
                 new Razred
@@ -148,7 +148,7 @@ namespace eMekteb.Services.Seed
                 new Razred
                 {
                     Id = 23,
-                    Naziv = "Tedzvid",
+                    Naziv = "Tedžvid",
                     MektebId = 4,
                 },
                 new Razred
@@ -184,7 +184,7 @@ namespace eMekteb.Services.Seed
                 new Razred
                 {
                     Id = 29,
-                    Naziv = "Tedzvid",
+                    Naziv = "Tedžvid",
                     MektebId = 5,
                 },
                 new Razred
@@ -220,7 +220,7 @@ namespace eMekteb.Services.Seed
                 new Razred
                 {
                     Id = 35,
-                    Naziv = "Tedzvid",
+                    Naziv = "Tedžvid",
                     MektebId = 6,
                 },
                 new Razred

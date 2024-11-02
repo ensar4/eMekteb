@@ -38,7 +38,6 @@ class KampProvider extends BaseProvider<Kamp>{
    }
  }
 
-
   Future<SearchResult<Kamp>> getLastTakmicenje() async {
     var url = "$baseOfUrl""Kamp/last";
     var uri = Uri.parse(url);
@@ -59,5 +58,27 @@ class KampProvider extends BaseProvider<Kamp>{
     }
   }
 
+  Future<bool> update(int? id, String opis, DateTime datumPocetka, DateTime datumZavrsetka, String naziv) async {
+    final url = Uri.parse('$baseOfUrl''Kamp/$id');
+    final headers = getHeaders();
+
+    final response = await http?.put(
+      url,
+      headers: headers,
+      body: json.encode({
+        'naziv': naziv,
+        'opis': opis,
+        'datumPocetka': datumPocetka.toIso8601String(),
+        'datumZavrsetka': datumZavrsetka.toIso8601String(),
+        'voditelj':'',
+      }),
+    );
+
+    if (response?.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
 }

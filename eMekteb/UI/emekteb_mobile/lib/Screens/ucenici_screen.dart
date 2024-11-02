@@ -138,6 +138,7 @@ class _ProfilInfoState extends State<Ucenici> {
 
 
   Widget _buildTable() {
+    final screenWidth = MediaQuery.of(context).size.width;
     return isLoading
         ? const Center(child: CircularProgressIndicator())
         : listaUcenika == null
@@ -146,16 +147,25 @@ class _ProfilInfoState extends State<Ucenici> {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
+          columnSpacing: screenWidth*0.09,
           columns: const [
             DataColumn(label: Text('Ime i prezime')),
-            DataColumn(label: Text('Prisustvo')),
             DataColumn(label: Text('Detalji')),
+            DataColumn(label: Text('Uredi')),
+            DataColumn(label: Text('Ispiši')),
           ],
           rows: filteredList.map((ucenik) {
             return DataRow(
               cells: [
                 DataCell(Text('${ucenik.ime} ${ucenik.prezime}')),
-                DataCell(Text('${ucenik.prisustvo!.toStringAsFixed(0)}%')),
+                DataCell(
+                  IconButton(
+                    icon: const Icon(Icons.more_vert),
+                    onPressed: () {
+                      showUcenikDetails(context, ucenik);
+                    },
+                  ),
+                ),
                 DataCell(
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -166,13 +176,31 @@ class _ProfilInfoState extends State<Ucenici> {
                           _editUcenik(context, ucenik);
                         },
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.more_vert),
-                        onPressed: () {
-                          showUcenikDetails(context, ucenik);
-                        },
-                      ),
                     ],
+                  ),
+                ),
+                DataCell(
+                  IconButton(
+                    //color: Colors.black,
+                    icon: const Icon(Icons.delete),
+                    onPressed: () async {
+                      bool confirmed = await _showConfirmationDialog(context);
+                      if (confirmed) {
+                        try {
+                          await _userProvider.delete(ucenik.id);
+                          setState(() {
+                            filteredList.remove(ucenik);
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Uspješno izbrisano!')),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Greška prilikom brisanja: $e')),
+                          );
+                        }
+                      }
+                    },
                   ),
                 ),
               ],
@@ -191,7 +219,27 @@ class _ProfilInfoState extends State<Ucenici> {
       },
     );
   }
-
+  Future<bool> _showConfirmationDialog(BuildContext context) async {
+    return (await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Potvrda brisanja'),
+          content: const Text('Jeste li sigurni da želite izbrisati ovog učenika?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Odustani'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('DA', style: TextStyle(color: Colors.red),),
+            ),
+          ],
+        );
+      },
+    )) ?? false;
+  }
   Widget _buildFilterOptions() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -249,28 +297,42 @@ class _ProfilInfoState extends State<Ucenici> {
       }
     });
   }
-
   void showUcenikDetails(BuildContext context, Ucenik ucenik) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('${ucenik.ime} ${ucenik.prezime}'),
+          title: Text(
+            '${ucenik.ime} ${ucenik.prezime}',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Telefon: ${ucenik.telefon ?? "N/A"}'),
-              Text('Datum rođenja: ${ucenik.datumRodjenja != null ? ucenik.datumRodjenja!.toLocal().toString().split(' ')[0] : "N/A"}'),
-              Text('Ime roditelja: ${ucenik.imeRoditelja ?? "N/A"}'),
-              Text('Naziv razreda: ${ucenik.nazivRazreda ?? "N/A"}'),
-              Text('Prisustvo: ${ucenik.prisustvo != null ? "${ucenik.prisustvo!.toStringAsFixed(0)}%" : "N/A"}'),
-              Text('Prosjek: ${ucenik.prosjek != null ? ucenik.prosjek!.toStringAsFixed(2) : "N/A"}'),
+              _buildDetailRow('Telefon', ucenik.telefon ?? "N/A"),
+              _buildDetailRow('Datum rođenja',
+                  ucenik.datumRodjenja != null
+                      ? ucenik.datumRodjenja!.toLocal().toString().split(' ')[0]
+                      : "N/A"
+              ),
+              _buildDetailRow('Ime roditelja', ucenik.imeRoditelja ?? "N/A"),
+              _buildDetailRow('Naziv razreda', ucenik.nazivRazreda ?? "N/A"),
+              _buildDetailRow('Prisustvo',
+                  ucenik.prisustvo != null
+                      ? "${ucenik.prisustvo!.toStringAsFixed(0)}%"
+                      : "N/A"
+              ),
+              _buildDetailRow('Prosjek',
+                  ucenik.prosjek != null
+                      ? ucenik.prosjek!.toStringAsFixed(2)
+                      : "N/A"
+              ),
             ],
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Close'),
+              child: const Text('Zatvori'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -278,6 +340,24 @@ class _ProfilInfoState extends State<Ucenici> {
           ],
         );
       },
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$label: ',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Expanded(
+            child: Text(value, style: TextStyle(color: Colors.grey.shade600)),
+          ),
+        ],
+      ),
     );
   }
 
@@ -363,6 +443,9 @@ class _ProfilInfoState extends State<Ucenici> {
                       if (value == null || value.isEmpty) {
                         return 'Unesite broj telefona';
                       }
+                      else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                        return 'Neispravan format, unesite samo brojeve!';
+                      }
                       return null;
                     },
                   ),
@@ -372,6 +455,8 @@ class _ProfilInfoState extends State<Ucenici> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Unesite mail';
+                      } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                        return 'Neispravan format maila!';
                       }
                       return null;
                     },
@@ -445,7 +530,7 @@ class _ProfilInfoState extends State<Ucenici> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text('Odustani'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -475,6 +560,7 @@ class _ProfilInfoState extends State<Ucenici> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Učenik uspješno ažuriran')),
                     );
+                    fetchData();
                     Navigator.of(context).pop();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(

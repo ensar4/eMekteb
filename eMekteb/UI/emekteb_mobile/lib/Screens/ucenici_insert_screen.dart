@@ -238,6 +238,8 @@ class _InsertUceniciState extends State<UceniciInsert> {
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Unesite broj telefona';
+              } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                return 'Neispravan format, unesite samo brojeve!';
               }
               return null;
             },
@@ -248,6 +250,8 @@ class _InsertUceniciState extends State<UceniciInsert> {
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Unesite mail';
+              } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                return 'Neispravan format maila!';
               }
               return null;
             },
@@ -305,7 +309,6 @@ class _InsertUceniciState extends State<UceniciInsert> {
         ),
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            // Retrieve values from the form
             String ime = _imeController.text;
             String prezime = _prezimeController.text;
             String imeRoditelja = _imeRoditeljaController.text;

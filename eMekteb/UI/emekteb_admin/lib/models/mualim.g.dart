@@ -19,6 +19,7 @@ Mualim _$MualimFromJson(Map<String, dynamic> json) => Mualim(
       json['username'] as String?,
       json['mail'] as String?,
       json['spol'] as String?,
+      json['imeRoditelja'] as String?,
     );
 
 Map<String, dynamic> _$MualimToJson(Mualim instance) => <String, dynamic>{
@@ -30,6 +31,7 @@ Map<String, dynamic> _$MualimToJson(Mualim instance) => <String, dynamic>{
       'status': instance.status,
       'mail': instance.mail,
       'spol': instance.spol,
+      'imeRoditelja': instance.imeRoditelja,
       'datumRodjenja': instance.datumRodjenja?.toIso8601String(),
       'mektebId': instance.mektebId,
     };

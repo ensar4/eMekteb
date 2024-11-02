@@ -292,7 +292,7 @@ class _CasDetaljiState extends State<CasDetalji> {
               onPressed: _showFilterOptions,
             ),
           ),
-          const SizedBox(width: 50),
+          const SizedBox(width: 20),
           Center(
             child: Text(
               "${DateFormat('d.M.yyyy').format(widget.cas!.datum)} - ${widget.cas!.razred}",

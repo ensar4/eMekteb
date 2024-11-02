@@ -18,73 +18,110 @@ namespace eMekteb.Services
         public MedzlisService(eMektebContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
-
         public async override Task<PagedResult<MedzlisM>> Get(MektebSearchObject? search)
         {
             var result = await base.Get(search);
 
             foreach (var medzlisM in result.Result)
             {
-                // Calculate the total number of Mektebs in the Medzlis
-                medzlisM.UkupnoMekteba = await _dbContext.Mekteb.CountAsync(m => m.MedzlisId == medzlisM.Id);
+                medzlisM.UkupnoMekteba = await _dbContext.Mekteb
+                    .CountAsync(m => m.MedzlisId == medzlisM.Id);
 
-                // Get all Mektebs in the Medzlis
-                var mektebsInMedzlis = await _dbContext.Mekteb
-                    .Where(m => m.MedzlisId == medzlisM.Id)
-                    .ToListAsync();
+                var korisniciIds = await _dbContext.Korisnik
+                         .Where(k => k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == "Ucenik") && 
+                        _dbContext.Mekteb
+                        .Where(m => m.MedzlisId == medzlisM.Id)
+                        .Select(m => m.Id)
+                        .Contains(k.MektebId))
+                          .Select(k => k.Id)
+                          .ToListAsync();
 
-                var korisniciIds = new List<int>();
-
-                // Get all student IDs in the Mektebs
-                foreach (var mekteb in mektebsInMedzlis)
-                {
-                    var mektebKorisniciIds = await _dbContext.Korisnik
-                        .Where(k => k.MektebId == mekteb.Id)
-                        .Select(k => k.Id)
-                        .ToListAsync();
-                    korisniciIds.AddRange(mektebKorisniciIds);
-                }
-
-                // Calculate the total number of students
                 medzlisM.UkupnoUcenika = korisniciIds.Count;
 
-                // Calculate the average grade for the Medzlis
-                var zadace = await _dbContext.Zadaca
+                var averageGrade = await _dbContext.Zadaca
                     .Where(z => korisniciIds.Contains(z.KorisnikId))
-                    .Include(z => z.Ocjene)
-                    .ToListAsync();
+                    .AverageAsync(z => (double?)z.Ocjene.Ocjena);
 
-                if (zadace.Count > 0)
-                {
-                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena);
-                    medzlisM.ProsjecnaOcjena = averageGrade;
-                }
-                else
-                {
-                    medzlisM.ProsjecnaOcjena = null;
-                }
+                medzlisM.ProsjecnaOcjena = averageGrade;
 
-                // Calculate the average attendance for the Medzlis
-                var prisustva = await _dbContext.Prisustvo
+                var averageAttendance = await _dbContext.Prisustvo
                     .Where(p => korisniciIds.Contains(p.KorisnikId))
-                    .ToListAsync();
+                    .GroupBy(p => p.KorisnikId)
+                    .Select(g => g.Count(p => p.Prisutan == true) / (double)g.Count())
+                    .AverageAsync() * 100;
 
-                if (prisustva.Count > 0)
-                {
-                    double averageAttendance = prisustva
-                        .GroupBy(p => p.KorisnikId)
-                        .Select(g => g.Count(p => p.Prisutan == true) / (double)g.Count())
-                        .Average() * 100;
-                    medzlisM.ProsjecnoPrisustvo = averageAttendance;
-                }
-                else
-                {
-                    medzlisM.ProsjecnoPrisustvo = null;
-                }
+                medzlisM.ProsjecnoPrisustvo = averageAttendance;
             }
 
             return result;
         }
+
+        //public async override Task<PagedResult<MedzlisM>> Get(MektebSearchObject? search)
+        //{
+        //    var result = await base.Get(search);
+
+        //    foreach (var medzlisM in result.Result)
+        //    {
+        //        // Calculate the total number of Mektebs in the Medzlis
+        //        medzlisM.UkupnoMekteba = await _dbContext.Mekteb.CountAsync(m => m.MedzlisId == medzlisM.Id);
+
+        //        // Get all Mektebs in the Medzlis
+        //        var mektebsInMedzlis = await _dbContext.Mekteb
+        //            .Where(m => m.MedzlisId == medzlisM.Id)
+        //            .ToListAsync();
+
+        //        var korisniciIds = new List<int>();
+
+        //        // Get all student IDs in the Mektebs
+        //        foreach (var mekteb in mektebsInMedzlis)
+        //        {
+        //            var mektebKorisniciIds = await _dbContext.Korisnik
+        //                .Where(k => k.MektebId == mekteb.Id)
+        //                .Select(k => k.Id).Distinct()
+        //                .ToListAsync();
+        //            korisniciIds.AddRange(mektebKorisniciIds);
+        //        }
+
+        //        // Calculate the total number of students
+        //        medzlisM.UkupnoUcenika = korisniciIds.Count;
+
+        //        // Calculate the average grade for the Medzlis
+        //        var zadace = await _dbContext.Zadaca
+        //            .Where(z => korisniciIds.Contains(z.KorisnikId))
+        //            .Include(z => z.Ocjene)
+        //            .ToListAsync();
+
+        //        if (zadace.Count > 0)
+        //        {
+        //            double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena);
+        //            medzlisM.ProsjecnaOcjena = averageGrade;
+        //        }
+        //        else
+        //        {
+        //            medzlisM.ProsjecnaOcjena = null;
+        //        }
+
+        //        // Calculate the average attendance for the Medzlis
+        //        var prisustva = await _dbContext.Prisustvo
+        //            .Where(p => korisniciIds.Contains(p.KorisnikId))
+        //            .ToListAsync();
+
+        //        if (prisustva.Count > 0)
+        //        {
+        //            double averageAttendance = prisustva
+        //                .GroupBy(p => p.KorisnikId)
+        //                .Select(g => g.Count(p => p.Prisutan == true) / (double)g.Count())
+        //                .Average() * 100;
+        //            medzlisM.ProsjecnoPrisustvo = averageAttendance;
+        //        }
+        //        else
+        //        {
+        //            medzlisM.ProsjecnoPrisustvo = null;
+        //        }
+        //    }
+
+        //    return result;
+        //}
 
 
     }

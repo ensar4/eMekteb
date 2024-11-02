@@ -287,13 +287,13 @@ class _ProfilInfoState extends State<Mektebi> {
                                     content: const Text("Jeste li sigurni da želite izbrisati mekteb?"),
                                     actions: [
                                       TextButton(
-                                        child: const Text("Ne"),
+                                        child: const Text("Ne", style: TextStyle(fontSize: 18),),
                                         onPressed: () {
                                           Navigator.of(context).pop(false);
                                         },
                                       ),
                                       TextButton(
-                                        child: const Text("Da"),
+                                        child: const Text("Da", style: TextStyle(color: Colors.red, fontSize: 18),),
                                         onPressed: () {
                                           Navigator.of(context).pop(true);
                                         },
@@ -323,7 +323,7 @@ class _ProfilInfoState extends State<Mektebi> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 22),
+                    const SizedBox(height: 15),
                     Flexible(
                       child: Row(
                         children: [
@@ -411,9 +411,12 @@ class _ProfilInfoState extends State<Mektebi> {
                 ),
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Telefon'),
+                  keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Unesite kontakt telefon';
+                      return 'Unesite telefon';
+                    } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                      return 'Neispravan format, unesite samo brojeve!';
                     }
                     return null;
                   },

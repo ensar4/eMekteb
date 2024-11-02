@@ -27,14 +27,12 @@ Ucenik fromJson(data) {
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
 
-      // Check if the JSON contains the "result" and "count" fields
       if (data is! Map<String, dynamic> || !data.containsKey('result')) {
         throw Exception("Unexpected JSON format");
       }
 
       var result = SearchResult<Ucenik>();
 
-      // Get the list from the "result" field
       var resultList = data['result'];
 
       if (resultList is List) {
@@ -115,6 +113,7 @@ Ucenik fromJson(data) {
 
     return response.statusCode == 200;
   }
+
   Future<bool> insertOboje(
       String ime,
       String prezime,
@@ -205,7 +204,6 @@ Ucenik fromJson(data) {
     final url = Uri.parse('$baseOfUrl''Korisnik/$id');
     final headers = getHeaders();
 
-    // First update the Ucenik data
     final response = await http.put(
       url,
       headers: headers,
@@ -224,7 +222,7 @@ Ucenik fromJson(data) {
     );
 
     if (response.statusCode == 200) {
-      // If the Ucenik update is successful, update RazredKorisnik table
+      print(response.body);
       final razredKorisnikProvider = RazredKorisnikProvider();
       DateTime currentDate = DateTime.now();
 
@@ -232,7 +230,6 @@ Ucenik fromJson(data) {
 
       return razredKorisnikUpdated;
     } else {
-      print(url);
       return false;
     }
   }

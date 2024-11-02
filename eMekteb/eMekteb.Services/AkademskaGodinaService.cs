@@ -25,11 +25,9 @@ namespace eMekteb.Services
 
             foreach (var aGm in result.Result)
             {
-                // Count the total number of Mektebs associated with the academic year
                 aGm.UkupnoMekteba = await _dbContext.AkademskaMekteb
                     .CountAsync(am => am.AkademskaGodinaId == aGm.Id);
 
-                // Get all Razred IDs associated with the academic year via AkademskaGodinaRazred
                 var razredIds = await _dbContext.AkademskaRazred
                     .Where(ag => ag.AkademskaGodinaId == aGm.Id)
                     .Select(ag => ag.RazredId)
@@ -37,7 +35,6 @@ namespace eMekteb.Services
 
                 if (!razredIds.Any())
                 {
-                    // If no classes are associated with the academic year, set default values
                     aGm.UkupnoUcenika = 0;
                     aGm.ProsjecnaOcjena = null;
                     aGm.ProsjecnoPrisustvo = null;
@@ -45,22 +42,29 @@ namespace eMekteb.Services
                 }
 
                 // Fetch Ucenik IDs connected to the found RazredIds via KorisnikRazred
+                //var korisniciIds = await _dbContext.RazredKorisnik
+                //    .Where(kr => razredIds.Contains(kr.RazredId))
+                //    .Select(kr => kr.KorisnikId)
+                //    .ToListAsync();
+
+                //aGm.UkupnoUcenika = korisniciIds.Count;
+
                 var korisniciIds = await _dbContext.RazredKorisnik
                     .Where(kr => razredIds.Contains(kr.RazredId))
                     .Select(kr => kr.KorisnikId)
+                    .Distinct() 
                     .ToListAsync();
 
                 aGm.UkupnoUcenika = korisniciIds.Count;
 
-                // Calculate average grade for all Uceniks (students) in these RazredIds
                 var zadace = await _dbContext.Zadaca
-                    .Where(z => razredIds.Contains(z.RazredId))  // Zadaca linked to Razred, not directly to Ucenik
+                    .Where(z => razredIds.Contains(z.RazredId))  
                     .Include(z => z.Ocjene)
                     .ToListAsync();
 
                 if (zadace.Count > 0)
                 {
-                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena); // Assuming Ocjene has property Ocjena
+                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena);
                     aGm.ProsjecnaOcjena = averageGrade;
                 }
                 else
@@ -68,9 +72,8 @@ namespace eMekteb.Services
                     aGm.ProsjecnaOcjena = null;
                 }
 
-                // Calculate average attendance for all Uceniks in the academic year
                 var prisustva = await _dbContext.Prisustvo
-                    .Where(p => razredIds.Contains((int)p.RazredId))  // Prisustvo linked to Razred, not directly to Ucenik
+                    .Where(p => razredIds.Contains((int)p.RazredId))  
                     .ToListAsync();
 
                 if (prisustva.Count > 0)

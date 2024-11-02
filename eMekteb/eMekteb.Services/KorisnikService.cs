@@ -450,21 +450,9 @@ namespace eMekteb.Services
 
             _mapper.Map(update, korisnik);
 
-            // Handle password change
-           // if (!string.IsNullOrEmpty(update.OldPassword) && !string.IsNullOrEmpty(update.NewPassword))
-           // {
-           //     if (GenerateHash(korisnik.LozinkaSalt, update.OldPassword) != korisnik.LozinkaHash)
-           //     {
-           //         throw new Exception("Old password is incorrect");
-           //     }
-           //
-           //     var newSalt = GenerateSalt();
-           //     var newHash = GenerateHash(newSalt, update.NewPassword);
-           //     korisnik.LozinkaSalt = newSalt;
-           //     korisnik.LozinkaHash = newHash;
-           // }
+          
 
-             _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             return _mapper.Map<KorisnikM>(korisnik);
         }
 
@@ -698,7 +686,8 @@ namespace eMekteb.Services
 
             PagedResult<KorisnikM> result = new PagedResult<KorisnikM>
             {
-                Count = uceniciWithAttendance.Count,
+                //Count = uceniciWithAttendance.Count,
+                Count = uceniciWithAttendance.Select(ud => ud.Korisnik.Id).Distinct().Count(),
                 Result = _mapper.Map<List<KorisnikM>>(uceniciWithAttendance.Select(ud => ud.Korisnik).Distinct().ToList())
             };
 

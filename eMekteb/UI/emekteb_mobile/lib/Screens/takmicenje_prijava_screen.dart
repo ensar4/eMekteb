@@ -27,6 +27,8 @@ class _TakmicenjePrijavaState extends State<TakmicenjePrijava> {
   DateTime datumRodjenja = DateTime.now();
   final TextEditingController _datumRodjenjaController = TextEditingController();
 
+  TextEditingController _imeController = TextEditingController();
+  TextEditingController _prezimeController = TextEditingController();
   int currentPage = 1;
   int numPages = 12;
   bool isLoading = false;
@@ -127,7 +129,7 @@ class _TakmicenjePrijavaState extends State<TakmicenjePrijava> {
     return isLoading
         ? const CircularProgressIndicator()
         : Padding(
-      padding: const EdgeInsets.only(top: 15.0, bottom: 20.0),
+      padding: const EdgeInsets.only(top: 12.0, bottom: 20.0),
       child: Center(
         child: Text(
           "Takmičenje ${listaTakmicenja?.result.first.godina}.",
@@ -160,19 +162,18 @@ class _TakmicenjePrijavaState extends State<TakmicenjePrijava> {
 
   Widget infoSection() {
     final screenWidth = MediaQuery.of(context).size.width;
-    final dateFormat = DateFormat('dd/MM/yyyy');
+    final dateFormat = DateFormat('dd.MM.yyyy');
 
-    // Check if the date is null before formatting
     String formattedDate;
     if (listaTakmicenja?.result.first.datumOdrzavanja != null) {
       formattedDate = dateFormat.format(listaTakmicenja!.result.first.datumOdrzavanja);
     } else {
-      formattedDate = 'N/A'; // or any default value you prefer
+      formattedDate = 'N/A';
     }
     return isLoading
         ? const CircularProgressIndicator()
         : Padding(
-      padding: const EdgeInsets.only(top: 25.0, bottom: 30.0),
+      padding: const EdgeInsets.only(top: 20.0, bottom: 25.0),
       child: Column(
         children: [
           Container(
@@ -186,6 +187,10 @@ class _TakmicenjePrijavaState extends State<TakmicenjePrijava> {
                 ),
                 Text(
                   "Datum: $formattedDate",
+                  style: const TextStyle(fontSize: 18),
+                  textAlign: TextAlign.justify,
+                ),Text(
+                  "Lokacija: ${listaTakmicenja?.result.first.lokacija}",
                   style: const TextStyle(fontSize: 18),
                   textAlign: TextAlign.justify,
                 ),
@@ -209,6 +214,7 @@ class _TakmicenjePrijavaState extends State<TakmicenjePrijava> {
               style: TextStyle(fontSize: 22),
             ),
             TextFormField(
+              controller: _imeController,
               decoration: const InputDecoration(labelText: 'Ime učenika:'),
               textCapitalization: TextCapitalization.sentences,
               validator: (value) {
@@ -222,6 +228,7 @@ class _TakmicenjePrijavaState extends State<TakmicenjePrijava> {
               },
             ),
             TextFormField(
+              controller: _prezimeController,
               decoration: const InputDecoration(labelText: 'Prezime učenika:'),
               textCapitalization: TextCapitalization.sentences,
               validator: (value) {
@@ -322,19 +329,23 @@ class _TakmicenjePrijavaState extends State<TakmicenjePrijava> {
       _formKey.currentState!.save();
 
       bool success = await _takmicarProvider.insert(
-        ime,  // 'ime' parameter
-        datumRodjenja,  // 'datumRodjenja' parameter
-        prezime,  // 'prezime' parameter
-        int.tryParse(kategorija!),  // 'kategorijaId' parameter
+        ime,
+        datumRodjenja,
+        prezime,
+        int.tryParse(kategorija!),
       );
 
       if (success) {
-        // Show a success message or navigate to another page
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Učenik uspješno dodan na takmičenje.')),
         );
+        _imeController.clear();
+        _prezimeController.clear();
+        _datumRodjenjaController.clear();
+         setState(() {
+           kategorija = null;
+         });
       } else {
-        // Show an error message
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Greška pri dodavanju učenika na takmičenje!')),
         );

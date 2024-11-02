@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:emekteb_mobile/Screens/lekcija_details_screen.dart';
+import 'package:emekteb_mobile/Screens/lekcija_edit_screen.dart';
 import 'package:emekteb_mobile/Screens/lekcija_insert_screen.dart';
 import 'package:emekteb_mobile/Widgets/master_screen.dart';
 import 'package:emekteb_mobile/models/dodatna_lekcija.dart';
@@ -189,7 +190,7 @@ class _ProfilInfoState extends State<Lekcija> {
                                   Text(
                                     lekcija.naziv,
                                     style: const TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.normal,
                                     ),
                                     softWrap: true,
@@ -205,7 +206,6 @@ class _ProfilInfoState extends State<Lekcija> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 10),
                               Divider(
                                 color: Colors.blue,
                                 thickness: 2,
@@ -216,14 +216,17 @@ class _ProfilInfoState extends State<Lekcija> {
                                   Text(lekcija.likes.toString()),
                                   ratedItemsLikes.contains(lekcija.id)
                                       ? IconButton(
-                                          icon: Icon(Icons.thumb_up,
+                                          icon: Icon(
+                                              Icons.thumb_up,
                                               color: Colors.grey),
                                           onPressed: () {},
+                                    visualDensity: VisualDensity(horizontal: -4.0),
                                         )
                                       : IconButton(
+                                    visualDensity: VisualDensity(horizontal: -4.0),
                                           icon: Icon(
                                             Icons.thumb_up,
-                                            color: Colors.blue,
+                                            color: Colors.blue.shade600,
                                           ),
                                           onPressed: () async {
                                             bool success =
@@ -231,11 +234,11 @@ class _ProfilInfoState extends State<Lekcija> {
                                                     .addLike(lekcija.id, 1);
                                             if (success) {
                                               setState(() {
-                                                lekcija.likes += 1;
-                                                ratedItemsLikes.add(lekcija
-                                                    .id);
+                                                lekcija.likes = (lekcija.likes ?? 0) + 1;
+                                                ratedItemsLikes.add(lekcija.id);
                                               });
                                             }
+
                                           },
                                         ),
                                   SizedBox(width: 5),
@@ -245,6 +248,7 @@ class _ProfilInfoState extends State<Lekcija> {
                                           icon: Icon(Icons.thumb_down,
                                               color: Colors.grey),
                                           onPressed: () {},
+                                    visualDensity: VisualDensity(horizontal: -4.0),
                                         )
                                       : IconButton(
                                           icon: Icon(
@@ -258,13 +262,26 @@ class _ProfilInfoState extends State<Lekcija> {
                                                         lekcija.id, 1);
                                             if (success) {
                                               setState(() {
-                                                lekcija.dislikes += 1;
-                                                ratedItems.add(lekcija
-                                                    .id); 
+                                                lekcija.dislikes = (lekcija.dislikes ?? 0) + 1;
+                                                ratedItems.add(lekcija.id);
                                               });
                                             }
                                           },
+                                    visualDensity: VisualDensity(horizontal: -4.0),
                                         ),
+                                  if (!isUcenik)
+                                  IconButton(
+                                    icon: const Icon(Icons.edit),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DodatnaLekcijaEdit(lekcija: lekcija),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                   if (!isUcenik)
                                     IconButton(
                                       icon: Icon(Icons.delete,
@@ -274,19 +291,19 @@ class _ProfilInfoState extends State<Lekcija> {
                                           context: context,
                                           builder: (BuildContext context) {
                                             return AlertDialog(
-                                              title: Text('Potvrda'),
+                                              title: Text('Potvrda brisanja'),
                                               content: Text(
-                                                  'Da li ste sigurni da želite izbrisati obavijest?'),
+                                                  'Da li ste sigurni da želite izbrisati lekciju?'),
                                               actions: [
                                                 TextButton(
-                                                  child: Text('Ne'),
+                                                  child: Text('Odustani'),
                                                   onPressed: () {
                                                     Navigator.of(context).pop(
                                                         false); // Return false if "No" is pressed
                                                   },
                                                 ),
                                                 TextButton(
-                                                  child: Text('Da'),
+                                                  child: Text('DA', style: TextStyle(color: Colors.red)),
                                                   onPressed: () {
                                                     Navigator.of(context).pop(
                                                         true); // Return true if "Yes" is pressed
@@ -296,7 +313,6 @@ class _ProfilInfoState extends State<Lekcija> {
                                             );
                                           },
                                         );
-
                                         if (confirmed == true) {
                                           bool success =
                                               await _dodatnaLekcijaProvider

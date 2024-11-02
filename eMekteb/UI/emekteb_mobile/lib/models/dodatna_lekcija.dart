@@ -9,8 +9,8 @@ class DodatnaLekcija{
   int? id;
   String naziv;
   String tekst;
-  int likes;
-  int dislikes;
+  int? likes;
+  int? dislikes;
   DateTime? datumObjavljivanja;
   int? mektebId;
 
