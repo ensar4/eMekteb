@@ -109,6 +109,298 @@ class _ProfilInfoState extends State<Takmicenja> {
     );
   }
 
+  Widget gridView() {
+    return Padding(
+      padding: EdgeInsets.all(30),
+      child: GridView.builder(
+        itemCount: filteredList.length, // Ensure the item count is set
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4, // Set the number of columns
+          crossAxisSpacing: 22.0, // Set the spacing between columns
+          mainAxisSpacing: 22.0, // Set the spacing between rows
+          childAspectRatio: 2.5,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          Takmicenje takmicenje = filteredList[index];
+          return InkWell(
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                // pushReplacement or push
+                MaterialPageRoute(
+                  builder: (context) => TakmicenjeDetalji(takmicenje: takmicenje),
+                ),
+              );
+            },
+            child: Card(
+              child: Container(
+                decoration: BoxDecoration(color: Colors.blueGrey[100]),
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Text(
+                            "Takmičenje - ${takmicenje.godina.toString()}",
+                            style: const TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        const Spacer(),
+                        PopupMenuButton<int>(
+                          icon: const Icon(Icons.more_vert),
+                          itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
+                            const PopupMenuItem<int>(
+                              value: 1,
+                              child: Text("Izbriši"),
+                            ),
+                            const PopupMenuItem<int>(
+                              value: 2,
+                              child: Text("Uredi"),
+                            ),
+                          ],
+                          onSelected: (int value) async {
+                            if (value == 1) {
+                              bool confirmDelete = await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text("Potvrda brisanja"),
+                                    content: const Text(
+                                        "Jeste li sigurni da želite izbrisati ovo takmičenje?"),
+                                    actions: [
+                                      TextButton(
+                                        child: const Text("Ne", style: TextStyle(fontSize: 18),),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(false);
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: const Text("Da", style: TextStyle(color: Colors.red, fontSize: 18),),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(true);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+
+                              if (confirmDelete) {
+                                try {
+                                  bool result = await _takmicenjaProvider
+                                      .delete(takmicenje.id);
+                                  if (result) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text('Takmičenje uspješno izbrisano')),
+                                    );
+                                    await fetchData();
+                                  }
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Greška pri brisanju takmičenja: $e')),
+                                  );
+                                }
+                              }
+                            }
+                            else if (value == 2) {
+                              _showEditForm(context, _takmicenjaProvider, takmicenje);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: Text.rich(
+                        TextSpan(
+                          text: "Ukupno takmičara: ",
+                          style: const TextStyle(fontSize: 16),
+                          children: [
+                            TextSpan(
+                              text: takmicenje.ukupnoUcenika.toString(),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.blue, // Change this to your desired color
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15, top: 8.0),
+                      child: Text.rich(
+                        TextSpan(
+                          text: "Mjesto takmičenja: ",
+                          style: const TextStyle(fontSize: 16),
+                          children: [
+                            TextSpan(
+                              text: (takmicenje.lokacija ?? 'Nepoznato').toString(),
+                              style: const TextStyle(color: Colors.blue),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+  void _showEditForm(BuildContext context, TakmicenjaProvider provider, Takmicenje existingTakmicenje) {
+    final formKey = GlobalKey<FormState>();
+    String? godina = existingTakmicenje.godina;
+    String? lokacija = existingTakmicenje.lokacija;
+    String? vrijemePocetka = existingTakmicenje.vrijemePocetka;
+    String? info = existingTakmicenje.info;
+    DateTime? datumOdrzavanja = existingTakmicenje.datumOdrzavanja;
+
+    final TextEditingController datumOdrzavanjaController = TextEditingController();
+    datumOdrzavanjaController.text = datumOdrzavanja!.toLocal().toString().split(' ')[0];
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Izmijeni takmičenje'),
+          content: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  initialValue: godina,
+                  decoration: const InputDecoration(labelText: 'Godina'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Unesite godinu takmičenja';
+                    } else if (!RegExp(r'^\d{4}$').hasMatch(value)) {
+                      return 'Neispravan format, unesite 4 cifre!';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    godina = value!;
+                  },
+                ),
+                TextFormField(
+                  initialValue: lokacija,
+                  decoration: const InputDecoration(labelText: 'Lokacija održavanja'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Unesite lokaciju održavanja';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    lokacija = value!;
+                  },
+                ),
+                TextFormField(
+                  initialValue: vrijemePocetka,
+                  decoration: const InputDecoration(labelText: 'Vrijeme'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Unesite vrijeme početka';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    vrijemePocetka = value!;
+                  },
+                ),
+                TextFormField(
+                  initialValue: info,
+                  decoration: const InputDecoration(labelText: 'Dodatni info'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Unesite dodatne informacije';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    info = value!;
+                  },
+                ),
+                TextFormField(
+                  controller: datumOdrzavanjaController,
+                  decoration: const InputDecoration(labelText: 'Datum'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Unesite datum takmičenja';
+                    }
+                    return null;
+                  },
+                  onTap: () async {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: datumOdrzavanja,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2101),
+                    );
+                    if (picked != null && picked != datumOdrzavanja) {
+                      datumOdrzavanja = picked;
+                      datumOdrzavanjaController.text = datumOdrzavanja!.toLocal().toString().split(' ')[0];
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Odustani'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Ažuriraj'),
+              onPressed: () async {
+                if (formKey.currentState!.validate()) {
+                  formKey.currentState!.save();
+
+                  bool result = await provider.update(
+                    existingTakmicenje.id,
+                    godina,
+                    datumOdrzavanja,
+                    lokacija,
+                    vrijemePocetka,
+                    info,
+                  );
+
+                  if (result) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Takmičenje uspješno ažurirano')),
+                    );
+                    fetchData();
+                    Navigator.of(context).pop();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Greška pri izvršenju')),
+                    );
+                  }
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _showCreateForm(BuildContext context, TakmicenjaProvider provider) {
     final formKey = GlobalKey<FormState>();
     String naziv = '';
@@ -240,149 +532,6 @@ class _ProfilInfoState extends State<Takmicenja> {
           ],
         );
       },
-    );
-  }
-  Widget gridView() {
-    return Padding(
-      padding: EdgeInsets.all(30),
-      child: GridView.builder(
-        itemCount: filteredList.length, // Ensure the item count is set
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4, // Set the number of columns
-          crossAxisSpacing: 22.0, // Set the spacing between columns
-          mainAxisSpacing: 22.0, // Set the spacing between rows
-          childAspectRatio: 2.5,
-        ),
-        itemBuilder: (BuildContext context, int index) {
-          Takmicenje takmicenje = filteredList[index];
-          return InkWell(
-            onTap: () {
-              Navigator.of(context).pushReplacement(
-                // pushReplacement or push
-                MaterialPageRoute(
-                  builder: (context) => TakmicenjeDetalji(takmicenje: takmicenje),
-                ),
-              );
-            },
-            child: Card(
-              child: Container(
-                decoration: BoxDecoration(color: Colors.blueGrey[100]),
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15),
-                          child: Text(
-                            "Takmičenje - ${takmicenje.godina.toString()}",
-                            style: const TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                        const Spacer(),
-                        PopupMenuButton<int>(
-                          icon: const Icon(Icons.more_vert),
-                          itemBuilder: (BuildContext context) =>
-                          <PopupMenuEntry<int>>[
-                            const PopupMenuItem<int>(
-                              value: 1,
-                              child: Text("Izbriši"),
-                            ),
-                          ],
-                          onSelected: (int value) async {
-                            if (value == 1) {
-                              bool confirmDelete = await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text("Potvrda brisanja"),
-                                    content: const Text(
-                                        "Jeste li sigurni da želite izbrisati ovo takmičenje?"),
-                                    actions: [
-                                      TextButton(
-                                        child: const Text("Ne", style: TextStyle(fontSize: 18),),
-                                        onPressed: () {
-                                          Navigator.of(context).pop(false);
-                                        },
-                                      ),
-                                      TextButton(
-                                        child: const Text("Da", style: TextStyle(color: Colors.red, fontSize: 18),),
-                                        onPressed: () {
-                                          Navigator.of(context).pop(true);
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-
-                              if (confirmDelete) {
-                                try {
-                                  bool result = await _takmicenjaProvider
-                                      .delete(takmicenje.id);
-                                  if (result) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text('Takmičenje uspješno izbrisano')),
-                                    );
-                                    await fetchData();
-                                  }
-                                } catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            'Greška pri brisanju takmičenja: $e')),
-                                  );
-                                }
-                              }
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Text.rich(
-                        TextSpan(
-                          text: "Ukupno takmičara: ",
-                          style: const TextStyle(fontSize: 16),
-                          children: [
-                            TextSpan(
-                              text: takmicenje.ukupnoUcenika.toString(),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.blue, // Change this to your desired color
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15, top: 8.0),
-                      child: Text.rich(
-                        TextSpan(
-                          text: "Mjesto takmičenja: ",
-                          style: const TextStyle(fontSize: 16),
-                          children: [
-                            TextSpan(
-                              text: (takmicenje.lokacija ?? 'Nepoznato').toString(),
-                              style: const TextStyle(color: Colors.blue),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
     );
   }
 

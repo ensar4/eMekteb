@@ -238,8 +238,8 @@ class _InsertUceniciState extends State<UceniciInsert> {
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Unesite broj telefona';
-              } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                return 'Neispravan format, unesite samo brojeve!';
+              } else if (!RegExp(r'^[0-9\s\-/]+$').hasMatch(value)) {
+                return 'Neispravan format!';
               }
               return null;
             },

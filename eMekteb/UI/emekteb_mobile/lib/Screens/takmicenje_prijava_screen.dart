@@ -189,7 +189,13 @@ class _TakmicenjePrijavaState extends State<TakmicenjePrijava> {
                   "Datum: $formattedDate",
                   style: const TextStyle(fontSize: 18),
                   textAlign: TextAlign.justify,
-                ),Text(
+                ),
+                Text(
+                  "Vrijeme: ${listaTakmicenja?.result.first.vrijemePocetka}",
+                  style: const TextStyle(fontSize: 18),
+                  textAlign: TextAlign.justify,
+                ),
+                Text(
                   "Lokacija: ${listaTakmicenja?.result.first.lokacija}",
                   style: const TextStyle(fontSize: 18),
                   textAlign: TextAlign.justify,

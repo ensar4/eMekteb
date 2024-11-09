@@ -581,8 +581,8 @@ namespace eMekteb.Services.Seed
                 {
                     Id = 33,
                     Ime = "Muhamed",
-                    Prezime = "Crnomerović",
-                    Username = "muhamed.crnomerovic",
+                    Prezime = "Hasić",
+                    Username = "muhamed.hasic",
                     Telefon = "062598777",
                     Mail = "muhamed@gmail.com",
                     Spol = "M",

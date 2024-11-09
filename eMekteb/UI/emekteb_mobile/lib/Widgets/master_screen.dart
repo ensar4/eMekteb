@@ -38,7 +38,7 @@ class MasterScreen extends StatefulWidget {
 
 //title: Text(widget.title ?? ""),
 class _MasterScreenState extends State<MasterScreen> {
-  int _selectedIndex = 5; // Keeps track of the currently selected tab
+  int _selectedIndex = 0; // Keeps track of the currently selected tab
 
   @override
   void didChangeDependencies() {
@@ -93,118 +93,107 @@ class _MasterScreenState extends State<MasterScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        color: Colors.grey.shade400,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          child: GNav(
-            backgroundColor: Colors.grey.shade400,
-            color: Colors.white,
-            activeColor: Colors.white,
-            tabBackgroundColor: Colors.cyan.shade800,
-            gap: 8,
-            tabBorderRadius: 10,
-            padding: const EdgeInsets.all(10),
-            tabs: [
-              GButton(icon: Icons.home_rounded, iconColor: Color(0xFFFFFFFF),),
-              if(isRoditelj)
-                GButton(icon: Icons.sports_basketball_sharp, iconColor: Color(0xFFFFFFFF),),
-              if(!isRoditelj)
-              GButton(icon: Icons.book, iconColor: Color(0xFFFFFFFF),),
-              if(!isUcenik && !isRoditelj)
-              GButton(icon: Icons.people, iconColor: Color(0xFFFFFFFF),),
-              if(isRoditelj)
-                GButton(icon: Icons.settings, iconColor: Color(0xFFFFFFFF),),
-              if(isUcenik)
-              GButton(icon: Icons.percent, iconColor: Color(0xFFFFFFFF),),
-              GButton(icon: Icons.person, iconColor: Color(0xFFFFFFFF),),
-            ],
-            selectedIndex: _selectedIndex,
-            onTabChange: (index) {
-              setState(() {
-                _selectedIndex = index; // Update selected index
-                print(index);
-              });
-              switch (index) {
-                case 0:
-                  if(isRoditelj){
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const RoditeljPocetna(),
-                      ),
-                    );
-                  }
-                  else if(isUcenik) {
-                    Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const UcenikPocetna(),
-                    ),
-                  );
-                  } else {
-                    Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const Pocetna(),
-                    ),
-                  );
-                  }
-                  break;
-                case 1:
-                  if(isRoditelj){
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const KampRoditeljScreen(),
-                      ),
-                    );
-                  }
-                  else if(isUcenik) {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const ZadacaScreen(),
-                      ),
-                    );
-                  }
-                  else {
-                    Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const Dnevnik(),
-                    ),
-                  );
-                  }
-                  break;
-                case 2:
-                  if(isRoditelj){
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const Postavke(),
-                      ),
-                    );
-                  }
-                  else if (!isUcenik) {
-                    Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const SelectUcenici(),
-                    ),
-                  );
-                  }
-                  else {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const PrisustvoScreen(),
-                      ),
-                    );
-                  }
-                  break;
-                case 3:
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const ProfilScreen(),
-                    ),
-                  );
-                  break;
+      bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        backgroundColor: Colors.grey.shade400,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+            //print(index);
+          });
+          switch (index) {
+            case 0:
+              if (isRoditelj) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const RoditeljPocetna()),
+                );
+              } else if (isUcenik) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const UcenikPocetna()),
+                );
+              } else {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const Pocetna()),
+                );
               }
-            },
+              break;
+            case 1:
+              if (isRoditelj) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const KampRoditeljScreen()),
+                );
+              } else if (isUcenik) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const ZadacaScreen()),
+                );
+              } else {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const Dnevnik()),
+                );
+              }
+              break;
+            case 2:
+              if (isRoditelj) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const Postavke()),
+                );
+              } else if (!isUcenik) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const SelectUcenici()),
+                );
+              } else {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const PrisustvoScreen()),
+                );
+              }
+              break;
+            case 3:
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const ProfilScreen()),
+              );
+              break;
+          }
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_rounded),
+            label: '',
           ),
-        ),
+          if (isRoditelj)
+            BottomNavigationBarItem(
+              icon: Icon(Icons.sports_basketball_sharp),
+              label: '',
+            ),
+          if (!isRoditelj)
+            BottomNavigationBarItem(
+              icon: Icon(Icons.book),
+              label: '',
+            ),
+          if (!isUcenik && !isRoditelj)
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people),
+              label: '',
+            ),
+          if (isRoditelj)
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: '',
+            ),
+          if (isUcenik)
+            BottomNavigationBarItem(
+              icon: Icon(Icons.percent),
+              label: '',
+            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: '',
+          ),
+        ],
       ),
       // Updated body to handle both child and tab navigation
       body: widget.child ??

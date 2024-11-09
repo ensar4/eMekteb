@@ -22,7 +22,7 @@ namespace eMekteb.Services.Seed
                     DatumOdrzavanja = new DateTime(2023, 06, 12),
                     Lokacija = "Medresa",
                     MedzlisId = 1,
-                    VrijemePočetka = "10:00"
+                    VrijemePocetka = "10:00"
                 },
                 new Takmicenje
                 {
@@ -32,7 +32,7 @@ namespace eMekteb.Services.Seed
                     DatumOdrzavanja = new DateTime(2024, 06, 12),
                     Lokacija = "Medresa",
                     MedzlisId = 1,
-                    VrijemePočetka = "10:00"
+                    VrijemePocetka = "10:00"
                 }
                
             );

@@ -35,4 +35,32 @@ class MektebProvider extends BaseProvider<Mekteb>{
       return null;
     }
   }
+
+
+  Future<bool> update(
+      int? id,
+      String naziv,
+      String telefon,
+      String adresa,
+      ) async {
+    final url = Uri.parse('$baseOfUrl''Mekteb/$id');
+    final headers = getHeaders();
+
+    final response = await http.put(
+      url,
+      headers: headers,
+      body: json.encode({
+        'naziv': naziv,
+        'telefon': telefon,
+        'adresa': adresa,
+      }),
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 405){
+      throw Exception('Failed: ${response.statusCode}');
+    }
+    return false;
+  }
+
 }

@@ -101,7 +101,7 @@ namespace eMekteb.Services.Seed
                     Ime = "Lejla",
                     Prezime = "Marić",
                     DatumRodjenja = new DateTime(2000, 02, 01),
-                    UkupnoBodova = 0,
+                    UkupnoBodova = 14,
                     KategorijaId = 7,
                 },
                 new Takmicar
@@ -110,7 +110,7 @@ namespace eMekteb.Services.Seed
                     Ime = "Hasan",
                     Prezime = "Gološ",
                     DatumRodjenja = new DateTime(2000, 02, 01),
-                    UkupnoBodova = 0,
+                    UkupnoBodova = 15,
                     KategorijaId = 7,
                 },
                 new Takmicar
@@ -119,7 +119,7 @@ namespace eMekteb.Services.Seed
                     Ime = "Zejd",
                     Prezime = "Marić",
                     DatumRodjenja = new DateTime(2001, 02, 01),
-                    UkupnoBodova = 0,
+                    UkupnoBodova = 16,
                     KategorijaId = 8,
                 },
                 new Takmicar
@@ -128,7 +128,7 @@ namespace eMekteb.Services.Seed
                     Ime = "Sadzid",
                     Prezime = "Marić",
                     DatumRodjenja = new DateTime(2001, 02, 01),
-                    UkupnoBodova = 0,
+                    UkupnoBodova = 17,
                     KategorijaId = 8,
                 },
                 new Takmicar
@@ -137,7 +137,7 @@ namespace eMekteb.Services.Seed
                     Ime = "Amna",
                     Prezime = "Baralija",
                     DatumRodjenja = new DateTime(2002, 02, 01),
-                    UkupnoBodova = 0,
+                    UkupnoBodova = 14,
                     KategorijaId = 9,
                 },
                 new Takmicar
@@ -146,7 +146,7 @@ namespace eMekteb.Services.Seed
                     Ime = "Selma",
                     Prezime = "Bučuk",
                     DatumRodjenja = new DateTime(2002, 02, 01),
-                    UkupnoBodova = 0,
+                    UkupnoBodova = 15,
                     KategorijaId = 9,
                 },
                 new Takmicar
@@ -155,7 +155,7 @@ namespace eMekteb.Services.Seed
                     Ime = "Kenan",
                     Prezime = "Baralija",
                     DatumRodjenja = new DateTime(2000, 02, 01),
-                    UkupnoBodova = 0,
+                    UkupnoBodova = 16,
                     KategorijaId = 10,
                 },
                 new Takmicar
@@ -164,7 +164,7 @@ namespace eMekteb.Services.Seed
                     Ime = "Osman",
                     Prezime = "Brkan",
                     DatumRodjenja = new DateTime(2001, 02, 01),
-                    UkupnoBodova = 0,
+                    UkupnoBodova = 14,
                     KategorijaId = 10,
                 },
                 new Takmicar
@@ -173,7 +173,7 @@ namespace eMekteb.Services.Seed
                     Ime = "Amar",
                     Prezime = "Brkan",
                     DatumRodjenja = new DateTime(2002, 02, 01),
-                    UkupnoBodova = 0,
+                    UkupnoBodova = 15,
                     KategorijaId = 11,
                 },
                 new Takmicar
@@ -182,7 +182,7 @@ namespace eMekteb.Services.Seed
                     Ime = "Salih",
                     Prezime = "Marić",
                     DatumRodjenja = new DateTime(2002, 02, 01),
-                    UkupnoBodova = 0,
+                    UkupnoBodova = 11,
                     KategorijaId = 12,
                 },
                 new Takmicar
@@ -191,7 +191,7 @@ namespace eMekteb.Services.Seed
                     Ime = "Ruvejda",
                     Prezime = "Kaminić",
                     DatumRodjenja = new DateTime(2000, 02, 01),
-                    UkupnoBodova = 0,
+                    UkupnoBodova = 12,
                     KategorijaId = 7,
                 }
             );

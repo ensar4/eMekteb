@@ -50,4 +50,32 @@ class AkademskagodinaProvider extends BaseProvider<AkademskaGodina>{
     }
   }
 
+
+  Future<bool> update(
+      int? id,
+      String naziv,
+      DateTime? datumPocetka,
+      DateTime? datumZavrsetka
+      ) async {
+    final url = Uri.parse('$baseOfUrl''AkademskaGodina/$id');
+    final headers = getHeaders();
+
+    final response = await http.put(
+      url,
+      headers: headers,
+      body: json.encode({
+        'naziv': naziv,
+        'datumPocetka': datumPocetka?.toIso8601String(),
+        'datumZavrsetka': datumZavrsetka?.toIso8601String(),
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 405){
+      throw Exception('Failed: ${response.statusCode}');
+    }
+    return false;
+  }
+
 }

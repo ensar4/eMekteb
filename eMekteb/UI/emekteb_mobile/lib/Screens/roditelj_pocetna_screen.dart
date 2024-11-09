@@ -156,10 +156,10 @@ class _RoditeljPocetnaState extends State<RoditeljPocetna> {
 
   Widget gridMenu() {
     final List<Map<String, dynamic>> menuItems = [
-      {'title': 'Obavijesti', 'icon': Icons.lightbulb, 'color': Colors.yellow.shade600},
-      {'title': 'Uspjeh', 'icon': Icons.emoji_events, 'color': Colors.green.shade600},
-      {'title': 'Kamp', 'icon': Icons.sports_basketball_sharp, 'color': Colors.orange},
-      {'title': 'Prisustvo', 'icon': Icons.percent, 'color': Colors.cyan.shade400},
+      {'title': 'Obavijesti', 'image': 'assets/images/obavijest.png', 'icon': Icons.lightbulb, 'color': Colors.yellow.shade600},
+      {'title': 'Uspjeh', 'image': 'assets/images/uspjeh.png', 'icon': Icons.emoji_events, 'color': Colors.green.shade600},
+      {'title': 'Kamp', 'image': 'assets/images/tenis.png', 'icon': Icons.sports_basketball_sharp, 'color': Colors.orange},
+      {'title': 'Prisustvo', 'image': 'assets/images/prisustvo.png', 'icon': Icons.percent, 'color': Colors.cyan.shade400},
     ];
 
     return Padding(
@@ -254,7 +254,21 @@ class _RoditeljPocetnaState extends State<RoditeljPocetna> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  // Display image or icon with fallback
+                  item.containsKey('image')
+                      ? Image.asset(
+                    item['image'],
+                    width: 80.0,
+                    height: 80.0,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(
+                        item['icon'],
+                        size: 70.0,
+                        color: item['color'],
+                      );
+                    },
+                  )
+                      : Icon(
                     item['icon'],
                     size: 70.0,
                     color: item['color'],

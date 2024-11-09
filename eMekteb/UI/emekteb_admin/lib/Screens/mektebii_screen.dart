@@ -276,6 +276,10 @@ class _ProfilInfoState extends State<Mektebi> {
                               value: 1,
                               child: Text("Izbriši"),
                             ),
+                            const PopupMenuItem<int>(
+                              value: 2,
+                              child: Text("Uredi"),
+                            ),
                           ],
                           onSelected: (int value) async {
                             if (value == 1) {
@@ -287,13 +291,13 @@ class _ProfilInfoState extends State<Mektebi> {
                                     content: const Text("Jeste li sigurni da želite izbrisati mekteb?"),
                                     actions: [
                                       TextButton(
-                                        child: const Text("Ne", style: TextStyle(fontSize: 18),),
+                                        child: const Text("Ne", style: TextStyle(fontSize: 18)),
                                         onPressed: () {
                                           Navigator.of(context).pop(false);
                                         },
                                       ),
                                       TextButton(
-                                        child: const Text("Da", style: TextStyle(color: Colors.red, fontSize: 18),),
+                                        child: const Text("Da", style: TextStyle(color: Colors.red, fontSize: 18)),
                                         onPressed: () {
                                           Navigator.of(context).pop(true);
                                         },
@@ -318,6 +322,8 @@ class _ProfilInfoState extends State<Mektebi> {
                                   );
                                 }
                               }
+                            } else if (value == 2) {
+                              _showEditForm(context, _mektebProvider, mekteb);
                             }
                           },
                         ),
@@ -368,6 +374,106 @@ class _ProfilInfoState extends State<Mektebi> {
     );
   }
 
+  void _showEditForm(BuildContext context, MektebProvider provider, Mekteb mekteb) {
+    final formKey = GlobalKey<FormState>();
+    String naziv = mekteb.naziv ?? '';
+    String telefon = mekteb.telefon ?? '';
+    String adresa = mekteb.adresa ?? '';
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Uredi mekteb'),
+          content: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  initialValue: naziv,
+                  decoration: const InputDecoration(labelText: 'Naziv'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Unesite naziv mekteba';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    naziv = value!;
+                  },
+                ),
+                TextFormField(
+                  initialValue: adresa,
+                  decoration: const InputDecoration(labelText: 'Adresa mekteba'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Unesite adresu mekteba';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    adresa = value!;
+                  },
+                ),
+                TextFormField(
+                  initialValue: telefon,
+                  decoration: const InputDecoration(labelText: 'Telefon'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Unesite telefon';
+                    } else if (!RegExp(r'^[0-9\s\-/]+$').hasMatch(value)) {
+                      return 'Neispravan format!';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    telefon = value!;
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Odustani'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Spremi'),
+              onPressed: () async {
+                if (formKey.currentState!.validate()) {
+                  formKey.currentState!.save();
+
+                  bool updateResult = await provider.update(
+                    mekteb.id,
+                    naziv,
+                    telefon,
+                    adresa,
+                  );
+
+                  if (updateResult) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Mekteb uspješno ažuriran')),
+                    );
+                    fetchData();
+                    Navigator.of(context).pop();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Greška pri ažuriranju mekteba')),
+                    );
+                  }
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void _showCreateForm(BuildContext context, MektebProvider provider) {
     final formKey = GlobalKey<FormState>();
@@ -415,8 +521,8 @@ class _ProfilInfoState extends State<Mektebi> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Unesite telefon';
-                    } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                      return 'Neispravan format, unesite samo brojeve!';
+                    } else if (!RegExp(r'^[0-9\s\-/]+$').hasMatch(value)) {
+                      return 'Neispravan format!';
                     }
                     return null;
                   },

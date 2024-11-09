@@ -100,13 +100,13 @@ class _ProfilInfoState extends State<ProfilScreen> {
                     height: 90,
                     decoration: BoxDecoration(
                       color: Colors.white, // Background color
-                      shape: BoxShape.circle,  // Makes the container circular
-                      image: slikaBytes.isNotEmpty
-                          ? DecorationImage(
-                        image: imageFromBase64String(slikaBytes),
+                      shape: BoxShape.circle, // Makes the container circular
+                      image: DecorationImage(
+                        image: slikaBytes.isNotEmpty
+                            ? imageFromBase64String(slikaBytes) // Use decoded image if available
+                            : const AssetImage("assets/images/profilnaB.png") as ImageProvider, // Fallback image from assets
                         fit: BoxFit.cover, // Fit image within the circle
-                      )
-                          : null,
+                      ),
                     ),
                   ),
                   Positioned(

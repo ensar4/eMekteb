@@ -2,6 +2,7 @@ import 'package:emekteb_admin/Widgets/master_screen.dart';
 import 'package:emekteb_admin/models/mekteb.dart';
 import 'package:emekteb_admin/providers/ucenici_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -432,58 +433,85 @@ class _ProfilInfoState extends State<Ucenici> {
     });
   }
 
+  Future<void> _createPdfReport(BuildContext context, List<Ucenik> filteredList, String ukupno) async {
+    final pdf = pw.Document();
+    String now = DateFormat('dd.MM.yyyy HH:mm').format(DateTime.now());
 
-void _createPdfReport(BuildContext context, List<Ucenik> filteredList, String ukupno) async {
-  final pdf = pw.Document();
-  String now = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
-  pdf.addPage(
-    pw.Page(
+    // Debugging: Check if filteredList is empty
+   // print("FilteredList length: ${filteredList.length}");
+
+    // Load custom font from assets
+    final fontData = await rootBundle.load("assets/fonts/OpenSans-VariableFont_wdth,wght.ttf");
+    final ttf = pw.Font.ttf(fontData.buffer.asByteData());
+
+    pdf.addPage(
+      pw.Page(
         build: (pw.Context context) => pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          crossAxisAlignment: pw.CrossAxisAlignment.center,
           children: [
+            pw.Text("Islamska zajednica u Bosni i Hercegovini", style: pw.TextStyle(fontSize: 12, font: ttf)),
+            pw.Text("Medžlis Islamske zajednice Mostar", style: pw.TextStyle(fontSize: 12, font: ttf)),
+            pw.SizedBox(height: 20),
             pw.Text(
               "Svi ucenici",
-              style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold),
+              style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold, font: ttf),
             ),
-
             pw.SizedBox(height: 20),
-            pw.TableHelper.fromTextArray(
-              data: <List<String>>[
-                <String>[
-                  'Ime',
-                  'Ime roditelja',
-                  'Prezime',
-                  'Datum rodjenja',
-                  'Nivo',
-                  'Prosjek',
-                  'Prisustvo',
-                ],
-                ...filteredList.map(
-                      (item) => [
-                    item.ime.toString(),
-                    "(${item.imeRoditelja.toString()})",
-                    item.prezime.toString(),
-                        item.datumRodjenja != null ? DateFormat('dd.MM.yyyy').format(item.datumRodjenja!) : 'N/A',
-                     item.nazivRazreda.toString(),
-                        item.prosjek?.toStringAsFixed(1) ?? '0.00',
-                        "${item.prisustvo?.toStringAsFixed(1) ?? '0.00'} %",
+
+            // Table with header and data rows
+            pw.Table(
+              border: pw.TableBorder.all(),
+              children: [
+                // Table Header
+                pw.TableRow(
+                  decoration: pw.BoxDecoration(color: PdfColors.grey300),
+                  children: [
+                    pw.Text('Ime', style: pw.TextStyle(font: ttf, fontWeight: pw.FontWeight.bold)),
+                    pw.Text('Ime roditelja', style: pw.TextStyle(font: ttf, fontWeight: pw.FontWeight.bold)),
+                    pw.Text('Prezime', style: pw.TextStyle(font: ttf, fontWeight: pw.FontWeight.bold)),
+                    pw.Text('Datum rodjenja', style: pw.TextStyle(font: ttf, fontWeight: pw.FontWeight.bold)),
+                    pw.Text('Nivo', style: pw.TextStyle(font: ttf, fontWeight: pw.FontWeight.bold)),
+                    pw.Text('Prosjek', style: pw.TextStyle(font: ttf, fontWeight: pw.FontWeight.bold)),
+                    pw.Text('Prisustvo', style: pw.TextStyle(font: ttf, fontWeight: pw.FontWeight.bold)),
                   ],
-                ).toList(),
+                ),
+
+                // Table Data Rows
+                ...filteredList.map((item) {
+                  return pw.TableRow(
+                    children: [
+                      pw.Text(item.ime?.toString() ?? '', style: pw.TextStyle(font: ttf)),
+                      pw.Text("(${item.imeRoditelja?.toString() ?? ''})", style: pw.TextStyle(font: ttf)),
+                      pw.Text(item.prezime?.toString() ?? '', style: pw.TextStyle(font: ttf)),
+                      pw.Text(
+                        item.datumRodjenja != null
+                            ? DateFormat('dd.MM.yyyy').format(item.datumRodjenja!)
+                            : 'N/A',
+                        style: pw.TextStyle(font: ttf),
+                      ),
+                      pw.Text(item.nazivRazreda?.toString() ?? '', style: pw.TextStyle(font: ttf)),
+                      pw.Text(item.prosjek?.toStringAsFixed(1) ?? '0.00', style: pw.TextStyle(font: ttf)),
+                      pw.Text("${item.prisustvo?.toStringAsFixed(1) ?? '0.00'} %", style: pw.TextStyle(font: ttf)),
+                    ],
+                  );
+                }).toList(),
               ],
             ),
+
             pw.SizedBox(height: 20),
             pw.Text(
               now,
-              style: const pw.TextStyle(fontSize: 14),),
+              style: pw.TextStyle(fontSize: 14, font: ttf),
+            ),
           ],
-        )
-    ),
-  );
+        ),
+      ),
+    );
 
-  await Printing.layoutPdf(
-    onLayout: (PdfPageFormat format) async => pdf.save(),
-  );
-}
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => pdf.save(),
+    );
+  }
 
 
 

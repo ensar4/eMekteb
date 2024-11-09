@@ -2,17 +2,20 @@
 import 'package:emekteb_mobile/Screens/dnevnik_screen.dart';
 import 'package:emekteb_mobile/Screens/kamp_screen.dart';
 import 'package:emekteb_mobile/Screens/lekcija_screen.dart';
+import 'package:emekteb_mobile/Screens/profil_screen.dart';
 import 'package:emekteb_mobile/Screens/ucenici_insert_screen.dart';
 import 'package:emekteb_mobile/Screens/ucenici_screen.dart';
 import 'package:emekteb_mobile/Widgets/master_screen.dart';
 import 'package:emekteb_mobile/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/korisnik.dart';
 import '../models/searches/search_result.dart';
 import '../models/slika.dart';
 import '../providers/slika_provider.dart';
 import '../providers/user_provider.dart';
+import 'login_screen.dart';
 import 'obavijesti_screen.dart';
 
 class Pocetna extends StatefulWidget {
@@ -122,15 +125,16 @@ class _PocetnaState extends State<Pocetna> {
               height: 70,
               decoration: BoxDecoration(
                 color: Colors.white, // Background color
-                shape: BoxShape.circle,  // Makes the container circular
-                image: slikaBytes.isNotEmpty
-                    ? DecorationImage(
-                  image: imageFromBase64String(slikaBytes),
+                shape: BoxShape.circle, // Makes the container circular
+                image: DecorationImage(
+                  image: slikaBytes.isNotEmpty
+                      ? imageFromBase64String(slikaBytes) // Use decoded image if available
+                      : const AssetImage("assets/images/profilnaB.png") as ImageProvider, // Fallback image from assets
                   fit: BoxFit.cover, // Fit image within the circle
-                )
-                    : null,
+                ),
               ),
             ),
+
           ],
         ),
       ),
@@ -139,19 +143,61 @@ class _PocetnaState extends State<Pocetna> {
 
   Widget gridMenu() {
     final List<Map<String, dynamic>> menuItems = [
-      {'title': 'Obavijesti', 'icon': Icons.lightbulb, 'color': Colors.yellow.shade600},
-      {'title': 'Učenici', 'icon': Icons.emoji_events, 'color': Colors.orange},
-      {'title': 'Dnevnik', 'icon': Icons.book, 'color': Colors.purple.shade600},
-      {'title': 'Kamp', 'icon': Icons.sports_basketball_sharp, 'color': Colors.cyan.shade400},
-      {'title': 'Upis u mekteb', 'icon': Icons.app_registration, 'color': Colors.green.shade600},
-      {'title': 'Dodatne lekcije', 'icon': Icons.menu_book, 'color': Colors.blue},
+      {
+        'title': 'Obavijesti',
+        'image': 'assets/images/obavijest.png',
+        'icon': Icons.lightbulb,
+        'color': Colors.yellow.shade600,
+      },
+      {
+        'title': 'Učenici',
+        'image': 'assets/images/ucenici.png',
+        'icon': Icons.emoji_events,
+        'color': Colors.orange,
+      },
+      {
+        'title': 'Dnevnik',
+        'image': 'assets/images/dnevnik.png',
+        'icon': Icons.book,
+        'color': Colors.purple.shade600,
+      },
+      {
+        'title': 'Kamp',
+        'image': 'assets/images/tenis.png',
+        'icon': Icons.sports_basketball_sharp,
+        'color': Colors.cyan.shade400,
+      },
+      {
+        'image': 'assets/images/upis.png',
+        'title': 'Upis u mekteb',
+        'icon': Icons.app_registration,
+        'color': Colors.green.shade600,
+      },
+      {
+        'image': 'assets/images/lekcije.png',
+        'title': 'Dodatne lekcije',
+        'icon': Icons.menu_book,
+        'color': Colors.blue,
+      },
+      {
+        'image': 'assets/images/profil.png',
+        'title': 'Moj profil',
+        'icon': Icons.person,
+        'color': Colors.green.shade600,
+      },
+      {
+        'image': 'assets/images/logout.png',
+        'title': 'Odjavi se',
+        'icon': Icons.logout,
+        'color': Colors.blue,
+      },
     ];
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(22, 0, 22, 22),
       child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(), // Disable grid scrolling
-        shrinkWrap: true, // Fit grid to its content size
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           mainAxisSpacing: 16.0,
@@ -163,7 +209,7 @@ class _PocetnaState extends State<Pocetna> {
           final item = menuItems[index];
           return InkWell(
             onTap: () {
-              // Check the item title and navigate to the respective screen
+              // Handle navigation based on title
               switch (item['title']) {
                 case 'Obavijesti':
                   Navigator.push(
@@ -200,6 +246,13 @@ class _PocetnaState extends State<Pocetna> {
                     context,
                     MaterialPageRoute(builder: (context) => const Lekcija()),
                   );
+                  case 'Moj profil':
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ProfilScreen()),
+                  );
+                  case 'Odjavi se':
+                     _logout(context);
                   break;
                 default:
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -223,7 +276,21 @@ class _PocetnaState extends State<Pocetna> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  // Display image or icon with fallback
+                  item.containsKey('image')
+                      ? Image.asset(
+                    item['image'],
+                    width: 80.0,
+                    height: 80.0,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(
+                        item['icon'],
+                        size: 70.0,
+                        color: item['color'],
+                      );
+                    },
+                  )
+                      : Icon(
                     item['icon'],
                     size: 70.0,
                     color: item['color'],
@@ -242,6 +309,17 @@ class _PocetnaState extends State<Pocetna> {
             ),
           );
         },
+      ),
+    );
+  }
+  Future<void> _logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    Korisnik.reset();
+    Provider.of<UserProvider>(context, listen: false).clearUser();
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => LoginPage(),
       ),
     );
   }

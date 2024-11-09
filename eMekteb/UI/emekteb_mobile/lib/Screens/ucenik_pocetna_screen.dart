@@ -2,6 +2,7 @@
 import 'package:emekteb_mobile/Screens/dnevnik_screen.dart';
 import 'package:emekteb_mobile/Screens/kamp_screen.dart';
 import 'package:emekteb_mobile/Screens/lekcija_screen.dart';
+import 'package:emekteb_mobile/Screens/postavke_screen.dart';
 import 'package:emekteb_mobile/Screens/prisustvo_screen.dart';
 import 'package:emekteb_mobile/Screens/profil_screen.dart';
 import 'package:emekteb_mobile/Screens/ucenici_insert_screen.dart';
@@ -13,11 +14,13 @@ import 'package:emekteb_mobile/models/user.dart';
 import 'package:emekteb_mobile/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/korisnik.dart';
 import '../models/searches/search_result.dart';
 import '../models/slika.dart';
 import '../providers/slika_provider.dart';
 import '../providers/user_provider.dart';
+import 'login_screen.dart';
 import 'obavijesti_screen.dart';
 
 class UcenikPocetna extends StatefulWidget {
@@ -154,14 +157,15 @@ class _UcenikPocetnaState extends State<UcenikPocetna> {
               decoration: BoxDecoration(
                 color: Colors.white, // Background color
                 shape: BoxShape.circle,  // Makes the container circular
-                image: slikaBytes.isNotEmpty
-                    ? DecorationImage(
-                  image: imageFromBase64String(slikaBytes),
+                image: DecorationImage(
+                  image: slikaBytes.isNotEmpty
+                      ? imageFromBase64String(slikaBytes) // Use decoded image if available
+                      : const AssetImage("assets/images/profilnaB.png") as ImageProvider, // Fallback image from assets
                   fit: BoxFit.cover, // Fit image within the circle
-                )
-                    : null,
+                ),
               ),
             ),
+
           ],
         ),
       ),
@@ -171,12 +175,14 @@ class _UcenikPocetnaState extends State<UcenikPocetna> {
 
   Widget gridMenu() {
     final List<Map<String, dynamic>> menuItems = [
-      {'title': 'Obavijesti', 'icon': Icons.lightbulb, 'color': Colors.yellow.shade600},
-      {'title': 'Uspjeh', 'icon': Icons.emoji_events, 'color': Colors.green.shade600},
-      {'title': 'Zadaća', 'icon': Icons.book, 'color': Colors.purple.shade600},
-      {'title': 'Prisustvo', 'icon': Icons.percent, 'color': Colors.cyan.shade400},
-      {'title': 'Moj profil', 'icon': Icons.person, 'color': Colors.orange},
-      {'title': 'Lekcije', 'icon': Icons.menu_book, 'color': Colors.blue},
+      {'title': 'Obavijesti', 'image': 'assets/images/obavijest.png', 'icon': Icons.lightbulb, 'color': Colors.yellow.shade600},
+      {'title': 'Uspjeh', 'image': 'assets/images/uspjeh.png', 'icon': Icons.emoji_events, 'color': Colors.green.shade600},
+      {'title': 'Zadaća', 'image': 'assets/images/dnevnik.png', 'icon': Icons.book, 'color': Colors.purple.shade600},
+      {'title': 'Prisustvo', 'image': 'assets/images/prisustvo.png','icon': Icons.percent, 'color': Colors.cyan.shade400},
+      {'title': 'Moj profil', 'image': 'assets/images/profil.png', 'icon': Icons.person, 'color': Colors.orange},
+      {'title': 'Lekcije', 'image': 'assets/images/lekcije.png', 'icon': Icons.menu_book, 'color': Colors.blue},
+      {'title': 'Postavke', 'image': 'assets/images/settings.png', 'icon': Icons.settings, 'color': Colors.blue},
+      {'title': 'Odjavi se', 'image': 'assets/images/logout.png', 'icon': Icons.logout, 'color': Colors.blue},
     ];
 
     return Padding(
@@ -233,6 +239,14 @@ class _UcenikPocetnaState extends State<UcenikPocetna> {
                     MaterialPageRoute(builder: (context) => const Lekcija()),
                   );
                   break;
+                case 'Postavke':
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Postavke()),
+                  );
+                case 'Odjavi se':
+                  _logout(context);
+                  break;
                 default:
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('${item['title']} clicked')),
@@ -255,7 +269,21 @@ class _UcenikPocetnaState extends State<UcenikPocetna> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  // Display image or icon with fallback
+                  item.containsKey('image')
+                      ? Image.asset(
+                    item['image'],
+                    width: 80.0,
+                    height: 80.0,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(
+                        item['icon'],
+                        size: 70.0,
+                        color: item['color'],
+                      );
+                    },
+                  )
+                      : Icon(
                     item['icon'],
                     size: 70.0,
                     color: item['color'],
@@ -274,6 +302,18 @@ class _UcenikPocetnaState extends State<UcenikPocetna> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    Korisnik.reset();
+    Provider.of<UserProvider>(context, listen: false).clearUser();
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => LoginPage(),
       ),
     );
   }

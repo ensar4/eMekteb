@@ -6,7 +6,10 @@ import 'package:provider/provider.dart';
 import '../models/searches/search_result.dart';
 import '../models/ucenik.dart';
 import '../providers/razred_provider.dart';
+import '../providers/slika_provider.dart';
+import 'dart:typed_data';
 
+import '../utils/util.dart'; // Import this if you haven't already
 
 class Ucenici extends StatefulWidget {
   const Ucenici({super.key});
@@ -19,6 +22,7 @@ class _ProfilInfoState extends State<Ucenici> {
   late UceniciProvider _uceniciProvider;
   late UserProvider _userProvider;
   late RazredProvider _nivoProvider;
+  late SlikaProvider _slikaProvider;
 
   final _formKey = GlobalKey<FormState>();
   SearchResult<Ucenik>? listaUcenika;
@@ -30,7 +34,7 @@ class _ProfilInfoState extends State<Ucenici> {
   int ukupno2 = 1;
   List<dynamic> filteredListNivo = [];
   dynamic listaNivo;
-
+  String slikaBytes = '';
 
   @override
   Future<void> didChangeDependencies() async {
@@ -38,8 +42,20 @@ class _ProfilInfoState extends State<Ucenici> {
     _uceniciProvider = context.read<UceniciProvider>();
     _userProvider = context.read<UserProvider>();
     _nivoProvider = context.read<RazredProvider>();
+    _slikaProvider = context.read<SlikaProvider>();
+
     await fetchData();
     await fetchDataRazredi();
+  }
+
+
+  Future<void> fetchDataSlika(int? id) async {
+    SearchResult<dynamic> result = await _slikaProvider.getById2(id);
+    if (result.result.isNotEmpty) {
+      setState(() {
+        slikaBytes = result.result[0].slikaBytes;
+      });
+    }
   }
 
   Future<void> fetchDataRazredi() async {
@@ -297,7 +313,10 @@ class _ProfilInfoState extends State<Ucenici> {
       }
     });
   }
-  void showUcenikDetails(BuildContext context, Ucenik ucenik) {
+  void showUcenikDetails(BuildContext context, Ucenik ucenik) async {
+    // Fetch the image data before showing the dialog
+    await fetchDataSlika(ucenik.id);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -310,6 +329,24 @@ class _ProfilInfoState extends State<Ucenici> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Show the circular image container at the top with a fallback image if slikaBytes is empty
+              Center(
+                child: Container(
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: Colors.white, // Background color
+                    shape: BoxShape.circle, // Makes the container circular
+                    image: DecorationImage(
+                      image: slikaBytes.isNotEmpty
+                          ? imageFromBase64String(slikaBytes) // Decode base64 image if available
+                          : AssetImage("assets/images/profilnaB.png") as ImageProvider, // Fallback image from assets
+                      fit: BoxFit.cover, // Fit image within the circle
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10), // Add some spacing below the image
               _buildDetailRow('Telefon', ucenik.telefon ?? "N/A"),
               _buildDetailRow('Datum rođenja',
                   ucenik.datumRodjenja != null
@@ -340,8 +377,15 @@ class _ProfilInfoState extends State<Ucenici> {
           ],
         );
       },
-    );
+    ).then((_) {
+      // Reset the image after the dialog is closed
+      setState(() {
+        slikaBytes = ''; // Resetting slikaBytes to an empty value
+      });
+    });
   }
+
+
 
   Widget _buildDetailRow(String label, String value) {
     return Padding(
@@ -443,8 +487,8 @@ class _ProfilInfoState extends State<Ucenici> {
                       if (value == null || value.isEmpty) {
                         return 'Unesite broj telefona';
                       }
-                      else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                        return 'Neispravan format, unesite samo brojeve!';
+                      else if (!RegExp(r'^[0-9\s\-/]+$').hasMatch(value)) {
+                        return 'Neispravan format!';
                       }
                       return null;
                     },

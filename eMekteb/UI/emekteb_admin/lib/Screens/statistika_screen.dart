@@ -3,8 +3,10 @@ import 'package:emekteb_admin/models/akademska_godina.dart';
 import 'package:emekteb_admin/providers/akademskagodina_provider.dart';
 import 'package:emekteb_admin/providers/medzlis_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'dart:ui' as ui;
 
 import '../Widgets/akademska_godina_chart.dart';
 import '../models/medzlis.dart';
@@ -49,6 +51,8 @@ class _ProfilInfoState extends State<Statistika> {
   List<Medzlis> filteredMedzlis = [];
   Mekteb? selectedMekteb;
   AkademskaGodina? selectedGodina;
+
+  final GlobalKey chartKey = GlobalKey();
 
   @override
   Future<void> didChangeDependencies() async {
@@ -146,7 +150,10 @@ class _ProfilInfoState extends State<Statistika> {
             _header(),
             divider(),
             filteredListGodine.isNotEmpty
-                ? AkademskaGodinaChart(data: filteredListGodine)
+                ? RepaintBoundary(
+              key: chartKey,
+              child: AkademskaGodinaChart(data: filteredListGodine),
+            )
                 : const Center(child: CircularProgressIndicator()),
             _bottom(),
           ],
@@ -168,7 +175,20 @@ class _ProfilInfoState extends State<Statistika> {
       ),
     );
   }
-
+  Widget _infoCard({required String title, required String value}) {
+    return Container(
+      width: 250,
+      height: 200,
+      color: Colors.grey.shade300,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text(value, style: const TextStyle(fontSize: 46)),
+          Text(title, style: const TextStyle(fontSize: 24)),
+        ],
+      ),
+    );
+  }
   Widget _header() {
     return Padding(
       padding: const EdgeInsets.all(30),
@@ -377,20 +397,6 @@ class _ProfilInfoState extends State<Statistika> {
     );
   }
 
-  Widget _infoCard({required String title, required String value}) {
-    return Container(
-      width: 250,
-      height: 200,
-      color: Colors.grey.shade300,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(value, style: const TextStyle(fontSize: 46)),
-          Text(title, style: const TextStyle(fontSize: 24)),
-        ],
-      ),
-    );
-  }
 
 
 
@@ -404,33 +410,47 @@ class _ProfilInfoState extends State<Statistika> {
       String mektebaValue,
       ) async {
     final pdf = pw.Document();
+    final boundary = chartKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+
+    // Capture the chart image
+    final chartImage = await boundary?.toImage(pixelRatio: 3.0);
+    final byteData = await chartImage?.toByteData(format: ui.ImageByteFormat.png);
+    final imageBytes = byteData?.buffer.asUint8List();
 
     // Current date and time
-    String now = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
-
+    String now = DateFormat('dd.MM.yyyy HH:mm').format(DateTime.now());
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) => pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          crossAxisAlignment: pw.CrossAxisAlignment.center,
           children: [
-            pw.Text(
-              "Statistika - izvjestaj",
-              style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold),
-            ),
+            pw.Text("Islamska zajednica u Bosni i Hercegovini", style: pw.TextStyle(fontSize: 12)),
+            pw.Text("Medzlis Islamske zajednice Mostar", style: pw.TextStyle(fontSize: 12)),
+            pw.SizedBox(height: 20),
+            pw.Text("Izvjestaj - Statistika", style: pw.TextStyle(fontSize: 22)),
+            pw.SizedBox(height: 20),
+
+            // Info text widgets
+            _infoText("Ukupno ucenika: ", ucenikaValue, ""),
+            _infoText("Prosjecno prisustvo: ", prisustvoValue , "%"),
+            _infoText("Prosjecna ocjena: ", prosjecnaOcjenaValue, ""),
+            _infoText("Ukupno mekteba: ", mektebaValue, ""),
 
             pw.SizedBox(height: 20),
 
-            // Displaying the data from _infoCard widgets
-            _infoText("Ukupno ucenika", ucenikaValue),
-            _infoText("Prosjecno prisustvo %", prisustvoValue),
-            _infoText("Prosjecna ocjena", prosjecnaOcjenaValue),
-            _infoText("Ukupno mekteba", mektebaValue),
+            // Chart image with fixed width
+            if (imageBytes != null)
+              pw.Image(
+                pw.MemoryImage(imageBytes),
+                width: PdfPageFormat.a4.width - 40, // Adjusted width to fit the page
+                height: 155, // Set a fixed height
+                fit: pw.BoxFit.cover,
+              ),
 
-            pw.SizedBox(height: 20),
-
+            pw.SizedBox(height: 30),
             // Date and time at the bottom of the page
             pw.Text(
-              '$now',
+              DateFormat('dd.MM.yyyy HH:mm').format(DateTime.now()),
               style: const pw.TextStyle(fontSize: 14),
             ),
           ],
@@ -438,24 +458,25 @@ class _ProfilInfoState extends State<Statistika> {
       ),
     );
 
-
     await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => pdf.save(),
     );
   }
 
 // Helper function to create Text widgets for info cards
-  pw.Widget _infoText(String title, String value) {
+  pw.Widget _infoText(String title, String value, String znak) {
     return pw.Row(
-      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: pw.MainAxisAlignment.start,
       children: [
         pw.Text(
           title,
-          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+          style: pw.TextStyle(fontWeight: pw.FontWeight.normal, fontSize: 18),
         ),
-        pw.Text(value),
+        pw.Text(value, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18)),
+        pw.Text(znak, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18)),
       ],
     );
   }
+
 
 }

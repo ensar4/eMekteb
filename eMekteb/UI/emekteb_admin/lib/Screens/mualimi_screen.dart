@@ -117,7 +117,7 @@ class _ProfilInfoState extends State<Muallimi> {
                   DataCell(Text((item.mail.toString())),),
                   DataCell(
                     IconButton(
-                      icon: const Icon(Icons.edit),
+                      icon: Icon(Icons.edit, color: Colors.cyan.shade700,),
                       onPressed: () async {
                         _showUpdateForm(context, _mualimProvider, item.id, item);
                       },
@@ -125,7 +125,7 @@ class _ProfilInfoState extends State<Muallimi> {
                   ),
                   DataCell(
                     IconButton(
-                      icon: const Icon(Icons.delete),
+                      icon: Icon(Icons.delete, color: Colors.cyan.shade700,),
                       onPressed: () async {
                         bool confirmed = await _showConfirmationDialog(context);
                         if (confirmed) {
@@ -252,8 +252,8 @@ class _ProfilInfoState extends State<Muallimi> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Unesite telefon';
-                        } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                          return 'Neispravan format, unesite samo brojeve!';
+                        } else if (!RegExp(r'^[0-9\s\-/]+$').hasMatch(value)) {
+                          return 'Neispravan format!';
                         }
                         return null;
                       },

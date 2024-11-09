@@ -4,6 +4,7 @@ import 'package:emekteb_admin/models/korisnik.dart';
 import 'package:emekteb_admin/models/takmicar.dart';
 import 'package:emekteb_admin/providers/takmicar_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/searches/search_result.dart';
@@ -255,19 +256,26 @@ class _TakmicariAdminState extends State<TakmicariAdmin> {
 
  void _createPdfReport(BuildContext context, List<Takmicar> filteredList, String naziv, String nivo) async {
    final pdf = pw.Document();
-   String now = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+   final fontData = await rootBundle.load('assets/fonts/OpenSans-VariableFont_wdth,wght.ttf');
+   final ttf = pw.Font.ttf(fontData);
+
+   String now = DateFormat('dd.MM.yyyy HH:mm').format(DateTime.now());
    pdf.addPage(
      pw.Page(
        build: (pw.Context context) => pw.Column(
-           crossAxisAlignment: pw.CrossAxisAlignment.start,
+           crossAxisAlignment: pw.CrossAxisAlignment.center,
            children: [
+             pw.Text("Islamska zajednica u Bosni i Hercegovini", style: pw.TextStyle(fontSize: 12, font: ttf)),
+             pw.Text("Medžlis Islamske zajednice Mostar", style: pw.TextStyle(fontSize: 12, font: ttf)),
+             pw.SizedBox(height: 20),
            pw.Text(
              "Rang lista / $naziv - nivo $nivo",
-            style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold),
+             style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold, font: ttf),
            ),
 
            pw.SizedBox(height: 20),
        pw.TableHelper.fromTextArray(
+         cellStyle: pw.TextStyle(font: ttf),
          data: <List<String>>[
            <String>[
              'Ime',
@@ -289,7 +297,8 @@ class _TakmicariAdminState extends State<TakmicariAdmin> {
          pw.SizedBox(height: 20),
          pw.Text(
            now,
-           style: const pw.TextStyle(fontSize: 14),),
+           style: pw.TextStyle(fontSize: 14, font: ttf),
+         ),
      ],
        )
      ),

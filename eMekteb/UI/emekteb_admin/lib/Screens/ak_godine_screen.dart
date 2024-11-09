@@ -184,13 +184,15 @@ class _ProfilInfoState extends State<AkGodine> {
                         const Spacer(),
                         PopupMenuButton<int>(
                           icon: const Icon(Icons.more_vert),
-                          itemBuilder: (BuildContext context) =>
-                          <PopupMenuEntry<int>>[
+                          itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
                             const PopupMenuItem<int>(
                               value: 1,
                               child: Text("Izbriši"),
                             ),
-                            // Add more options as needed
+                            const PopupMenuItem<int>(
+                              value: 2,
+                              child: Text("Uredi"),
+                            ),
                           ],
                           onSelected: (int value) async {
                             if (value == 1) {
@@ -233,6 +235,9 @@ class _ProfilInfoState extends State<AkGodine> {
                                   );
                                 }
                               }
+                            }
+                            else if (value == 2) {
+                              _showUpdateForm(context, akGodina, _akademskaProvider);
                             }
                           },
                         ),
@@ -286,88 +291,128 @@ class _ProfilInfoState extends State<AkGodine> {
     );
   }
 
+  void _showUpdateForm(BuildContext context, AkademskaGodina akademskaGodina, AkademskagodinaProvider provider) {
+    final formKey = GlobalKey<FormState>();
+    String? naziv = akademskaGodina.naziv;
+    DateTime? datumPocetka = akademskaGodina.datumPocetka;
+    DateTime? datumZavrsetka = akademskaGodina.datumZavrsetka;
 
+    final TextEditingController datumPocetkaController = TextEditingController(text: datumPocetka?.toLocal().toString().split(' ')[0]);
+    final TextEditingController datumZavrsetkaController = TextEditingController(text: datumZavrsetka?.toLocal().toString().split(' ')[0]);
 
-  Widget headerButtons() {
-    return Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            height: 36,
-            decoration: BoxDecoration(
-              color: Colors.blueGrey[50],
-              border: Border.all(color: Colors.black),
-              borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-            ),
-            child: DropdownButton<String>(
-              value: dropdownValue,
-              icon: const Icon(Icons.arrow_drop_down),
-              elevation: 16,
-              style: const TextStyle(color: Colors.black),
-              underline: Container(), // Remove underline on the button
-              onChanged: (String? value) {
-                setState(() {
-                  dropdownValue = value!;
-                  sortData();
-                  //promjeniSort();
-                  //fetchData();
-                });
-              },
-              items: ['Broj učenika', 'Manje - Veće', 'Veće - Manje']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-          ),
-          const SizedBox(width: 20),
-
-          IconButton(
-            iconSize: 30,
-            icon: const Icon(Icons.swap_vert_rounded),
-            onPressed: () {
-              setState(() {
-                isSortAsc = !isSortAsc; // Toggle sort order
-                fetchData();
-              });
-            },
-          ),
-          const Spacer(),
-
-          Text(
-            "Ukupno: $ukupnoMekteba",
-            style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500), // Use the actual total count
-          ),
-          const SizedBox(width: 20),
-
-          ElevatedButton(
-            onPressed: () => _showCreateForm(context, _akademskaProvider, _akademskaMektebProvider, filteredListM),
-            style: ElevatedButton.styleFrom(
-              shape: const RoundedRectangleBorder(),
-              padding: const EdgeInsets.only(
-                  left: 20.0, right: 24.0, top: 16.0, bottom: 16.0),
-            ),
-            child: const Row(
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Ažuriraj akademsku godinu'),
+          content: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.add),
-                SizedBox(width: 10),
-                Text(
-                  "AKADEMSKA",
-                  style: TextStyle(fontSize: 18),
+                TextFormField(
+                  initialValue: naziv,
+                  decoration: const InputDecoration(labelText: 'Naziv'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Unesite naziv';
+                    } else if (!RegExp(r'^\d{4}/\d{2}$').hasMatch(value)) {
+                      return 'Unesite naziv u formatu "2022/23"';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    naziv = value;
+                  },
+                ),
+                TextFormField(
+                  controller: datumPocetkaController,
+                  decoration: const InputDecoration(labelText: 'Datum početka'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Unesite datum početka';
+                    }
+                    return null;
+                  },
+                  onTap: () async {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: datumPocetka ?? DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2101),
+                    );
+                    if (picked != null) {
+                      datumPocetka = picked;
+                      datumPocetkaController.text = datumPocetka!.toLocal().toString().split(' ')[0];
+                    }
+                  },
+                ),
+                TextFormField(
+                  controller: datumZavrsetkaController,
+                  decoration: const InputDecoration(labelText: 'Datum završetka'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Unesite datum završetka';
+                    }
+                    return null;
+                  },
+                  onTap: () async {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: datumZavrsetka ?? DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2101),
+                    );
+                    if (picked != null) {
+                      datumZavrsetka = picked;
+                      datumZavrsetkaController.text = datumZavrsetka!.toLocal().toString().split(' ')[0];
+                    }
+                  },
                 ),
               ],
             ),
           ),
-        ],
-      ),
+          actions: [
+            TextButton(
+              child: const Text('Odustani'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Spremi'),
+              onPressed: () async {
+                if (formKey.currentState!.validate()) {
+                  akademskaGodina.naziv = naziv!;
+                  akademskaGodina.datumPocetka = datumPocetka!;
+                  akademskaGodina.datumZavrsetka = datumZavrsetka!;
+
+                  try {
+                    bool result = await provider.update(akademskaGodina.id, naziv!, datumPocetka, datumZavrsetka);
+                    if (result) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Akademska godina uspješno ažurirana')),
+                      );
+                      fetchData();
+                      Navigator.of(context).pop();
+                    }
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Greška pri ažuriranju akademske godine: $e')),
+                    );
+                  }
+                }
+              },
+            ),
+          ],
+        );
+      },
     );
   }
+
+
   void _showCreateForm(BuildContext context, AkademskagodinaProvider provider, AkademskaMektebProvider _akademskaMektebProvider, List<Mekteb> filteredListM) {
     final formKey = GlobalKey<FormState>();
     String naziv = '';
@@ -496,6 +541,88 @@ class _ProfilInfoState extends State<AkGodine> {
           ],
         );
       },
+    );
+  }
+
+
+  Widget headerButtons() {
+    return Padding(
+      padding: const EdgeInsets.all(30.0),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            height: 36,
+            decoration: BoxDecoration(
+              color: Colors.blueGrey[50],
+              border: Border.all(color: Colors.black),
+              borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+            ),
+            child: DropdownButton<String>(
+              value: dropdownValue,
+              icon: const Icon(Icons.arrow_drop_down),
+              elevation: 16,
+              style: const TextStyle(color: Colors.black),
+              underline: Container(), // Remove underline on the button
+              onChanged: (String? value) {
+                setState(() {
+                  dropdownValue = value!;
+                  sortData();
+                  //promjeniSort();
+                  //fetchData();
+                });
+              },
+              items: ['Broj učenika', 'Manje - Veće', 'Veće - Manje']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(width: 20),
+
+          IconButton(
+            iconSize: 30,
+            icon: const Icon(Icons.swap_vert_rounded),
+            onPressed: () {
+              setState(() {
+                isSortAsc = !isSortAsc; // Toggle sort order
+                fetchData();
+              });
+            },
+          ),
+          const Spacer(),
+
+          Text(
+            "Ukupno: $ukupnoMekteba",
+            style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w500), // Use the actual total count
+          ),
+          const SizedBox(width: 20),
+
+          ElevatedButton(
+            onPressed: () => _showCreateForm(context, _akademskaProvider, _akademskaMektebProvider, filteredListM),
+            style: ElevatedButton.styleFrom(
+              shape: const RoundedRectangleBorder(),
+              padding: const EdgeInsets.only(
+                  left: 20.0, right: 24.0, top: 16.0, bottom: 16.0),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.add),
+                SizedBox(width: 10),
+                Text(
+                  "AKADEMSKA",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

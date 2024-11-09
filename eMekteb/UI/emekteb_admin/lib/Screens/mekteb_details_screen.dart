@@ -2,6 +2,7 @@ import 'package:emekteb_admin/Widgets/master_screen.dart';
 import 'package:emekteb_admin/models/mualim.dart';
 import 'package:emekteb_admin/providers/mualim_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -556,8 +557,8 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Unesite telefon';
-                        } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                          return 'Neispravan format, unesite samo brojeve!';
+                        } else if (!RegExp(r'^[0-9\s\-/]+$').hasMatch(value)) {
+                          return 'Neispravan format!';
                         }
                         return null;
                       },
@@ -728,55 +729,63 @@ class _MektebDetaljiState extends State<MektebDetalji> {
       },
     );
   }
-
-  void _createPdfReport(BuildContext context, List<Ucenik> filteredList, String naziv, List<Mualim>fiteredListMualim) async {
+  void _createPdfReport(BuildContext context, List<Ucenik> filteredList, String naziv, List<Mualim> filteredListMualim) async {
     final pdf = pw.Document();
-    String now = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+    final fontData = await rootBundle.load('assets/fonts/OpenSans-VariableFont_wdth,wght.ttf');
+    final ttf = pw.Font.ttf(fontData);
+
+    String now = DateFormat('dd.MM.yyyy HH:mm').format(DateTime.now());
+
     pdf.addPage(
       pw.Page(
-          build: (pw.Context context) => pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(
-                "$naziv ",
-                style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold),
-              ),
-              pw.SizedBox(height: 20),
-               pw.Text(
-                   "Mualim: ${fiteredListMualim[0].ime} ${fiteredListMualim[0].prezime}",
-                   style: const pw.TextStyle(fontSize: 18),
-             ),
-              pw.SizedBox(height: 20),
-              pw.TableHelper.fromTextArray(
-                data: <List<String>>[
-                  <String>[
-                    'Ime',
-                    'Ime roditelja',
-                    'Prezime',
-                    'Datum rodjenja',
-                    'Nivo',
-                    'Prosjek',
-                    'Prisustvo',
-                  ],
-                  ...filteredList.map(
-                        (item) => [
-                      item.ime.toString(),
-                      "(${item.imeRoditelja.toString()})",
-                      item.prezime.toString(),
-                      item.datumRodjenja != null ? DateFormat('dd.MM.yyyy').format(item.datumRodjenja!) : 'N/A',
-                      item.nazivRazreda.toString(),
-                      item.prosjek?.toStringAsFixed(1) ?? '0.00',
-                      "${item.prisustvo?.toStringAsFixed(1) ?? '0.00'} %",
-                    ],
-                  ).toList(),
+        build: (pw.Context context) => pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.center,
+          children: [
+            pw.Text("Islamska zajednica u Bosni i Hercegovini", style: pw.TextStyle(fontSize: 12, font: ttf)),
+            pw.Text("Medžlis Islamske zajednice Mostar", style: pw.TextStyle(fontSize: 12, font: ttf)),
+            pw.SizedBox(height: 20),
+            pw.Text(
+              "$naziv ",
+              style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold, font: ttf),
+            ),
+            pw.SizedBox(height: 20),
+            pw.Text(
+              "Mualim: ${filteredListMualim[0].ime} ${filteredListMualim[0].prezime}",
+              style: pw.TextStyle(fontSize: 18, font: ttf),
+            ),
+            pw.SizedBox(height: 20),
+            pw.TableHelper.fromTextArray(
+              cellStyle: pw.TextStyle(font: ttf), // Apply font to table cells
+              data: <List<String>>[
+                <String>[
+                  'Ime',
+                  'Ime roditelja',
+                  'Prezime',
+                  'Datum rodjenja',
+                  'Nivo',
+                  'Prosjek',
+                  'Prisustvo',
                 ],
-              ),
-              pw.SizedBox(height: 20),
-              pw.Text(
-                now,
-                style: const pw.TextStyle(fontSize: 14),),
-            ],
-          )
+                ...filteredList.map(
+                      (item) => [
+                    item.ime.toString(),
+                    "(${item.imeRoditelja.toString()})",
+                    item.prezime.toString(),
+                    item.datumRodjenja != null ? DateFormat('dd.MM.yyyy').format(item.datumRodjenja!) : 'N/A',
+                    item.nazivRazreda.toString(),
+                    item.prosjek?.toStringAsFixed(1) ?? '0.00',
+                    "${item.prisustvo?.toStringAsFixed(1) ?? '0.00'} %",
+                  ],
+                ).toList(),
+              ],
+            ),
+            pw.SizedBox(height: 20),
+            pw.Text(
+              now,
+              style: pw.TextStyle(fontSize: 14, font: ttf),
+            ),
+          ],
+        ),
       ),
     );
 
@@ -784,5 +793,6 @@ class _MektebDetaljiState extends State<MektebDetalji> {
       onLayout: (PdfPageFormat format) async => pdf.save(),
     );
   }
+
 
 }

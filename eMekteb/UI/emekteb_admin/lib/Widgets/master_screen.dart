@@ -46,11 +46,6 @@ class _MasterScreenState extends State<MasterScreen> {
             const SizedBox(
               width: 15,
             ),
-            Icon(
-              Icons.notifications,
-              size: 24.0,
-              color: Colors.cyan.shade700,
-            ),
           ],
         ),
         bottom: const PreferredSize(
@@ -62,8 +57,14 @@ class _MasterScreenState extends State<MasterScreen> {
         ),
       ),
       drawer: Drawer(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(1),
+              bottomRight: Radius.circular(1)),
+        ),
+        backgroundColor: Colors.cyan,
         child: Padding(
-          padding: const EdgeInsets.all(30.0),
+          padding: const EdgeInsets.all(15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -72,7 +73,7 @@ class _MasterScreenState extends State<MasterScreen> {
                 child: DrawerHeader(
                   child: Text(
                     'e-Mekteb',
-                    style: TextStyle(color: Colors.black, fontSize: 20.0),
+                    style: TextStyle(color: Colors.white, fontSize: 26.0),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -82,7 +83,7 @@ class _MasterScreenState extends State<MasterScreen> {
               ),
               if (!isKomisija)
                 ListTile(
-                  title: const Text('Mektebi', textAlign: TextAlign.center),
+                  title: const Text('Mektebi', textAlign: TextAlign.center,  style: TextStyle(color: Colors.white, fontSize: 18.0),),
                   onTap: () => Navigator.of(context).pushReplacement(
                     //pushReplacement  ili   push
                     MaterialPageRoute(
@@ -92,7 +93,7 @@ class _MasterScreenState extends State<MasterScreen> {
                 ),
               if (!isKomisija)
                 ListTile(
-                  title: const Text('Muallimi', textAlign: TextAlign.center),
+                  title: const Text('Muallimi', textAlign: TextAlign.center,  style: TextStyle(color: Colors.white, fontSize: 18.0),),
                   onTap: () => Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) => const Muallimi(),
@@ -102,7 +103,7 @@ class _MasterScreenState extends State<MasterScreen> {
 
               if (!isKomisija)
                 ListTile(
-                  title: const Text('Učenici', textAlign: TextAlign.center),
+                  title: const Text('Učenici', textAlign: TextAlign.center,  style: TextStyle(color: Colors.white, fontSize: 18.0),),
                   onTap: () => Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) => const Ucenici(),
@@ -110,7 +111,7 @@ class _MasterScreenState extends State<MasterScreen> {
                   ),
                 ),
               ListTile(
-                title: const Text('Takmičenja', textAlign: TextAlign.center),
+                title: const Text('Takmičenja', textAlign: TextAlign.center,  style: TextStyle(color: Colors.white, fontSize: 18.0),),
                 onTap: () => Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (context) => const Takmicenja(),
@@ -119,7 +120,7 @@ class _MasterScreenState extends State<MasterScreen> {
               ),
               if (!isKomisija)
                 ListTile(
-                  title: const Text('Ak. godine', textAlign: TextAlign.center),
+                  title: const Text('Ak. godine', textAlign: TextAlign.center,  style: TextStyle(color: Colors.white, fontSize: 18.0),),
                   onTap: () => Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) => const AkGodine(),
@@ -128,7 +129,7 @@ class _MasterScreenState extends State<MasterScreen> {
                 ),
               if (!isKomisija)
                 ListTile(
-                  title: const Text('Statistika', textAlign: TextAlign.center),
+                  title: const Text('Statistika', textAlign: TextAlign.center,  style: TextStyle(color: Colors.white, fontSize: 18.0),),
                   onTap: () => Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) => const Statistika(),
@@ -137,7 +138,7 @@ class _MasterScreenState extends State<MasterScreen> {
                 ),
               const Spacer(), // Add Spacer to push the following widgets to the bottom
               ListTile(
-                title: const Text('Postavke', textAlign: TextAlign.center),
+                title: const Text('Postavke', textAlign: TextAlign.center,  style: TextStyle(color: Colors.white, fontSize: 18.0),),
                 onTap: () => Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (context) => const Postavke(),
@@ -145,7 +146,7 @@ class _MasterScreenState extends State<MasterScreen> {
                 ),
               ),
               ListTile(
-                title: const Text('Odjavi se', textAlign: TextAlign.center),
+                title: const Text('Odjavi se', textAlign: TextAlign.center,  style: TextStyle(color: Colors.white, fontSize: 18.0),),
                 onTap: () => _logout(context),
               ),
             ],
