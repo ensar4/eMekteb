@@ -150,7 +150,7 @@ class _KampRoditeljScreenState extends State<KampRoditeljScreen> {
 
   Widget infoSection() {
     final screenWidth = MediaQuery.of(context).size.width;
-    final dateFormat = DateFormat('dd/MM/yyyy');
+    final dateFormat = DateFormat('dd.MM.yyyy');
 
     // Check if the date is null before formatting
     String formattedDatePocetak;

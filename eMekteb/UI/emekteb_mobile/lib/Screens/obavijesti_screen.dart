@@ -41,7 +41,13 @@ class _ObavijestiScreenState extends State<ObavijestiScreen> {
     super.didChangeDependencies();
     _obavijestProviderProvider = context.read<ObavijestProvider>();
     _userProvider = context.read<UserProvider>();
-    fetchData();
+    if (_userProvider.user == null) {
+      _userProvider.getKorisnik(Korisnik.id).then((_) {
+        fetchData();
+      });
+    } else {
+      fetchData();
+    }
   }
 
   Future<void> fetchData({String? filter}) async {
