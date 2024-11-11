@@ -22,20 +22,16 @@ namespace eMekteb.Services
 
         public override async Task<MektebM> Insert(MektebInsert insert)
         {
-            // Call the base insert method to add the new Mekteb
             var mekteb = await base.Insert(insert);
 
-            // Get the most recent academic year
             var latestAcademicYear = await _dbContext.AkademskaGodina
                 .OrderByDescending(ag => ag.DatumPocetka)
                 .FirstOrDefaultAsync();
 
             if (latestAcademicYear != null)
             {
-                // List of razredi to be added
                 var razredi = new List<string> { "I nivo", "II nivo", "III nivo", "Sufara", "Tedžvid", "Hatma" };
 
-                // Insert new Razredi and associate them with the most recent academic year
                 foreach (var nazivRazreda in razredi)
                 {
                     var razred = new Razred
@@ -56,7 +52,6 @@ namespace eMekteb.Services
                     _dbContext.AkademskaRazred.Add(razredAkademska);
                 }
 
-                // Save the changes for the RazredAkademska
                 await _dbContext.SaveChangesAsync();
             }
 
@@ -92,13 +87,11 @@ namespace eMekteb.Services
 
             foreach (var mektebM in result.Result)
             {
-                // Calculate the total number of students
                 mektebM.UkupnoUcenika = await _dbContext.Korisnik
                     .Where(u => u.MektebId == mektebM.Id && u.KorisniciUloge.Any(ku => ku.Uloga.Naziv == "Ucenik"))
                      .CountAsync();
 
 
-                // Calculate the average grade for the Mekteb
                 var korisniciIds = await _dbContext.Korisnik
                     .Where(k => k.MektebId == mektebM.Id)
                     .Select(k => k.Id)
@@ -111,7 +104,7 @@ namespace eMekteb.Services
 
                 if (zadace.Count > 0)
                 {
-                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena); // Assuming Ocjene has a property 'Ocjena' for grade
+                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena); 
                     mektebM.ProsjecnaOcjena = averageGrade;
                 }
                 else
@@ -119,7 +112,6 @@ namespace eMekteb.Services
                     mektebM.ProsjecnaOcjena = null;
                 }
 
-                // Calculate the average attendance for the Mekteb
                 var prisustva = await _dbContext.Prisustvo
                     .Where(p => korisniciIds.Contains(p.KorisnikId))
                     .ToListAsync();
@@ -137,7 +129,6 @@ namespace eMekteb.Services
                     mektebM.ProsjecnoPrisustvo = null;
                 }
 
-                // Get the name and surname of the Korisnik with the role of "imam"
                 var imam = await _dbContext.Korisnik
                     .Where(k => k.MektebId == mektebM.Id && k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == "imam"))
                     .Select(k => new { k.Ime, k.Prezime })
@@ -149,7 +140,7 @@ namespace eMekteb.Services
                 }
                 else
                 {
-                    mektebM.Mualim = null; // No imam found
+                    mektebM.Mualim = null; 
                 }
             }
 

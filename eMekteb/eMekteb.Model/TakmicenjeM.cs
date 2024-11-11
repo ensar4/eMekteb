@@ -22,7 +22,6 @@ namespace eMekteb.Services.Database
 
 
 
-        //public virtual ICollection<TakmicenjeKategorija> TakmicenjeKategorije { get; set; } = new List<TakmicenjeKategorija>();
 
     }
 }
