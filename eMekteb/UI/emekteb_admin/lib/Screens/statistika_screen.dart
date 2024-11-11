@@ -442,9 +442,9 @@ class _ProfilInfoState extends State<Statistika> {
             if (imageBytes != null)
               pw.Image(
                 pw.MemoryImage(imageBytes),
-                width: PdfPageFormat.a4.width - 40, // Adjusted width to fit the page
+                width: PdfPageFormat.a4.width - 45, // Adjusted width to fit the page
                 height: 155, // Set a fixed height
-                fit: pw.BoxFit.cover,
+               // fit: pw.BoxFit.cover,
               ),
 
             pw.SizedBox(height: 30),
