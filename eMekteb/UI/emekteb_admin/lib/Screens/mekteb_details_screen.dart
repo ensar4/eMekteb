@@ -359,7 +359,7 @@ class _MektebDetaljiState extends State<MektebDetalji> {
             filterByNivo(dropdownValue3);
           });
         },
-        items: ['Nivo', 'Prvi', 'Drugi', 'Treći', 'Sufara']
+        items: ['Nivo', 'I nivo', 'II nivo', 'III nivo', 'Sufara', 'Tedžvid', 'Hatma']
             .map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
