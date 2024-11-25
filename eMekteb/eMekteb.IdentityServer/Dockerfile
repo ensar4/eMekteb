@@ -23,4 +23,6 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
+COPY eMekteb.IdentityServer/certificate.pfx /app/certificate.pfx
+
 ENTRYPOINT ["dotnet", "eMekteb.IdentityServer.dll"]
