@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:emekteb_admin/Screens/mektebii_screen.dart';
 import 'package:emekteb_admin/Screens/takmicenja_screen.dart';
 import 'package:emekteb_admin/models/korisnik.dart';
@@ -53,18 +54,19 @@ import 'package:provider/provider.dart';
 
 
 void main() async {
-  // Ensure all bindings are initialized
+  HttpOverrides.global = MyHttpOverrides();
+
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize the window manager
+
   await windowManager.ensureInitialized();
 
-  // Set the window to full-screen when ready
+
   windowManager.waitUntilReadyToShow().then((_) async {
     await windowManager.setMinimumSize(const Size(1600, 900));
     await windowManager.setMaximizable(true);
 
-    windowManager.show(); // Show the window
+    windowManager.show();
   });
 
   runApp(
@@ -229,6 +231,13 @@ class LoginPage extends StatelessWidget {
 
 }
 
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+  }
+}
 
 
 
