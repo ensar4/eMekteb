@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eMekteb.Services.Database;
 
@@ -11,9 +12,11 @@ using eMekteb.Services.Database;
 namespace eMekteb.Services.Migrations
 {
     [DbContext(typeof(eMektebContext))]
-    partial class eMektebContextModelSnapshot : ModelSnapshot
+    [Migration("20241202223558_fx2")]
+    partial class fx2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -686,7 +689,7 @@ namespace eMekteb.Services.Migrations
                     b.Property<string>("Lekcija")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MektebId")
+                    b.Property<int>("MektebId")
                         .HasColumnType("int");
 
                     b.Property<string>("Razred")
@@ -2560,7 +2563,7 @@ namespace eMekteb.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CasId")
+                    b.Property<int>("CasId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("Datum")
@@ -4323,12 +4326,14 @@ namespace eMekteb.Services.Migrations
             modelBuilder.Entity("eMekteb.Services.Database.Cas", b =>
                 {
                     b.HasOne("eMekteb.Services.Database.AkademskaGodina", "AkademskaGodina")
-                        .WithMany("Cas")
+                        .WithMany()
                         .HasForeignKey("AkademskaGodinaId");
 
                     b.HasOne("eMekteb.Services.Database.Mekteb", "Mekteb")
-                        .WithMany("Cas")
-                        .HasForeignKey("MektebId");
+                        .WithMany()
+                        .HasForeignKey("MektebId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AkademskaGodina");
 
@@ -4451,7 +4456,9 @@ namespace eMekteb.Services.Migrations
                 {
                     b.HasOne("eMekteb.Services.Database.Cas", "Cas")
                         .WithMany("Prisustva")
-                        .HasForeignKey("CasId");
+                        .HasForeignKey("CasId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("eMekteb.Services.Database.Korisnik", "Korisnik")
                         .WithMany("Prisustva")
@@ -4561,8 +4568,6 @@ namespace eMekteb.Services.Migrations
             modelBuilder.Entity("eMekteb.Services.Database.AkademskaGodina", b =>
                 {
                     b.Navigation("AkademskaMekteb");
-
-                    b.Navigation("Cas");
                 });
 
             modelBuilder.Entity("eMekteb.Services.Database.Cas", b =>
@@ -4596,8 +4601,6 @@ namespace eMekteb.Services.Migrations
             modelBuilder.Entity("eMekteb.Services.Database.Mekteb", b =>
                 {
                     b.Navigation("AkademskaMekteb");
-
-                    b.Navigation("Cas");
 
                     b.Navigation("DodatneLekcije");
 

@@ -15,7 +15,9 @@ namespace eMekteb.Services.Database
         public DateTime DatumPocetka { get; set; }
         public DateTime DatumZavrsetka { get; set; }
         public bool? isAktivna { get; set; }
-        public ICollection<AkademskaMekteb>? AkademskaMekteb { get; set; } 
+        public ICollection<AkademskaMekteb>? AkademskaMekteb { get; set; }
+        public virtual ICollection<Cas> Cas { get; set; } = new List<Cas>();
+
 
     }
 }

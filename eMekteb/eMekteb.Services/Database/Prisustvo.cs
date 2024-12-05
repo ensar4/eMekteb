@@ -20,7 +20,7 @@ namespace eMekteb.Services.Database
         public virtual Korisnik? Korisnik { get; set; }
 
         [ForeignKey("Cas")]
-        public int CasId { get; set; }
+        public int? CasId { get; set; }
         public virtual Cas? Cas { get; set; }        
         
 

@@ -29,7 +29,7 @@ namespace eMekteb.Services.Migrations
                         column: x => x.KampId,
                         principalTable: "Kamp",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_KampKorisnik_Korisnik_KorisnikId",
                         column: x => x.KorisnikId,

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eMekteb.Services.Database;
 
@@ -11,9 +12,11 @@ using eMekteb.Services.Database;
 namespace eMekteb.Services.Migrations
 {
     [DbContext(typeof(eMektebContext))]
-    partial class eMektebContextModelSnapshot : ModelSnapshot
+    [Migration("20241202231338_fx4")]
+    partial class fx4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2560,7 +2563,7 @@ namespace eMekteb.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CasId")
+                    b.Property<int>("CasId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("Datum")
@@ -4451,7 +4454,9 @@ namespace eMekteb.Services.Migrations
                 {
                     b.HasOne("eMekteb.Services.Database.Cas", "Cas")
                         .WithMany("Prisustva")
-                        .HasForeignKey("CasId");
+                        .HasForeignKey("CasId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("eMekteb.Services.Database.Korisnik", "Korisnik")
                         .WithMany("Prisustva")

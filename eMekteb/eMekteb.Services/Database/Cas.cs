@@ -17,7 +17,7 @@ namespace eMekteb.Services.Database
         public string? Lekcija { get; set; }
 
         [ForeignKey("Mekteb")]
-        public int MektebId { get; set; }
+        public int? MektebId { get; set; }
         public virtual Mekteb? Mekteb { get; set; }
 
         [ForeignKey("AkademskaGodina")]

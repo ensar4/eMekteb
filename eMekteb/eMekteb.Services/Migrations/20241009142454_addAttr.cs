@@ -129,7 +129,7 @@ namespace eMekteb.Services.Migrations
                 column: "AkademskaGodinaId",
                 principalTable: "AkademskaGodina",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.NoAction);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Prisustvo_Razred_RazredId",
@@ -137,7 +137,7 @@ namespace eMekteb.Services.Migrations
                 column: "RazredId",
                 principalTable: "Razred",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.NoAction);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Razred_Mekteb_MektebId",
@@ -145,7 +145,7 @@ namespace eMekteb.Services.Migrations
                 column: "MektebId",
                 principalTable: "Mekteb",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.NoAction);
         }
     }
 }

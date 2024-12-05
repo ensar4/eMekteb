@@ -57,7 +57,7 @@ namespace eMekteb.Services.Migrations
                         column: x => x.RazredId,
                         principalTable: "Razred",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(

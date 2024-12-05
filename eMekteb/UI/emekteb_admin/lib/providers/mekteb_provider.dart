@@ -13,7 +13,7 @@ class MektebProvider extends BaseProvider<Mekteb>{
     return Mekteb.fromJson(data);
   }
 
-  Future<int?> insert(String naziv, String telefon, String adresa) async {
+  Future<int?> insert(String naziv, String adresa, String telefon) async {
     final url = Uri.parse(fullUrl);
     var headers = getHeaders();
 

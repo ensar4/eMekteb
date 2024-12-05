@@ -62,7 +62,7 @@ namespace eMekteb.Services.Migrations
                         column: x => x.AkademskaGodinaId,
                         principalTable: "AkademskaGodina",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_AkademskaRazred_Razred_RazredId",
                         column: x => x.RazredId,
@@ -89,7 +89,7 @@ namespace eMekteb.Services.Migrations
                         column: x => x.KorisnikId,
                         principalTable: "Korisnik",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_RazredKorisnik_Razred_RazredId",
                         column: x => x.RazredId,

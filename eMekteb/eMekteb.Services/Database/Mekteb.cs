@@ -29,6 +29,7 @@ namespace eMekteb.Services.Database
         public virtual ICollection<Obavijest> Obavijesti { get; set; } = new List<Obavijest>();
         public virtual ICollection<Korisnik> Korisnik { get; set; } = new List<Korisnik>();
         public virtual ICollection<DodatneLekcije> DodatneLekcije { get; set; } = new List<DodatneLekcije>();
+        public virtual ICollection<Cas> Cas { get; set; } = new List<Cas>();
         public ICollection<AkademskaMekteb>? AkademskaMekteb { get; set; } 
 
 

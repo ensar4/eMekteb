@@ -5,28 +5,28 @@
 namespace eMekteb.Services.Migrations
 {
     /// <inheritdoc />
-    public partial class addnull : Migration
+    public partial class fx4 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Korisnik_Razred_RazredId",
-                table: "Korisnik");
+                name: "FK_Cas_Mekteb_MektebId",
+                table: "Cas");
 
             migrationBuilder.AlterColumn<int>(
-                name: "RazredId",
-                table: "Korisnik",
+                name: "MektebId",
+                table: "Cas",
                 type: "int",
                 nullable: true,
                 oldClrType: typeof(int),
                 oldType: "int");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Korisnik_Razred_RazredId",
-                table: "Korisnik",
-                column: "RazredId",
-                principalTable: "Razred",
+                name: "FK_Cas_Mekteb_MektebId",
+                table: "Cas",
+                column: "MektebId",
+                principalTable: "Mekteb",
                 principalColumn: "Id");
         }
 
@@ -34,12 +34,12 @@ namespace eMekteb.Services.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Korisnik_Razred_RazredId",
-                table: "Korisnik");
+                name: "FK_Cas_Mekteb_MektebId",
+                table: "Cas");
 
             migrationBuilder.AlterColumn<int>(
-                name: "RazredId",
-                table: "Korisnik",
+                name: "MektebId",
+                table: "Cas",
                 type: "int",
                 nullable: false,
                 defaultValue: 0,
@@ -48,10 +48,10 @@ namespace eMekteb.Services.Migrations
                 oldNullable: true);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Korisnik_Razred_RazredId",
-                table: "Korisnik",
-                column: "RazredId",
-                principalTable: "Razred",
+                name: "FK_Cas_Mekteb_MektebId",
+                table: "Cas",
+                column: "MektebId",
+                principalTable: "Mekteb",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.NoAction);
         }

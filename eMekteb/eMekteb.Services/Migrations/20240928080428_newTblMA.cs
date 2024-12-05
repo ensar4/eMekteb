@@ -39,13 +39,13 @@ namespace eMekteb.Services.Migrations
                         column: x => x.AkademskaGodinaId,
                         principalTable: "AkademskaGodina",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_AkademskaMekteb_Mekteb_MektebId",
                         column: x => x.MektebId,
                         principalTable: "Mekteb",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(
@@ -83,7 +83,7 @@ namespace eMekteb.Services.Migrations
                 column: "AkademskaGodinaId",
                 principalTable: "AkademskaGodina",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.NoAction);
         }
     }
 }
