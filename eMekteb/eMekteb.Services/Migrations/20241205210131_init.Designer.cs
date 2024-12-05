@@ -12,8 +12,8 @@ using eMekteb.Services.Database;
 namespace eMekteb.Services.Migrations
 {
     [DbContext(typeof(eMektebContext))]
-    [Migration("20241202231338_fx4")]
-    partial class fx4
+    [Migration("20241205210131_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -2563,7 +2563,7 @@ namespace eMekteb.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CasId")
+                    b.Property<int?>("CasId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("Datum")
@@ -4454,9 +4454,7 @@ namespace eMekteb.Services.Migrations
                 {
                     b.HasOne("eMekteb.Services.Database.Cas", "Cas")
                         .WithMany("Prisustva")
-                        .HasForeignKey("CasId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CasId");
 
                     b.HasOne("eMekteb.Services.Database.Korisnik", "Korisnik")
                         .WithMany("Prisustva")
