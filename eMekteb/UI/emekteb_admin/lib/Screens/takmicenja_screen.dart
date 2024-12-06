@@ -48,7 +48,7 @@ class _ProfilInfoState extends State<Takmicenja> {
       });
 
       var data =
-          await _takmicenjaProvider.get(page: currentPage, pageSize: numPages);
+          await _takmicenjaProvider.get(page: currentPage, pageSize: numPages, sort: false);
 
       setState(() {
         if (listaTakmicenja == null) {

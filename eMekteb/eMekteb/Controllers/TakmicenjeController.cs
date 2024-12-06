@@ -10,10 +10,10 @@ namespace eMekteb.Controllers
 {
 
     [ApiController]
-    public class TakmicenjeController : BaseCRUDController<TakmicenjeM, BaseSearchObject, TakmicenjeInsert, TakmicenjeUpdate>
+    public class TakmicenjeController : BaseCRUDController<TakmicenjeM, TakmicenjeSearchObject, TakmicenjeInsert, TakmicenjeUpdate>
     {
         ITakmicenjeService service1;
-        public TakmicenjeController(ILogger<BaseController<TakmicenjeM, BaseSearchObject>> logger, ITakmicenjeService service) : base(logger, service)
+        public TakmicenjeController(ILogger<BaseController<TakmicenjeM, TakmicenjeSearchObject>> logger, ITakmicenjeService service) : base(logger, service)
         {
             service1 = service;
         }

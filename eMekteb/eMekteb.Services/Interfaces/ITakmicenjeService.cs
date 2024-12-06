@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace eMekteb.Services.Interfaces
 {
-    public interface ITakmicenjeService : ICRUDService<TakmicenjeM, BaseSearchObject, TakmicenjeInsert, TakmicenjeUpdate>
+    public interface ITakmicenjeService : ICRUDService<TakmicenjeM, TakmicenjeSearchObject, TakmicenjeInsert, TakmicenjeUpdate>
     {
         public Task<TakmicenjeM?> GetLastTakmicenjeAsync();
     }

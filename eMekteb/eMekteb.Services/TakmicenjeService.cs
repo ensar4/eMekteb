@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace eMekteb.Services
 {
-    public class TakmicenjeService : BaseCRUDService<TakmicenjeM, Takmicenje, BaseSearchObject, TakmicenjeInsert, TakmicenjeUpdate>, ITakmicenjeService
+    public class TakmicenjeService : BaseCRUDService<TakmicenjeM, Takmicenje, TakmicenjeSearchObject, TakmicenjeInsert, TakmicenjeUpdate>, ITakmicenjeService
     {
         public TakmicenjeService(eMektebContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
@@ -28,7 +28,7 @@ namespace eMekteb.Services
             return _mapper.Map<TakmicenjeM>(lastTakmicenje);
         }
 
-        public override async Task<PagedResult<TakmicenjeM>> Get(BaseSearchObject? search)
+        public override async Task<PagedResult<TakmicenjeM>> Get(TakmicenjeSearchObject? search)
         {
             var result = await base.Get(search);
 
@@ -39,6 +39,18 @@ namespace eMekteb.Services
             }
 
             return result;
+        }
+
+        public override IQueryable<Takmicenje> AddFilter(IQueryable<Takmicenje> query, TakmicenjeSearchObject? search)
+        {
+            if (search?.IsAsc == true)
+            {
+                query = query.OrderBy(y => y.Godina);
+            }
+            else
+                query = query.OrderByDescending(y => y.Godina);
+
+            return base.AddFilter(query, search);
         }
 
 
