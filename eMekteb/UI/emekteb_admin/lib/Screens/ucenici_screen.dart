@@ -511,6 +511,7 @@ class _ProfilInfoState extends State<Ucenici> {
     await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => pdf.save(),
     );
+    fetchData();
   }
 
 

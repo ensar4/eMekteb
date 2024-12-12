@@ -461,6 +461,7 @@ class _ProfilInfoState extends State<Statistika> {
     await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => pdf.save(),
     );
+    fetchDataGodine();
   }
 
 // Helper function to create Text widgets for info cards

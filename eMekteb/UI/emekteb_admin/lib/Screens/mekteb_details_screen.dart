@@ -162,9 +162,17 @@ class _MektebDetaljiState extends State<MektebDetalji> {
               );
             },
           ),
-          const SizedBox(width: 10), // Adjusted spacing
+          const SizedBox(width: 8), // Adjusted spacing
           Text(
             "/ ${widget.mekteb?.naziv}",
+            style: const TextStyle(fontSize: 16),
+          ), const SizedBox(width: 20), // Adjusted spacing
+          Text(
+            "(Adresa: ${widget.mekteb?.adresa}, ",
+            style: const TextStyle(fontSize: 16),
+          ), const SizedBox(width: 2), // Adjusted spacing
+          Text(
+            "Telefon: ${widget.mekteb?.telefon})",
             style: const TextStyle(fontSize: 16),
           ),
           const Spacer(), // Creates space between breadcrumb and buttons
@@ -189,6 +197,7 @@ class _MektebDetaljiState extends State<MektebDetalji> {
           ElevatedButton(
             onPressed: () {
               _createPdfReport(context, filteredList, widget.mekteb?.naziv as String, filteredListMualims);
+
             },
             style: ElevatedButton.styleFrom(
               shape: const RoundedRectangleBorder(),
@@ -792,6 +801,7 @@ class _MektebDetaljiState extends State<MektebDetalji> {
     await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => pdf.save(),
     );
+    fetchDataUcenici();
   }
 
 

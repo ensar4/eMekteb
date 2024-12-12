@@ -307,6 +307,7 @@ class _TakmicariAdminState extends State<TakmicariAdmin> {
    await Printing.layoutPdf(
      onLayout: (PdfPageFormat format) async => pdf.save(),
    );
+   fetchData();
  }
 
 
