@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../models/searches/search_result.dart';
 import '../models/takmicenje.dart';
+import 'mektebii_screen.dart';
 
 void main() {
   runApp(const Takmicenja());
@@ -84,8 +85,21 @@ class _ProfilInfoState extends State<Takmicenja> {
     return Padding(
       padding: EdgeInsets.all(30.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          BackButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                //pushReplacement  ili   push
+                MaterialPageRoute(
+                  builder: (context) => const Mektebi(),
+                ),
+              );
+            },
+          ),
+          const SizedBox(
+            width: 20,
+          ),
           ElevatedButton(
             onPressed: () => _showCreateForm(context, _takmicenjaProvider),
             style: ElevatedButton.styleFrom(

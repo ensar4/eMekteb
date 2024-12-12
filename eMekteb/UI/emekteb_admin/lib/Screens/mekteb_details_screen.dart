@@ -499,7 +499,7 @@ class _MektebDetaljiState extends State<MektebDetalji> {
     String telefon = '';
     String mail = '';
     String spol = 'M';
-    String status = 'Aktivan';
+    //String status = 'Aktivan';
     DateTime datumRodjenja = DateTime.now();
     String imeRoditelja = '';
     String password = '';
@@ -608,25 +608,25 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                         return null;
                       },
                     ),
-                    DropdownButtonFormField<String>(
-                      decoration: const InputDecoration(labelText: 'Status'),
-                      value: status,
-                      items: ['Aktivan', 'Neaktivan'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        status = newValue!;
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Unesite status mualima';
-                        }
-                        return null;
-                      },
-                    ),
+                   // DropdownButtonFormField<String>(
+                   //   decoration: const InputDecoration(labelText: 'Status'),
+                   //   value: status,
+                   //   items: ['Aktivan', 'Neaktivan'].map((String value) {
+                   //     return DropdownMenuItem<String>(
+                   //       value: value,
+                   //       child: Text(value),
+                   //     );
+                   //   }).toList(),
+                   //   onChanged: (newValue) {
+                   //     status = newValue!;
+                   //   },
+                   //   validator: (value) {
+                   //     if (value == null || value.isEmpty) {
+                   //       return 'Unesite status mualima';
+                   //     }
+                   //     return null;
+                   //   },
+                   // ),
                     TextFormField(
                       controller: datumRodjenjaController,
                       decoration: const InputDecoration(labelText: 'Datum rođenja'),
@@ -712,7 +712,6 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                     telefon,
                     mail,
                     spol,
-                    status,
                     datumRodjenja,
                     imeRoditelja,
                     mektebId!,

@@ -29,53 +29,64 @@ class UcenikPocetna extends StatefulWidget {
   @override
   State<UcenikPocetna> createState() => _UcenikPocetnaState();
 }
-
 class _UcenikPocetnaState extends State<UcenikPocetna> {
   late UserProvider _userProvider;
   late SlikaProvider _slikaProvider;
-  var samoIme = Korisnik.ime?.split(" ")[0] ?? "";
-
-  int currentPage = 1;
-  int numPages = 12;
-  bool isLoading = false;
-  int ukupno = 1;
+  var samoIme = "";
+  bool isLoading = true; // Add a loading state
   String slikaBytes = '';
-
-  SearchResult<Slika>? lista;
-  List<Slika> filteredList = [];
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _userProvider = context.read<UserProvider>();
     _slikaProvider = context.read<SlikaProvider>();
+
     if (_userProvider.user == null) {
       _userProvider.getKorisnik(Korisnik.id).then((_) {
-        fetchData(_userProvider.user?.id);
+        fetchData(_userProvider.user?.id).then((_) {
+          setState(() {
+            samoIme = _userProvider.user?.ime?.split(" ")[0] ?? "";
+            isLoading = false; // Data is ready
+          });
+        });
       });
     } else {
-      fetchData(_userProvider.user?.id);
+      fetchData(_userProvider.user?.id).then((_) {
+        setState(() {
+          samoIme = _userProvider.user?.ime?.split(" ")[0] ?? "";
+          isLoading = false; // Data is ready
+        });
+      });
     }
   }
 
   Future<void> fetchData(int? id) async {
-      SearchResult<dynamic> result = await _slikaProvider.getById2(id);
-      if (result.result.isNotEmpty) {
-        setState(() {
-          slikaBytes = result.result[0].slikaBytes;
-        });
-      }
+    if (id == null) return;
+    SearchResult<dynamic> result = await _slikaProvider.getById2(id);
+    if (result.result.isNotEmpty) {
+      setState(() {
+        slikaBytes = result.result[0].slikaBytes;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      // Show a loading indicator while data is being fetched
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     return MasterScreen(
       title: "e-Mekteb",
       child: SingleChildScrollView(
         child: Column(
           children: [
             greetingCard(),
-            gridMenu()
+            gridMenu(),
           ],
         ),
       ),
@@ -155,23 +166,21 @@ class _UcenikPocetnaState extends State<UcenikPocetna> {
               width: 70,
               height: 70,
               decoration: BoxDecoration(
-                color: Colors.white, // Background color
-                shape: BoxShape.circle,  // Makes the container circular
+                color: Colors.white,
+                shape: BoxShape.circle,
                 image: DecorationImage(
                   image: slikaBytes.isNotEmpty
-                      ? imageFromBase64String(slikaBytes) // Use decoded image if available
-                      : const AssetImage("assets/images/profilnaB.png") as ImageProvider, // Fallback image from assets
-                  fit: BoxFit.cover, // Fit image within the circle
+                      ? imageFromBase64String(slikaBytes)
+                      : const AssetImage("assets/images/profilnaB.png") as ImageProvider,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
-
           ],
         ),
       ),
     );
   }
-
 
   Widget gridMenu() {
     final List<Map<String, dynamic>> menuItems = [

@@ -148,7 +148,7 @@ class _ProfilInfoState extends State<Ucenici> {
           ),
           const Text(
             "Svi učenici",
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 22),
           ),
           const Spacer(),
 

@@ -499,7 +499,7 @@ class _ProfilInfoState extends State<Postavke> {
     String telefon = '';
     String mail = '';
     String spol = 'M';
-    String status = 'Aktivan';
+    //String status = 'Aktivan';
     DateTime datumRodjenja = DateTime.now();
     String imeRoditelja = '';
     String password = '';
@@ -608,25 +608,25 @@ class _ProfilInfoState extends State<Postavke> {
                         return null;
                       },
                     ),
-                    DropdownButtonFormField<String>(
-                      decoration: const InputDecoration(labelText: 'Status'),
-                      value: status,
-                      items: ['Aktivan', 'Neaktivan'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        status = newValue!;
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Unesite status';
-                        }
-                        return null;
-                      },
-                    ),
+                   //DropdownButtonFormField<String>(
+                   //  decoration: const InputDecoration(labelText: 'Status'),
+                   //  value: status,
+                   //  items: ['Aktivan', 'Neaktivan'].map((String value) {
+                   //    return DropdownMenuItem<String>(
+                   //      value: value,
+                   //      child: Text(value),
+                   //    );
+                   //  }).toList(),
+                   //  onChanged: (newValue) {
+                   //    status = newValue!;
+                   //  },
+                   //  validator: (value) {
+                   //    if (value == null || value.isEmpty) {
+                   //      return 'Unesite status';
+                   //    }
+                   //    return null;
+                   //  },
+                   //),
                     TextFormField(
                       controller: datumRodjenjaController,
                       decoration: const InputDecoration(labelText: 'Datum rođenja'),
@@ -715,7 +715,6 @@ class _ProfilInfoState extends State<Postavke> {
                     telefon,
                     mail,
                     spol,
-                    status,
                     datumRodjenja,
                     imeRoditelja,
                     mektebId,
@@ -760,7 +759,7 @@ class _ProfilInfoState extends State<Postavke> {
     String telefon = '';
     String mail = '';
     String spol = 'M';
-    String status = 'Aktivan';
+    //String status = 'Aktivan';
     DateTime datumRodjenja = DateTime.now();
     String imeRoditelja = '';
     String password = '';
@@ -869,25 +868,25 @@ class _ProfilInfoState extends State<Postavke> {
                         return null;
                       },
                     ),
-                    DropdownButtonFormField<String>(
-                      decoration: const InputDecoration(labelText: 'Status'),
-                      value: status,
-                      items: ['Aktivan', 'Neaktivan'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        status = newValue!;
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Unesite status';
-                        }
-                        return null;
-                      },
-                    ),
+                   //DropdownButtonFormField<String>(
+                   //  decoration: const InputDecoration(labelText: 'Status'),
+                   //  value: status,
+                   //  items: ['Aktivan', 'Neaktivan'].map((String value) {
+                   //    return DropdownMenuItem<String>(
+                   //      value: value,
+                   //      child: Text(value),
+                   //    );
+                   //  }).toList(),
+                   //  onChanged: (newValue) {
+                   //    status = newValue!;
+                   //  },
+                   //  validator: (value) {
+                   //    if (value == null || value.isEmpty) {
+                   //      return 'Unesite status';
+                   //    }
+                   //    return null;
+                   //  },
+                   //),
                     TextFormField(
                       controller: datumRodjenjaController,
                       decoration: const InputDecoration(labelText: 'Datum rođenja'),
@@ -976,7 +975,6 @@ class _ProfilInfoState extends State<Postavke> {
                     telefon,
                     mail,
                     spol,
-                    status,
                     datumRodjenja,
                     imeRoditelja,
                     mektebId,
@@ -1171,7 +1169,7 @@ class _ProfilInfoState extends State<Postavke> {
     String? telefon = userData.telefon;
     String? mail = userData.mail;
     String? spol = userData.spol;
-    String? status = userData.status;
+    //String? status = userData.status;
     DateTime? datumRodjenja = userData.datumRodjenja;
     String? imeRoditelja = userData.imeRoditelja;
     int? mektebId = userData.mektebId;
@@ -1281,25 +1279,25 @@ class _ProfilInfoState extends State<Postavke> {
                         return null;
                       },
                     ),
-                    DropdownButtonFormField<String>(
-                      decoration: const InputDecoration(labelText: 'Status'),
-                      value: status,
-                      items: ['Aktivan', 'Neaktivan'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        status = newValue!;
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Unesite status!';
-                        }
-                        return null;
-                      },
-                    ),
+                    //DropdownButtonFormField<String>(
+                    //  decoration: const InputDecoration(labelText: 'Status'),
+                    //  value: status,
+                    //  items: ['Aktivan', 'Neaktivan'].map((String value) {
+                    //    return DropdownMenuItem<String>(
+                    //      value: value,
+                    //      child: Text(value),
+                    //    );
+                    //  }).toList(),
+                    //  onChanged: (newValue) {
+                    //    status = newValue!;
+                    //  },
+                    //  validator: (value) {
+                    //    if (value == null || value.isEmpty) {
+                    //      return 'Unesite status!';
+                    //    }
+                    //    return null;
+                    //  },
+                    //),
                     TextFormField(
                       controller: datumRodjenjaController,
                       decoration: const InputDecoration(labelText: 'Datum rođenja'),
@@ -1361,7 +1359,6 @@ class _ProfilInfoState extends State<Postavke> {
                     telefon!,
                     mail!,
                     spol!,
-                    status!,
                     datumRodjenja!,
                     imeRoditelja!,
                     mektebId,
@@ -1394,7 +1391,7 @@ class _ProfilInfoState extends State<Postavke> {
     String? telefon = userData.telefon;
     String? mail = userData.mail;
     String? spol = userData.spol;
-    String? status = userData.status;
+   // String? status = userData.status;
     DateTime? datumRodjenja = userData.datumRodjenja;
     String? imeRoditelja = userData.imeRoditelja;
     int? mektebId = userData.mektebId;
@@ -1504,25 +1501,25 @@ class _ProfilInfoState extends State<Postavke> {
                         return null;
                       },
                     ),
-                    DropdownButtonFormField<String>(
-                      decoration: const InputDecoration(labelText: 'Status'),
-                      value: status,
-                      items: ['Aktivan', 'Neaktivan'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        status = newValue!;
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Unesite status!';
-                        }
-                        return null;
-                      },
-                    ),
+                   //DropdownButtonFormField<String>(
+                   //  decoration: const InputDecoration(labelText: 'Status'),
+                   //  value: status,
+                   //  items: ['Aktivan', 'Neaktivan'].map((String value) {
+                   //    return DropdownMenuItem<String>(
+                   //      value: value,
+                   //      child: Text(value),
+                   //    );
+                   //  }).toList(),
+                   //  onChanged: (newValue) {
+                   //    status = newValue!;
+                   //  },
+                   //  validator: (value) {
+                   //    if (value == null || value.isEmpty) {
+                   //      return 'Unesite status!';
+                   //    }
+                   //    return null;
+                   //  },
+                   //),
                     TextFormField(
                       controller: datumRodjenjaController,
                       decoration: const InputDecoration(labelText: 'Datum rođenja'),
@@ -1584,7 +1581,6 @@ class _ProfilInfoState extends State<Postavke> {
                     telefon!,
                     mail!,
                     spol!,
-                    status!,
                     datumRodjenja!,
                     imeRoditelja!,
                     mektebId,

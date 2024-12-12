@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/searches/search_result.dart';
+import 'mektebii_screen.dart';
 
 void main() {
   runApp(const Muallimi());
@@ -68,18 +69,31 @@ class _ProfilInfoState extends State<Muallimi> {
       title: "Muallimi",
       child: Column(
         children: [
-          headerWidet(),
+          headerWidget(),
           Expanded(child: tabelaWidget())
         ],
       ),
     );
   }
   
-  Widget headerWidet(){
-    return const Padding(padding: EdgeInsets.all(30),
+  Widget headerWidget(){
+    return Padding(padding: const EdgeInsets.all(30),
     child: Row(
       children: [
-        Text("Svi muallimi",
+        BackButton(
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+              //pushReplacement  ili   push
+              MaterialPageRoute(
+                builder: (context) => const Mektebi(),
+              ),
+            );
+          },
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        const Text("Svi muallimi",
         style: TextStyle(fontSize: 22),)
       ],
     ),
@@ -185,7 +199,7 @@ class _ProfilInfoState extends State<Muallimi> {
     String? telefon = userData.telefon;
     String? mail = userData.mail;
     String? spol = userData.spol;
-    String? status = userData.status;
+    //String? status = userData.status;
     DateTime? datumRodjenja = userData.datumRodjenja;
     String? imeRoditelja = userData.imeRoditelja;
     int? mektebId = userData.mektebId;
@@ -295,25 +309,25 @@ class _ProfilInfoState extends State<Muallimi> {
                         return null;
                       },
                     ),
-                    DropdownButtonFormField<String>(
-                      decoration: const InputDecoration(labelText: 'Status'),
-                      value: status,
-                      items: ['Aktivan', 'Neaktivan'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        status = newValue!;
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Unesite status mualima';
-                        }
-                        return null;
-                      },
-                    ),
+                    //DropdownButtonFormField<String>(
+                    //  decoration: const InputDecoration(labelText: 'Status'),
+                    //  value: status,
+                    //  items: ['Aktivan', 'Neaktivan'].map((String value) {
+                    //    return DropdownMenuItem<String>(
+                    //      value: value,
+                    //      child: Text(value),
+                    //    );
+                    //  }).toList(),
+                    //  onChanged: (newValue) {
+                    //    status = newValue!;
+                    //  },
+                    //  validator: (value) {
+                    //    if (value == null || value.isEmpty) {
+                    //      return 'Unesite status mualima';
+                    //    }
+                    //    return null;
+                    //  },
+                    //),
                     TextFormField(
                       controller: datumRodjenjaController,
                       decoration: const InputDecoration(labelText: 'Datum rođenja'),
@@ -375,7 +389,6 @@ class _ProfilInfoState extends State<Muallimi> {
                     telefon!,
                     mail!,
                     spol!,
-                    status!,
                     datumRodjenja!,
                     imeRoditelja!,
                     mektebId,

@@ -412,7 +412,7 @@ class _ProfilInfoState extends State<Ucenici> {
     final imeRoditeljaController = TextEditingController(text: ucenik.imeRoditelja);
     final brojTelefonaController = TextEditingController(text: ucenik.telefon);
     final mailController = TextEditingController(text: ucenik.mail);
-    final statusController = TextEditingController(text: ucenik.status);
+   // final statusController = TextEditingController(text: ucenik.status);
     int? nivoId = ucenik.idRazreda;
     String? nivo = ucenik.nazivRazreda;
     final datumRodjenjaController = TextEditingController(
@@ -470,16 +470,16 @@ class _ProfilInfoState extends State<Ucenici> {
                       return null;
                     },
                   ),
-                  TextFormField(
-                    controller: statusController,
-                    decoration: const InputDecoration(labelText: 'Status:'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Unesite status';
-                      }
-                      return null;
-                    },
-                  ),
+                  //TextFormField(
+                  //  controller: statusController,
+                  //  decoration: const InputDecoration(labelText: 'Status:'),
+                  //  validator: (value) {
+                  //    if (value == null || value.isEmpty) {
+                  //      return 'Unesite status';
+                  //    }
+                  //    return null;
+                  //  },
+                  //),
                   TextFormField(
                     controller: brojTelefonaController,
                     decoration: const InputDecoration(labelText: 'Broj telefona:'),
@@ -593,7 +593,6 @@ class _ProfilInfoState extends State<Ucenici> {
                     brojTelefonaController.text,
                     mailController.text,
                     selectedSpol!,
-                    statusController.text,
                     DateTime.parse(datumRodjenjaController.text),
                     imeRoditeljaController.text,
                     _userProvider.user?.mektebId,

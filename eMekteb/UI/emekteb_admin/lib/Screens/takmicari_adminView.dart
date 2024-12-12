@@ -92,6 +92,14 @@ class _TakmicariAdminState extends State<TakmicariAdmin> {
       child: Row(
         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          BackButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Pops the current page and goes back to the previous one
+            },
+          ),
+          const SizedBox(
+            width: 20,
+          ),
           Text(
             "Rang lista / ${widget.kategorija?.naziv} - nivo ${widget.kategorija?.nivo}",
             style: const TextStyle(

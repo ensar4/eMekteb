@@ -17,7 +17,6 @@ import '../providers/slika_provider.dart';
 import '../providers/user_provider.dart';
 import 'login_screen.dart';
 import 'obavijesti_screen.dart';
-
 class Pocetna extends StatefulWidget {
   const Pocetna({super.key});
 
@@ -28,37 +27,48 @@ class Pocetna extends StatefulWidget {
 class _PocetnaState extends State<Pocetna> {
   late UserProvider _userProvider;
   late SlikaProvider _slikaProvider;
-  var samoIme = Korisnik.ime?.split(" ")[0] ?? "";
-  int currentPage = 1;
-  int numPages = 12;
+  String samoIme = "";
   bool isLoading = false;
-  int ukupno = 1;
   String slikaBytes = '';
-
-  SearchResult<Slika>? lista;
-  List<Slika> filteredList = [];
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _userProvider = context.read<UserProvider>();
     _slikaProvider = context.read<SlikaProvider>();
+
     if (_userProvider.user == null) {
       _userProvider.getKorisnik(Korisnik.id).then((_) {
+        setState(() {
+          samoIme = _userProvider.user?.ime.split(" ")[0] ?? "";
+        });
         fetchData(_userProvider.user?.id);
       });
     } else {
+      setState(() {
+        samoIme = _userProvider.user?.ime.split(" ")[0] ?? "";
+      });
       fetchData(_userProvider.user?.id);
     }
   }
 
   Future<void> fetchData(int? id) async {
-      SearchResult<dynamic> result = await _slikaProvider.getById2(id);
+    setState(() {
+      isLoading = true;
+    });
+
+    if (id != null) {
+      var result = await _slikaProvider.getById2(id);
       if (result.result.isNotEmpty) {
         setState(() {
-          slikaBytes = result.result[0].slikaBytes;
+          slikaBytes = result.result[0].slikaBytes!;
         });
       }
+    }
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -69,7 +79,7 @@ class _PocetnaState extends State<Pocetna> {
         child: Column(
           children: [
             greetingCard(),
-            gridMenu()
+            gridMenu(),
           ],
         ),
       ),
@@ -110,9 +120,9 @@ class _PocetnaState extends State<Pocetna> {
                     ),
                   ),
                   const SizedBox(height: 8.0),
-                   Text(
-                     Korisnik.uloge.toString().replaceAll('[', '').replaceAll(']', ''),
-                     style: const TextStyle(
+                  Text(
+                    Korisnik.uloge?.toString().replaceAll('[', '').replaceAll(']', '') ?? '',
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 14.0,
                     ),
@@ -124,17 +134,15 @@ class _PocetnaState extends State<Pocetna> {
               width: 70,
               height: 70,
               decoration: BoxDecoration(
-                color: Colors.white, // Background color
-                shape: BoxShape.circle, // Makes the container circular
+                shape: BoxShape.circle,
                 image: DecorationImage(
                   image: slikaBytes.isNotEmpty
-                      ? imageFromBase64String(slikaBytes) // Use decoded image if available
-                      : const AssetImage("assets/images/profilnaB.png") as ImageProvider, // Fallback image from assets
-                  fit: BoxFit.cover, // Fit image within the circle
+                      ? imageFromBase64String(slikaBytes)
+                      : const AssetImage("assets/images/profilnaB.png") as ImageProvider,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
-
           ],
         ),
       ),

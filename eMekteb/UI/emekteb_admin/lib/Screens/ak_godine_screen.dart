@@ -11,6 +11,7 @@ import '../models/searches/search_result.dart';
 import '../providers/akademskarazred_provider.dart';
 import '../providers/mekteb_provider.dart';
 import '../providers/razred_provider.dart';
+import 'mektebii_screen.dart';
 
 void main() {
   runApp(const AkGodine());
@@ -550,6 +551,19 @@ class _ProfilInfoState extends State<AkGodine> {
       padding: const EdgeInsets.all(30.0),
       child: Row(
         children: [
+          BackButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                //pushReplacement  ili   push
+                MaterialPageRoute(
+                  builder: (context) => const Mektebi(),
+                ),
+              );
+            },
+          ),
+          const SizedBox(
+            width: 20,
+          ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             height: 36,
