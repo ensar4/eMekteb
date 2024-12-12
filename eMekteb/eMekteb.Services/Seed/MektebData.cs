@@ -60,6 +60,78 @@ namespace eMekteb.Services.Seed
                     Adresa = "Mostar",
                     Telefon = "036 585-965",
                     Naziv = "Mekteb Vrapčići"
+                },
+                new Mekteb
+                {
+                    Id = 7,
+                    MedzlisId = 1,
+                    Adresa = "Mostar",
+                    Telefon = "036 585-967",
+                    Naziv = "Mekteb Zalik 2"
+                },
+                new Mekteb
+                {
+                    Id = 8,
+                    MedzlisId = 1,
+                    Adresa = "Mostar",
+                    Telefon = "036 585-963",
+                    Naziv = "Mekteb Luka 2"
+                },
+                new Mekteb
+                {
+                    Id = 9,
+                    MedzlisId = 1,
+                    Adresa = "Mostar",
+                    Telefon = "036 585-962",
+                    Naziv = "Mekteb Ričina"
+                },
+                new Mekteb
+                {
+                    Id = 10,
+                    MedzlisId = 1,
+                    Adresa = "Mostar",
+                    Telefon = "036 585-961",
+                    Naziv = "Mekteb Podhum"
+                },
+                new Mekteb
+                {
+                    Id = 11,
+                    MedzlisId = 1,
+                    Adresa = "Mostar",
+                    Telefon = "036 585-965",
+                    Naziv = "Mekteb Pijesak"
+                },
+                new Mekteb
+                {
+                    Id = 12,
+                    MedzlisId = 1,
+                    Adresa = "Mostar",
+                    Telefon = "036 585-961",
+                    Naziv = "Mekteb Balinovac"
+                },
+                new Mekteb
+                {
+                    Id = 13,
+                    MedzlisId = 1,
+                    Adresa = "Mostar",
+                    Telefon = "036 585-965",
+                    Naziv = "Mekteb Jasenica"
+                },
+                new Mekteb
+                {
+                    Id = 14,
+                    MedzlisId = 1,
+                    Adresa = "Mostar",
+                    Telefon = "036 585-961",
+                    Naziv = "Mekteb Kočine"
+                },
+                new Mekteb
+                {
+                    Id = 15,
+                    MedzlisId = 1,
+                    Adresa = "Mostar",
+                    Telefon = "036 585-965",
+                    Naziv = "Mekteb Brankovac"
                 }
             );
         }
