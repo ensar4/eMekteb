@@ -3,22 +3,22 @@
 ### Kredencijali za prijavu
 
 DESKTOP:
-1. Uloga administrator
+1. Uloga administrator (Dino Maksumic)
     - username: admin
     - password: test
-2. Uloga komisija
+2. Uloga komisija (Armin Abaza)
     - username: komisija
     - password: test
 
 
 MOBILE:
-1. Uloga imam
+1. Uloga imam (Atif Mujkic)
     - username: imam
     - password: test
-2. Uloga učenik
+2. Uloga učenik (Lejla Maric)
     - username: ucenik
     - password: test
-3. Uloga roditelj
+3. Uloga roditelj (Zijad Maric)
     - username: roditelj
     - password: test
 
