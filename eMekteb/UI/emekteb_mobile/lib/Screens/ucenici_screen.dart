@@ -163,7 +163,7 @@ class _ProfilInfoState extends State<Ucenici> {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
-          columnSpacing: screenWidth*0.09,
+          columnSpacing: screenWidth*0.2,
           columns: const [
             DataColumn(label: Text('Ime i prezime')),
             DataColumn(label: Text('Detalji')),
