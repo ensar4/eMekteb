@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/kamp.dart';
 import '../providers/user_provider.dart';
+import 'kamp_screen.dart';
 void main() {
   runApp(const KampEdit(
     kamp: null,
@@ -195,7 +196,11 @@ class _KampEditState extends State<KampEdit> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Kamp uspješno uređen')),
               );
-              Navigator.of(context).pop(true); // Close the form after saving
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const Kamps(),
+                ),
+              );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Greška pri spašavanju promjena')),

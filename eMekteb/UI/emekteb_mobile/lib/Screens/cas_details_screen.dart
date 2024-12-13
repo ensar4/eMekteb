@@ -440,7 +440,6 @@ class EditUcenikDialog extends StatefulWidget {
   @override
   _EditUcenikDialogState createState() => _EditUcenikDialogState();
 }
-
 class _EditUcenikDialogState extends State<EditUcenikDialog> {
   String? selectedKategorija;
   final TextEditingController lekcijaKontroler = TextEditingController();
@@ -464,55 +463,73 @@ class _EditUcenikDialogState extends State<EditUcenikDialog> {
         child: Text('${widget.ucenik.ime} ${widget.ucenik.prezime}'),
       ),
       content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Lekcija: ${widget.cas?.lekcija}', style: const TextStyle(fontSize: 16),),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Ocjena',
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Lekcija: ${widget.cas?.lekcija}',
+                style: const TextStyle(fontSize: 16),
               ),
-              hint: const Text('Odaberite ocjenu'),
-              value: selectedKategorija,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedKategorija = newValue;
-                });
-              },
-              items: widget.filteredListKategorija
-                  .map<DropdownMenuItem<String>>((kategorija) {
-                return DropdownMenuItem<String>(
-                  value: kategorija.id.toString(),
-                  child: Text('${kategorija.ocjena}'),
-                );
-              }).toList(),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Odaberite ocjenu';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: lekcijaKontroler,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Lekcija',
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Ocjena',
+                ),
+                hint: const Text('Odaberite ocjenu'),
+                value: selectedKategorija,
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedKategorija = newValue;
+                  });
+                },
+                items: widget.filteredListKategorija
+                    .map<DropdownMenuItem<String>>((kategorija) {
+                  return DropdownMenuItem<String>(
+                    value: kategorija.id.toString(),
+                    child: Text('${kategorija.ocjena}'),
+                  );
+                }).toList(),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Molimo odaberite ocjenu.';
+                  }
+                  return null;
+                },
               ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: zadacaKontroler,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Zadaća',
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: lekcijaKontroler,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Lekcija',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Molimo unesite lekciju.';
+                  }
+                  return null;
+                },
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: zadacaKontroler,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Zadaća',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Molimo unesite zadaću.';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
         ),
       ),
       actions: [
@@ -520,19 +537,23 @@ class _EditUcenikDialogState extends State<EditUcenikDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: const Text('Odustani'),
         ),
         isLoading
             ? const CircularProgressIndicator()
             : ElevatedButton(
           onPressed: () async {
-            await _saveData();
+            if (_formKey.currentState!.validate()) {
+              await _saveData();
+            }
           },
           child: const Text('Spasi'),
         ),
       ],
     );
   }
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Future<void> _saveData() async {
     setState(() {
@@ -545,7 +566,7 @@ class _EditUcenikDialogState extends State<EditUcenikDialog> {
       widget.ucenik.id,
       int.tryParse(selectedKategorija ?? ''),
       widget.ucenik.idRazreda,
-      zadacaKontroler.text
+      zadacaKontroler.text,
     );
 
     setState(() {

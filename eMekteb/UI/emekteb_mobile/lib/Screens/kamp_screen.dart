@@ -42,13 +42,7 @@ class _ProfilInfoState extends State<Kamps> {
     super.didChangeDependencies();
     _kampProvider = context.read<KampProvider>();
     _UserProvider = context.read<UserProvider>();
-    if (_UserProvider.user == null) {
-      _UserProvider.getKorisnik(Korisnik.id).then((_) {
-        fetchData();
-      });
-    } else {
-      fetchData();
-    }
+    fetchData();
   }
 
   Future<void> fetchData({String? filter}) async {

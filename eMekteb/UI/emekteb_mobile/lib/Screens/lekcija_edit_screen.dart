@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/dodatna_lekcija.dart';
 import '../providers/user_provider.dart';
+import 'lekcija_screen.dart';
 
 void main() {
   runApp(const DodatnaLekcijaEdit(
@@ -150,7 +151,11 @@ class _DodatnaLekcijaEditState extends State<DodatnaLekcijaEdit> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Lekcija uspješno uređena!')),
               );
-              Navigator.of(context).pop(true);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const Lekcija(),
+                ),
+              );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Greška pri spašavanju promjena!')),
