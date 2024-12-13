@@ -158,6 +158,8 @@ class _TakmicariAdminState extends State<TakmicariAdmin> {
                 const DataColumn(label: Text('Ukupno Bodova')),
               if (isKomisija)
                 const DataColumn(label: Text('Ocjeni')),
+              if (!isKomisija)
+              const DataColumn(label: Text('Izbriši')),
             ],
             rows: filteredList.map<DataRow>((item) {
               return DataRow(
@@ -179,6 +181,30 @@ class _TakmicariAdminState extends State<TakmicariAdmin> {
                         },
                       ),
                     ),
+                  if (!isKomisija)
+                  DataCell(
+                    IconButton(
+                      icon: Icon(Icons.delete, color: Colors.cyan.shade700,),
+                      onPressed: () async {
+                        bool confirmed = await _showConfirmationDialog(context);
+                        if (confirmed) {
+                          try {
+                            await _takmicarProvider.deleteTakmicar(item.id);
+                            setState(() {
+                              fetchData();
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Uspješno izbrisano!')),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Greška prilikom brisanja: $e')),
+                            );
+                          }
+                        }
+                      },
+                    ),
+                  ),
                 ],
               );
             }).toList(),
@@ -252,6 +278,28 @@ class _TakmicariAdminState extends State<TakmicariAdmin> {
     setState(() {
       ratedItems.add(item.id); // Assuming item has a unique `id`
     });
+  }
+
+  Future<bool> _showConfirmationDialog(BuildContext context) async {
+    return (await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Potvrda brisanja'),
+          content: const Text('Jeste li sigurni da želite izbrisati ovog takmičara?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('POTVRDI', style: TextStyle(color: Colors.red),),
+            ),
+          ],
+        );
+      },
+    )) ?? false;
   }
 
   String getCurrentUserRole() {

@@ -30,4 +30,22 @@ class TakmicarProvider extends BaseProvider<Takmicar> {
       return false;
     }
   }
+
+
+  Future<bool> deleteTakmicar(int? id) async {
+    final url = Uri.parse('$baseOfUrl''Takmicar/$id');
+    var headers = getHeaders();
+
+    final response = await http.delete(
+      url,
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to delete item: ${response.statusCode}');
+    }
+  }
+
 }

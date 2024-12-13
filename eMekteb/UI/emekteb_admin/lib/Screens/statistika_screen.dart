@@ -210,11 +210,11 @@ class _ProfilInfoState extends State<Statistika> {
             title: "Prisustvo %",
             value:
                  selectedMekteb != null
-                ? selectedMekteb!.prosjecnoPrisustvo?.toStringAsFixed(1) ?? '0.00'
+                ? selectedMekteb!.prosjecnoPrisustvo?.toStringAsFixed(0) ?? '0.00'
                 : selectedGodina != null
-                ? selectedGodina!.prosjecnoPrisustvo?.toStringAsFixed(1) ?? '0.00'
+                ? selectedGodina!.prosjecnoPrisustvo?.toStringAsFixed(0) ?? '0.00'
                 : filteredMedzlis.isNotEmpty
-                ? filteredMedzlis[0].prosjecnoPrisustvo?.toStringAsFixed(1) ?? '0.00'
+                ? filteredMedzlis[0].prosjecnoPrisustvo?.toStringAsFixed(0) ?? '0.00'
                 : 'Loading...',
           ),
           _infoCard(
