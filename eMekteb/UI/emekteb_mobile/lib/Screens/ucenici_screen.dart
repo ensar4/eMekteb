@@ -168,7 +168,6 @@ class _ProfilInfoState extends State<Ucenici> {
             DataColumn(label: Text('Ime i prezime')),
             DataColumn(label: Text('Detalji')),
             DataColumn(label: Text('Uredi')),
-            DataColumn(label: Text('Ispiši')),
           ],
           rows: filteredList.map((ucenik) {
             return DataRow(
@@ -195,30 +194,7 @@ class _ProfilInfoState extends State<Ucenici> {
                     ],
                   ),
                 ),
-                DataCell(
-                  IconButton(
-                    //color: Colors.black,
-                    icon: const Icon(Icons.delete),
-                    onPressed: () async {
-                      bool confirmed = await _showConfirmationDialog(context);
-                      if (confirmed) {
-                        try {
-                          await _userProvider.delete(ucenik.id);
-                          setState(() {
-                            filteredList.remove(ucenik);
-                          });
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Uspješno izbrisano!')),
-                          );
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Greška prilikom brisanja: $e')),
-                          );
-                        }
-                      }
-                    },
-                  ),
-                ),
+
               ],
             );
           }).toList(),
@@ -235,27 +211,8 @@ class _ProfilInfoState extends State<Ucenici> {
       },
     );
   }
-  Future<bool> _showConfirmationDialog(BuildContext context) async {
-    return (await showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Potvrda brisanja'),
-          content: const Text('Jeste li sigurni da želite izbrisati ovog učenika?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Odustani'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('DA', style: TextStyle(color: Colors.red),),
-            ),
-          ],
-        );
-      },
-    )) ?? false;
-  }
+
+
   Widget _buildFilterOptions() {
     return Container(
       padding: const EdgeInsets.all(16),
