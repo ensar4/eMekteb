@@ -9,10 +9,9 @@ namespace eMekteb.Model.SearchObjects
     public class AkademskaGodSearchObject : BaseSearchObject
     {
         public bool? IsAsc { get; set; }
-
         public bool? IsPupilsAsc { get; set; }
-
-
+        public int? MedzlisId { get; set; }
+        public int? MuftijstvoId { get; set; }
 
     }
 }

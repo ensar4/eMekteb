@@ -32,16 +32,20 @@ class AuthProvider with ChangeNotifier{
      Korisnik.id = int.parse(decodedToken[ClaimType.sid] as String);
      Korisnik.ime = decodedToken[ClaimType.name] as String?;
      Korisnik.username = decodedToken[ClaimType.nameIdentifier] as String?;
-     //Korisnik.mail = decodedToken[ClaimType.email] as String?;
      Korisnik.token = token;
 
      var role = decodedToken[ClaimType.role];
      if (role is List<dynamic>) {
-       Korisnik.uloge = List<String>.from(decodedToken[ClaimType.role]);
+       Korisnik.uloge = List<String>.from(role);
      } else {
        Korisnik.uloge.add(role);
      }
+
+     Korisnik.mektebId = int.tryParse(decodedToken["MektebId"] as String? ?? '');
+     Korisnik.medzlisId = int.tryParse(decodedToken["MedzlisId"] as String? ?? '');
+     Korisnik.muftijstvoId = int.tryParse(decodedToken["MuftijstvoId"] as String? ?? '');
    }
+
 
    bool _isValidResponse(http.Response response) {
      if (response.statusCode < 299) {

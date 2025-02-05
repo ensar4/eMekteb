@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:emekteb_admin/models/korisnik.dart';
 import 'package:emekteb_admin/models/mualim.dart';
 import 'package:emekteb_admin/providers/base_provider.dart';
 import 'package:http/http.dart' as http;
 
 class MualimProvider extends BaseProvider<Mualim>{
   MualimProvider() : super("Mualimi");
-
+ // var medzlisIde = Korisnik.medzlisId;
 
 @override
 Mualim fromJson(data) {
@@ -24,7 +25,8 @@ Mualim fromJson(data) {
       String imeRoditelja,
       int mektebId,
       String password,
-      String passwordPotvrda
+      String passwordPotvrda,
+      int medzlisId
       ) async {
     final url = Uri.parse('$baseOfUrl''Korisnik');
     var headers = getHeaders();
@@ -46,8 +48,10 @@ Mualim fromJson(data) {
         'razredId': 2,
         'password': password,
         'passwordPotvrda': passwordPotvrda,
+        'medzlisId': medzlisId,
       }),
     );
+    //print("medzlisIde:");    print(medzlisIde);
 
     if (response.statusCode == 200) {
       final korisnikId = json.decode(response.body)['id'];

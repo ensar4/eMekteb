@@ -9,5 +9,7 @@ namespace eMekteb.Model.SearchObjects
     public class TakmicenjeSearchObject : BaseSearchObject
     {
         public bool? IsAsc { get; set; }
+        public int? MedzlisId { get; set; }
+
     }
 }

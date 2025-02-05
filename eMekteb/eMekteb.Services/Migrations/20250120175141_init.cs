@@ -30,7 +30,7 @@ namespace eMekteb.Services.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Medzlis",
+                name: "Muftijstvo",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -42,7 +42,7 @@ namespace eMekteb.Services.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Medzlis", x => x.Id);
+                    table.PrimaryKey("PK_Muftijstvo", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -69,6 +69,29 @@ namespace eMekteb.Services.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Uloga", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Medzlis",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Naziv = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Adresa = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Telefon = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Mail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MuftijstvoId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Medzlis", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Medzlis_Muftijstvo_MuftijstvoId",
+                        column: x => x.MuftijstvoId,
+                        principalTable: "Muftijstvo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -162,14 +185,12 @@ namespace eMekteb.Services.Migrations
                         name: "FK_Cas_AkademskaGodina_AkademskaGodinaId",
                         column: x => x.AkademskaGodinaId,
                         principalTable: "AkademskaGodina",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Cas_Mekteb_MektebId",
                         column: x => x.MektebId,
                         principalTable: "Mekteb",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -260,8 +281,7 @@ namespace eMekteb.Services.Migrations
                         name: "FK_Razred_Mekteb_MektebId",
                         column: x => x.MektebId,
                         principalTable: "Mekteb",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -333,6 +353,8 @@ namespace eMekteb.Services.Migrations
                     Prosjek = table.Column<double>(type: "float", nullable: true),
                     IdRazreda = table.Column<int>(type: "int", nullable: true),
                     MektebId = table.Column<int>(type: "int", nullable: false),
+                    MedzlisId = table.Column<int>(type: "int", nullable: true),
+                    MuftijstvoId = table.Column<int>(type: "int", nullable: true),
                     RoditeljId = table.Column<int>(type: "int", nullable: true),
                     RazredId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -345,11 +367,21 @@ namespace eMekteb.Services.Migrations
                         principalTable: "Korisnik",
                         principalColumn: "Id");
                     table.ForeignKey(
+                        name: "FK_Korisnik_Medzlis_MedzlisId",
+                        column: x => x.MedzlisId,
+                        principalTable: "Medzlis",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_Korisnik_Mekteb_MektebId",
                         column: x => x.MektebId,
                         principalTable: "Mekteb",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Korisnik_Muftijstvo_MuftijstvoId",
+                        column: x => x.MuftijstvoId,
+                        principalTable: "Muftijstvo",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Korisnik_Razred_RazredId",
                         column: x => x.RazredId,
@@ -453,7 +485,7 @@ namespace eMekteb.Services.Migrations
                         name: "FK_Prisustvo_Cas_CasId",
                         column: x => x.CasId,
                         principalTable: "Cas",
-                        principalColumn: "Id", onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Prisustvo_Korisnik_KorisnikId",
                         column: x => x.KorisnikId,
@@ -561,9 +593,9 @@ namespace eMekteb.Services.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Medzlis",
+                table: "Muftijstvo",
                 columns: new[] { "Id", "Adresa", "Mail", "Naziv", "Telefon" },
-                values: new object[] { 1, "Čiče Miličevića, Mostar 88000", "medzlismostar@gmail.com", "Medzlis Mostar", "036 550-727" });
+                values: new object[] { 1, "Čiče Miličevića, Mostar 88000", "muftijstvomostar@gmail.com", "Muftijstvo Mostarsko", "036 550-727" });
 
             migrationBuilder.InsertData(
                 table: "Ocjene",
@@ -586,8 +618,14 @@ namespace eMekteb.Services.Migrations
                     { 2, "Ucenik" },
                     { 3, "Imam" },
                     { 4, "Roditelj" },
-                    { 5, "Komisija" }
+                    { 5, "Komisija" },
+                    { 6, "SuperAdmin" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Medzlis",
+                columns: new[] { "Id", "Adresa", "Mail", "MuftijstvoId", "Naziv", "Telefon" },
+                values: new object[] { 1, "Čiče Miličevića, Mostar 88000", "medzlismostar@gmail.com", 1, "Medzlis Mostar", "036 550-727" });
 
             migrationBuilder.InsertData(
                 table: "Mekteb",
@@ -599,7 +637,16 @@ namespace eMekteb.Services.Migrations
                     { 3, "Mostar", 1, "Mekteb Luka", "036 585-963" },
                     { 4, "Mostar", 1, "Mekteb Musala", "036 585-962" },
                     { 5, "Mostar", 1, "Mekteb Blagaj", "036 585-961" },
-                    { 6, "Mostar", 1, "Mekteb Vrapčići", "036 585-965" }
+                    { 6, "Mostar", 1, "Mekteb Vrapčići", "036 585-965" },
+                    { 7, "Mostar", 1, "Mekteb Zalik 2", "036 585-967" },
+                    { 8, "Mostar", 1, "Mekteb Luka 2", "036 585-963" },
+                    { 9, "Mostar", 1, "Mekteb Ričina", "036 585-962" },
+                    { 10, "Mostar", 1, "Mekteb Podhum", "036 585-961" },
+                    { 11, "Mostar", 1, "Mekteb Pijesak", "036 585-965" },
+                    { 12, "Mostar", 1, "Mekteb Balinovac", "036 585-961" },
+                    { 13, "Mostar", 1, "Mekteb Jasenica", "036 585-965" },
+                    { 14, "Mostar", 1, "Mekteb Kočine", "036 585-961" },
+                    { 15, "Mostar", 1, "Mekteb Brankovac", "036 585-965" }
                 });
 
             migrationBuilder.InsertData(
@@ -704,30 +751,31 @@ namespace eMekteb.Services.Migrations
 
             migrationBuilder.InsertData(
                 table: "Korisnik",
-                columns: new[] { "Id", "DatumRodjenja", "IdRazreda", "Ime", "ImeRoditelja", "LozinkaHash", "LozinkaSalt", "Mail", "MektebId", "NazivRazreda", "Prezime", "Prisustvo", "Prosjek", "RazredId", "RoditeljId", "Spol", "Status", "Telefon", "Username" },
+                columns: new[] { "Id", "DatumRodjenja", "IdRazreda", "Ime", "ImeRoditelja", "LozinkaHash", "LozinkaSalt", "Mail", "MedzlisId", "MektebId", "MuftijstvoId", "NazivRazreda", "Prezime", "Prisustvo", "Prosjek", "RazredId", "RoditeljId", "Spol", "Status", "Telefon", "Username" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(1985, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Dino", "Mehmed", "dP9XoZcTTTU8f4ddDbNLJalRQqQ=", "jmK1d1xnmg2DC0svh3UvRw==", "dino@gmail.com", 1, null, "Maksumic", null, null, null, null, "M", "Aktivan", "063355441", "admin" },
-                    { 2, new DateTime(1971, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Zijad", "Bajro", "z/sT0B+tdXeEL9SHGZRnuwLTq24=", "TojKLl0mMwNiLEbjjO9oZg==", "zijad@gmail.com", 1, null, "Maric", null, null, null, null, "M", "Aktivan", "062627878", "roditelj" },
-                    { 4, new DateTime(1981, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Armin", "Aner", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "armin@gmail.com", 1, null, "Abaza", null, null, null, null, "M", "Aktivan", "062545121", "komisija" },
-                    { 5, new DateTime(1989, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Atif", "Suad", "cKnCCVJWJjRXqM7XevrbN6B3RbM=", "cLnMQzMpSBWfc9nVetCRnw==", "atif@gmail.com", 1, null, "Mujkic", null, null, null, null, "M", "Aktivan", "062589989", "imam" },
-                    { 7, new DateTime(1971, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Almir", "Salko", "bkLKbSxLPSFFmeMtQgdPC1AAnDQ=", "Gx+JkCnY/r169UVKD+dWYg==", "almir@gmail.com", 2, null, "Gosto", null, null, null, null, "M", "Aktivan", "062062062", "almir.gosto" },
-                    { 11, new DateTime(1974, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Almir", "Halil", "QASszTjeeigPIi3z2Pco4Xz6z2A=", "SGEPRubCkiUhpIkgN1ICLA==", "almirL@gmail.com", 3, null, "Lizde", null, null, null, null, "M", "Aktivan", "063063063", "almir.lizde" },
-                    { 15, new DateTime(1979, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Muamer", "Husein", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "muamer@gmail.com", 2, null, "Terko", null, null, null, null, "M", "Aktivan", "061061061", "muamer.terko" },
-                    { 18, new DateTime(1979, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Omer", "Husein", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "omer@gmail.com", 1, null, "Brkan", null, null, null, null, "M", "Aktivan", "061222222", "omer.brkan" },
-                    { 21, new DateTime(1979, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Samed", "Husein", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "samed@gmail.com", 3, null, "Kodrić", null, null, null, null, "M", "Aktivan", "061222333", "samed.kodric" },
-                    { 24, new DateTime(2005, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Medzida", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "medzida@gmail.com", 4, null, "Pehilj", null, null, null, null, "Ž", "Aktivan", "061061444", "medzida.pehilj" },
-                    { 25, new DateTime(2006, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Bakir", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "bakir@gmail.com", 4, null, "Pehilj", null, null, null, null, "M", "Aktivan", "061061444", "bakir.pehilj" },
-                    { 26, new DateTime(2007, 8, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Seid", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "seid@gmail.com", 4, null, "Cikotić", null, null, null, null, "M", "Aktivan", "062062555", "seid.cikotic" },
-                    { 27, new DateTime(2004, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Sajra", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "sajra@gmail.com", 4, null, "Sarancic", null, null, null, null, "Ž", "Aktivan", "063555444", "sajra.sarancic" },
-                    { 28, new DateTime(2004, 3, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Amina", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "amina@gmail.com", 5, null, "Čomor", null, null, null, null, "Ž", "Aktivan", "063212454", "amina.comor" },
-                    { 29, new DateTime(2001, 1, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Hana", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "hana@gmail.com", 6, null, "Omerika", null, null, null, null, "Ž", "Aktivan", "061474851", "hana.omerika" },
-                    { 30, new DateTime(2001, 3, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Amil", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "amil@gmail.com", 6, null, "Omerović", null, null, null, null, "M", "Aktivan", "061111444", "amil.omerovic" },
-                    { 31, new DateTime(1989, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Muhjudin", "Suad", "cKnCCVJWJjRXqM7XevrbN6B3RbM=", "cLnMQzMpSBWfc9nVetCRnw==", "muhjudin@gmail.com", 2, null, "Bećoja", null, null, null, null, "M", "Aktivan", "062062581", "muhjudin" },
-                    { 32, new DateTime(1999, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Sanjin", "Suad", "cKnCCVJWJjRXqM7XevrbN6B3RbM=", "cLnMQzMpSBWfc9nVetCRnw==", "sanjin@gmail.com", 3, null, "Šahić", null, null, null, null, "M", "Aktivan", "063212323", "sanjin.sahic" },
-                    { 33, new DateTime(2000, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Muhamed", "Nazif", "cKnCCVJWJjRXqM7XevrbN6B3RbM=", "cLnMQzMpSBWfc9nVetCRnw==", "muhamed@gmail.com", 4, null, "Hasić", null, null, null, null, "M", "Aktivan", "062598777", "muhamed.hasic" },
-                    { 34, new DateTime(2000, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Šefik", "Nazif", "cKnCCVJWJjRXqM7XevrbN6B3RbM=", "cLnMQzMpSBWfc9nVetCRnw==", "sefik@gmail.com", 5, null, "Čavčić", null, null, null, null, "M", "Aktivan", "062358474", "sefik.cavcic" },
-                    { 35, new DateTime(1984, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Suljo", "Omer", "cKnCCVJWJjRXqM7XevrbN6B3RbM=", "cLnMQzMpSBWfc9nVetCRnw==", "suljo@gmail.com", 6, null, "Cikotić", null, null, null, null, "M", "Aktivan", "061222555", "suljo.cikotic" }
+                    { 1, new DateTime(1985, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Dino", "Mehmed", "dP9XoZcTTTU8f4ddDbNLJalRQqQ=", "jmK1d1xnmg2DC0svh3UvRw==", "dino@gmail.com", null, 1, null, null, "Maksumic", null, null, null, null, "M", "Aktivan", "063355441", "admin" },
+                    { 2, new DateTime(1971, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Zijad", "Bajro", "z/sT0B+tdXeEL9SHGZRnuwLTq24=", "TojKLl0mMwNiLEbjjO9oZg==", "zijad@gmail.com", null, 1, null, null, "Maric", null, null, null, null, "M", "Aktivan", "062627878", "roditelj" },
+                    { 4, new DateTime(1981, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Armin", "Aner", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "armin@gmail.com", null, 1, null, null, "Abaza", null, null, null, null, "M", "Aktivan", "062545121", "komisija" },
+                    { 5, new DateTime(1989, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Atif", "Suad", "cKnCCVJWJjRXqM7XevrbN6B3RbM=", "cLnMQzMpSBWfc9nVetCRnw==", "atif@gmail.com", null, 1, null, null, "Mujkic", null, null, null, null, "M", "Aktivan", "062589989", "imam" },
+                    { 7, new DateTime(1971, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Almir", "Salko", "bkLKbSxLPSFFmeMtQgdPC1AAnDQ=", "Gx+JkCnY/r169UVKD+dWYg==", "almir@gmail.com", null, 2, null, null, "Gosto", null, null, null, null, "M", "Aktivan", "062062062", "almir.gosto" },
+                    { 11, new DateTime(1974, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Almir", "Halil", "QASszTjeeigPIi3z2Pco4Xz6z2A=", "SGEPRubCkiUhpIkgN1ICLA==", "almirL@gmail.com", null, 3, null, null, "Lizde", null, null, null, null, "M", "Aktivan", "063063063", "almir.lizde" },
+                    { 15, new DateTime(1979, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Muamer", "Husein", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "muamer@gmail.com", null, 2, null, null, "Terko", null, null, null, null, "M", "Aktivan", "061061061", "muamer.terko" },
+                    { 18, new DateTime(1979, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Omer", "Husein", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "omer@gmail.com", null, 1, null, null, "Brkan", null, null, null, null, "M", "Aktivan", "061222222", "omer.brkan" },
+                    { 21, new DateTime(1979, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Samed", "Husein", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "samed@gmail.com", null, 3, null, null, "Kodrić", null, null, null, null, "M", "Aktivan", "061222333", "samed.kodric" },
+                    { 24, new DateTime(2005, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Medzida", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "medzida@gmail.com", null, 4, null, null, "Pehilj", null, null, null, null, "Ž", "Aktivan", "061061444", "medzida.pehilj" },
+                    { 25, new DateTime(2006, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Bakir", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "bakir@gmail.com", null, 4, null, null, "Pehilj", null, null, null, null, "M", "Aktivan", "061061444", "bakir.pehilj" },
+                    { 26, new DateTime(2007, 8, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Seid", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "seid@gmail.com", null, 4, null, null, "Cikotić", null, null, null, null, "M", "Aktivan", "062062555", "seid.cikotic" },
+                    { 27, new DateTime(2004, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Sajra", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "sajra@gmail.com", null, 4, null, null, "Sarancic", null, null, null, null, "Ž", "Aktivan", "063555444", "sajra.sarancic" },
+                    { 28, new DateTime(2004, 3, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Amina", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "amina@gmail.com", null, 5, null, null, "Čomor", null, null, null, null, "Ž", "Aktivan", "063212454", "amina.comor" },
+                    { 29, new DateTime(2001, 1, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Hana", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "hana@gmail.com", null, 6, null, null, "Omerika", null, null, null, null, "Ž", "Aktivan", "061474851", "hana.omerika" },
+                    { 30, new DateTime(2001, 3, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Amil", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "amil@gmail.com", null, 6, null, null, "Omerović", null, null, null, null, "M", "Aktivan", "061111444", "amil.omerovic" },
+                    { 31, new DateTime(1989, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Muhjudin", "Suad", "cKnCCVJWJjRXqM7XevrbN6B3RbM=", "cLnMQzMpSBWfc9nVetCRnw==", "muhjudin@gmail.com", null, 2, null, null, "Bećoja", null, null, null, null, "M", "Aktivan", "062062581", "muhjudin" },
+                    { 32, new DateTime(1999, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Sanjin", "Suad", "cKnCCVJWJjRXqM7XevrbN6B3RbM=", "cLnMQzMpSBWfc9nVetCRnw==", "sanjin@gmail.com", null, 3, null, null, "Šahić", null, null, null, null, "M", "Aktivan", "063212323", "sanjin.sahic" },
+                    { 33, new DateTime(2000, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Muhamed", "Nazif", "cKnCCVJWJjRXqM7XevrbN6B3RbM=", "cLnMQzMpSBWfc9nVetCRnw==", "muhamed@gmail.com", null, 4, null, null, "Hasić", null, null, null, null, "M", "Aktivan", "062598777", "muhamed.hasic" },
+                    { 34, new DateTime(2000, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Šefik", "Nazif", "cKnCCVJWJjRXqM7XevrbN6B3RbM=", "cLnMQzMpSBWfc9nVetCRnw==", "sefik@gmail.com", null, 5, null, null, "Čavčić", null, null, null, null, "M", "Aktivan", "062358474", "sefik.cavcic" },
+                    { 35, new DateTime(1984, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Suljo", "Omer", "cKnCCVJWJjRXqM7XevrbN6B3RbM=", "cLnMQzMpSBWfc9nVetCRnw==", "suljo@gmail.com", null, 6, null, null, "Cikotić", null, null, null, null, "M", "Aktivan", "061222555", "suljo.cikotic" },
+                    { 38, new DateTime(1954, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Seid", "Omer", "dP9XoZcTTTU8f4ddDbNLJalRQqQ=", "jmK1d1xnmg2DC0svh3UvRw==", "superadmin@gmail.com", null, 6, null, null, "Smajkić", null, null, null, null, "M", "Aktivan", "061222555", "superadmin" }
                 });
 
             migrationBuilder.InsertData(
@@ -902,30 +950,31 @@ namespace eMekteb.Services.Migrations
                     { 32, new DateTime(2024, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 32, 3 },
                     { 33, new DateTime(2024, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 33, 3 },
                     { 34, new DateTime(2024, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 34, 3 },
-                    { 35, new DateTime(2024, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 35, 3 }
+                    { 35, new DateTime(2024, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 35, 3 },
+                    { 38, new DateTime(2024, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 38, 6 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Korisnik",
-                columns: new[] { "Id", "DatumRodjenja", "IdRazreda", "Ime", "ImeRoditelja", "LozinkaHash", "LozinkaSalt", "Mail", "MektebId", "NazivRazreda", "Prezime", "Prisustvo", "Prosjek", "RazredId", "RoditeljId", "Spol", "Status", "Telefon", "Username" },
+                columns: new[] { "Id", "DatumRodjenja", "IdRazreda", "Ime", "ImeRoditelja", "LozinkaHash", "LozinkaSalt", "Mail", "MedzlisId", "MektebId", "MuftijstvoId", "NazivRazreda", "Prezime", "Prisustvo", "Prosjek", "RazredId", "RoditeljId", "Spol", "Status", "Telefon", "Username" },
                 values: new object[,]
                 {
-                    { 3, new DateTime(2001, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Lejla", "Zijad", "YumKKJBN/A/I4N5FUZAQiS+GsKU=", "sDj4ejrFF0VUWuf3Z86EAg==", "lejla@gmail.com", 1, null, "Maric", null, null, null, 2, "Ž", "Aktivan", "062627878", "ucenik" },
-                    { 6, new DateTime(2003, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Sadzid", "Zijad", "ScUPKxksw9aYsTBy3ONHNtiP/pQ=", "iHcegpYjjbOop1BEsE3Rtg==", "sadzid@gmail.com", 1, null, "Maric", null, null, null, 2, "M", "Aktivan", "062627878", "sadzid" },
-                    { 8, new DateTime(2001, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Omer", "Almir", "LCG4lHMiiZiASdZwtCYMsGxbIoc=", "lTkuZDGh2IQr66IeRWnkIA==", "omer@gmail.com", 2, null, "Gosto", null, null, null, 7, "M", "Aktivan", "062062062", "omer" },
-                    { 9, new DateTime(2003, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Nejra", "Almir", "YumKKJBN/A/I4N5FUZAQiS+GsKU=", "sDj4ejrFF0VUWuf3Z86EAg==", "nejra@gmail.com", 2, null, "Gosto", null, null, null, 7, "Ž", "Aktivan", "062062062", "nejra" },
-                    { 10, new DateTime(2005, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Amer", "Almir", "YumKKJBN/A/I4N5FUZAQiS+GsKU=", "sDj4ejrFF0VUWuf3Z86EAg==", "amer@gmail.com", 2, null, "Gosto", null, null, null, 7, "Ž", "Aktivan", "062062062", "amer" },
-                    { 12, new DateTime(2009, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Madzid", "Almir", "/VHd1Q8gLYi2VggsmwT3ruCAqJk=", "HzWzHz3sQE9LK4+jteknTA==", "madzid@gmail.com", 3, null, "Lizde", null, null, null, 11, "M", "Aktivan", "063063063", "madzid" },
-                    { 13, new DateTime(2008, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Hazim", "Almir", "YumKKJBN/A/I4N5FUZAQiS+GsKU=", "sDj4ejrFF0VUWuf3Z86EAg==", "hazim@gmail.com", 3, null, "Lizde", null, null, null, 11, "M", "Aktivan", "063063063", "hazim" },
-                    { 14, new DateTime(2000, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Alma", "Almir", "YumKKJBN/A/I4N5FUZAQiS+GsKU=", "sDj4ejrFF0VUWuf3Z86EAg==", "almal@gmail.com", 3, null, "Lizde", null, null, null, 11, "Ž", "Aktivan", "063063063", "alma.lizde" },
-                    { 16, new DateTime(2007, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Iman", "Muamer", "5SBNe56lKlnvUcxOHVIpujXsv5g=", "+HLQg+K0DVk1praxlrTU3g==", "imant@gmail.com", 2, null, "Terko", null, null, null, 15, "Ž", "Aktivan", "061061061", "iman.terko" },
-                    { 17, new DateTime(2002, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Emina", "Muamer", "YumKKJBN/A/I4N5FUZAQiS+GsKU=", "sDj4ejrFF0VUWuf3Z86EAg==", "emina@gmail.com", 2, null, "Terko", null, null, null, 15, "Ž", "Aktivan", "061061061", "emina.terko" },
-                    { 19, new DateTime(2002, 6, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Voljevica", "Omer", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "kenan@gmail.com", 1, null, "Kenan", null, null, null, 18, "M", "Aktivan", "061222222", "kenan.voljevica" },
-                    { 20, new DateTime(2004, 3, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Nejra", "Omer", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "nejra@gmail.com", 1, null, "Brkan", null, null, null, 18, "M", "Aktivan", "061222222", "nejra.brkan" },
-                    { 22, new DateTime(2001, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Ahmet", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "ahmet@gmail.com", 3, null, "Kodrić", null, null, null, 21, "M", "Aktivan", "061222333", "ahmet.kodric" },
-                    { 23, new DateTime(2006, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Elma", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "elma@gmail.com", 3, null, "Kodrić", null, null, null, 21, "Ž", "Aktivan", "061222333", "elma.kodric" },
-                    { 36, new DateTime(2000, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Anadin", "Omer", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "anadin@gmail.com", 1, null, "Brkan", null, null, null, 18, "M", "Aktivan", "061222222", "anadin.brkan" },
-                    { 37, new DateTime(2008, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Zaim", "Omer", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "zaim@gmail.com", 1, null, "Brkan", null, null, null, 18, "M", "Aktivan", "061222222", "zaim.brkan" }
+                    { 3, new DateTime(2001, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Lejla", "Zijad", "YumKKJBN/A/I4N5FUZAQiS+GsKU=", "sDj4ejrFF0VUWuf3Z86EAg==", "lejla@gmail.com", null, 1, null, null, "Maric", null, null, null, 2, "Ž", "Aktivan", "062627878", "ucenik" },
+                    { 6, new DateTime(2003, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Sadzid", "Zijad", "ScUPKxksw9aYsTBy3ONHNtiP/pQ=", "iHcegpYjjbOop1BEsE3Rtg==", "sadzid@gmail.com", null, 1, null, null, "Maric", null, null, null, 2, "M", "Aktivan", "062627878", "sadzid" },
+                    { 8, new DateTime(2001, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Omer", "Almir", "LCG4lHMiiZiASdZwtCYMsGxbIoc=", "lTkuZDGh2IQr66IeRWnkIA==", "omer@gmail.com", null, 2, null, null, "Gosto", null, null, null, 7, "M", "Aktivan", "062062062", "omer" },
+                    { 9, new DateTime(2003, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Nejra", "Almir", "YumKKJBN/A/I4N5FUZAQiS+GsKU=", "sDj4ejrFF0VUWuf3Z86EAg==", "nejra@gmail.com", null, 2, null, null, "Gosto", null, null, null, 7, "Ž", "Aktivan", "062062062", "nejra" },
+                    { 10, new DateTime(2005, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Amer", "Almir", "YumKKJBN/A/I4N5FUZAQiS+GsKU=", "sDj4ejrFF0VUWuf3Z86EAg==", "amer@gmail.com", null, 2, null, null, "Gosto", null, null, null, 7, "Ž", "Aktivan", "062062062", "amer" },
+                    { 12, new DateTime(2009, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Madzid", "Almir", "/VHd1Q8gLYi2VggsmwT3ruCAqJk=", "HzWzHz3sQE9LK4+jteknTA==", "madzid@gmail.com", null, 3, null, null, "Lizde", null, null, null, 11, "M", "Aktivan", "063063063", "madzid" },
+                    { 13, new DateTime(2008, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Hazim", "Almir", "YumKKJBN/A/I4N5FUZAQiS+GsKU=", "sDj4ejrFF0VUWuf3Z86EAg==", "hazim@gmail.com", null, 3, null, null, "Lizde", null, null, null, 11, "M", "Aktivan", "063063063", "hazim" },
+                    { 14, new DateTime(2000, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Alma", "Almir", "YumKKJBN/A/I4N5FUZAQiS+GsKU=", "sDj4ejrFF0VUWuf3Z86EAg==", "almal@gmail.com", null, 3, null, null, "Lizde", null, null, null, 11, "Ž", "Aktivan", "063063063", "alma.lizde" },
+                    { 16, new DateTime(2007, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Iman", "Muamer", "5SBNe56lKlnvUcxOHVIpujXsv5g=", "+HLQg+K0DVk1praxlrTU3g==", "imant@gmail.com", null, 2, null, null, "Terko", null, null, null, 15, "Ž", "Aktivan", "061061061", "iman.terko" },
+                    { 17, new DateTime(2002, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Emina", "Muamer", "YumKKJBN/A/I4N5FUZAQiS+GsKU=", "sDj4ejrFF0VUWuf3Z86EAg==", "emina@gmail.com", null, 2, null, null, "Terko", null, null, null, 15, "Ž", "Aktivan", "061061061", "emina.terko" },
+                    { 19, new DateTime(2002, 6, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Voljevica", "Omer", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "kenan@gmail.com", null, 1, null, null, "Kenan", null, null, null, 18, "M", "Aktivan", "061222222", "kenan.voljevica" },
+                    { 20, new DateTime(2004, 3, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Nejra", "Omer", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "nejra@gmail.com", null, 1, null, null, "Brkan", null, null, null, 18, "M", "Aktivan", "061222222", "nejra.brkan" },
+                    { 22, new DateTime(2001, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Ahmet", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "ahmet@gmail.com", null, 3, null, null, "Kodrić", null, null, null, 21, "M", "Aktivan", "061222333", "ahmet.kodric" },
+                    { 23, new DateTime(2006, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Elma", "Samed", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "elma@gmail.com", null, 3, null, null, "Kodrić", null, null, null, 21, "Ž", "Aktivan", "061222333", "elma.kodric" },
+                    { 36, new DateTime(2000, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Anadin", "Omer", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "anadin@gmail.com", null, 1, null, null, "Brkan", null, null, null, 18, "M", "Aktivan", "061222222", "anadin.brkan" },
+                    { 37, new DateTime(2008, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Zaim", "Omer", "AtSGH/z7qvkVdWoRnHgpVjtiw+M=", "XPD7niYAxH0Rify963NJDA==", "zaim@gmail.com", null, 1, null, null, "Brkan", null, null, null, 18, "M", "Aktivan", "061222222", "zaim.brkan" }
                 });
 
             migrationBuilder.InsertData(
@@ -1230,9 +1279,19 @@ namespace eMekteb.Services.Migrations
                 column: "UlogaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Korisnik_MedzlisId",
+                table: "Korisnik",
+                column: "MedzlisId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Korisnik_MektebId",
                 table: "Korisnik",
                 column: "MektebId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Korisnik_MuftijstvoId",
+                table: "Korisnik",
+                column: "MuftijstvoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Korisnik_RazredId",
@@ -1243,6 +1302,11 @@ namespace eMekteb.Services.Migrations
                 name: "IX_Korisnik_RoditeljId",
                 table: "Korisnik",
                 column: "RoditeljId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Medzlis_MuftijstvoId",
+                table: "Medzlis",
+                column: "MuftijstvoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Mekteb_MedzlisId",
@@ -1383,6 +1447,9 @@ namespace eMekteb.Services.Migrations
 
             migrationBuilder.DropTable(
                 name: "Medzlis");
+
+            migrationBuilder.DropTable(
+                name: "Muftijstvo");
         }
     }
 }

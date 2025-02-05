@@ -17,6 +17,9 @@ class Komisija{
   String? imeRoditelja;
   DateTime? datumRodjenja;
   int? mektebId;
+   int? medzlisId;
+   int? muftijstvoId;
+
 
   Komisija(
       this.id,
@@ -29,7 +32,9 @@ class Komisija{
       this.username,
       this.mail,
       this.spol,
-      this.imeRoditelja
+      this.imeRoditelja,
+      this.medzlisId,
+      this.muftijstvoId
       );
   factory Komisija.fromJson(Map<String, dynamic> json) => _$KomisijaFromJson(json);
 

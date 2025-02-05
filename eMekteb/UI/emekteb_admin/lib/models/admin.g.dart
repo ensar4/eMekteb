@@ -20,6 +20,8 @@ Admin _$AdminFromJson(Map<String, dynamic> json) => Admin(
       json['mail'] as String?,
       json['spol'] as String?,
       json['imeRoditelja'] as String?,
+      (json['medzlisId'] as num?)?.toInt(),
+      (json['muftijstvoId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$AdminToJson(Admin instance) => <String, dynamic>{
@@ -34,4 +36,6 @@ Map<String, dynamic> _$AdminToJson(Admin instance) => <String, dynamic>{
       'imeRoditelja': instance.imeRoditelja,
       'datumRodjenja': instance.datumRodjenja?.toIso8601String(),
       'mektebId': instance.mektebId,
+      'medzlisId': instance.medzlisId,
+      'muftijstvoId': instance.muftijstvoId,
     };

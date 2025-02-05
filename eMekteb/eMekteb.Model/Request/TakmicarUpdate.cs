@@ -14,6 +14,7 @@ namespace eMekteb.Services.Database
         public string? Prezime { get; set; }
         public DateTime DatumRodjenja { get; set; }
         public int? UkupnoBodova { get; set; }
+        public int? MektebId { get; set; }
 
     }
 }

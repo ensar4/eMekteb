@@ -4,6 +4,7 @@ using eMekteb.Model.Request;
 using eMekteb.Model.SearchObjects;
 using eMekteb.Services.Database;
 using eMekteb.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -72,6 +73,20 @@ namespace eMekteb.Services
             await _dbContext.SaveChangesAsync();
 
             return _mapper.Map<TakmicarM>(entity);
+        }
+
+        public async Task<TakmicarM> UpdatePoints(int id, int points)
+        {
+            var takmicar = await _dbContext.Takmicar.FindAsync(id);
+            if (takmicar == null)
+            {
+                throw new KeyNotFoundException($"Takmicar with Id {id} not found.");
+            }
+
+            takmicar.UkupnoBodova += points;
+            await _dbContext.SaveChangesAsync();
+
+            return _mapper.Map<TakmicarM>(takmicar);
         }
 
 

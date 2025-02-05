@@ -15,6 +15,11 @@ namespace eMekteb.Services
     {
         public MappingProfile()
         {
+            CreateMap<Muftijstvo, MuftijstvoM>();
+            CreateMap<MuftijstvoM, Muftijstvo>();
+            CreateMap<MuftijstvoInsert, Muftijstvo>();
+            CreateMap<MuftijstvoUpdate, Muftijstvo>();
+
             CreateMap<Mekteb, MektebM>();
             CreateMap<MektebM, Mekteb>();
             CreateMap<MektebInsert, Mekteb>();

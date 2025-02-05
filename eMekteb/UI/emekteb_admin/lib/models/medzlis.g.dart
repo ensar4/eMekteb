@@ -16,6 +16,7 @@ Medzlis _$MedzlisFromJson(Map<String, dynamic> json) => Medzlis(
       (json['ukupnoUcenika'] as num?)?.toInt(),
       (json['prosjecnaOcjena'] as num?)?.toDouble(),
       (json['prosjecnoPrisustvo'] as num?)?.toDouble(),
+      (json['muftijstvoId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$MedzlisToJson(Medzlis instance) => <String, dynamic>{
@@ -28,4 +29,5 @@ Map<String, dynamic> _$MedzlisToJson(Medzlis instance) => <String, dynamic>{
       'ukupnoUcenika': instance.ukupnoUcenika,
       'prosjecnaOcjena': instance.prosjecnaOcjena,
       'prosjecnoPrisustvo': instance.prosjecnoPrisustvo,
+      'muftijstvoId': instance.muftijstvoId,
     };

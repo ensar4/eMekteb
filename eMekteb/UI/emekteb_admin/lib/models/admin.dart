@@ -17,6 +17,8 @@ class Admin{
   String? imeRoditelja;
   DateTime? datumRodjenja;
   int? mektebId;
+  int? medzlisId;
+  int? muftijstvoId;
 
   Admin(
       this.id,
@@ -29,7 +31,9 @@ class Admin{
       this.username,
       this.mail,
       this.spol,
-      this.imeRoditelja
+      this.imeRoditelja,
+      this.medzlisId,
+      this.muftijstvoId
       );
   factory Admin.fromJson(Map<String, dynamic> json) => _$AdminFromJson(json);
 

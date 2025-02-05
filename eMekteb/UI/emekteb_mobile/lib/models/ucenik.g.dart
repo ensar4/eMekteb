@@ -24,6 +24,7 @@ Ucenik _$UcenikFromJson(Map<String, dynamic> json) => Ucenik(
       (json['prisustvo'] as num?)?.toDouble(),
       (json['prosjek'] as num?)?.toDouble(),
       json['nazivRazreda'] as String?,
+      (json['ocjena'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$UcenikToJson(Ucenik instance) => <String, dynamic>{
@@ -42,4 +43,5 @@ Map<String, dynamic> _$UcenikToJson(Ucenik instance) => <String, dynamic>{
       'nazivRazreda': instance.nazivRazreda,
       'prisustvo': instance.prisustvo,
       'prosjek': instance.prosjek,
+      'ocjena': instance.ocjena,
     };

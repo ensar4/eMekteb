@@ -43,6 +43,10 @@ namespace eMekteb.Services
 
         public override IQueryable<Takmicenje> AddFilter(IQueryable<Takmicenje> query, TakmicenjeSearchObject? search)
         {
+            if (search?.MedzlisId != null)
+            {
+                query = query.Where(m => m.MedzlisId == search.MedzlisId);
+            }
             if (search?.IsAsc == true)
             {
                 query = query.OrderBy(y => y.Godina);

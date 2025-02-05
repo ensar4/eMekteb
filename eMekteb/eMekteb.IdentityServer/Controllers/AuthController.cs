@@ -46,23 +46,29 @@ public class AuthController : ControllerBase
 
         var signingCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256Signature);
 
+        var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Sid, employee.Id.ToString()),
+        new Claim(ClaimTypes.NameIdentifier, employee.Username),
+        new Claim(ClaimTypes.Name, employee.Ime + ' ' + employee.Prezime),
+        new Claim("MektebId", employee.MektebId.ToString())  // Always exists
+    };
 
-
-        var claims = new List<Claim>                    //secretKey, SecurityAlgorithms.HmacSha256Signature
-                                                     //secretKey, SecurityAlgorithms.HmacSha256         ---->  STARI
+        // Add nullable claims only if they have values
+        if (employee.MedzlisId.HasValue)
         {
-            new Claim(ClaimTypes.Sid, employee.Id.ToString()),
-            new Claim(ClaimTypes.NameIdentifier, employee.Username),
-            new Claim(ClaimTypes.Name, employee.Ime + ' ' + employee.Prezime),
-           // new Claim(ClaimTypes.Email, employee.Email)
-        };
+            claims.Add(new Claim("MedzlisId", employee.MedzlisId.Value.ToString()));
+        }
 
+        if (employee.MuftijstvoId.HasValue)
+        {
+            claims.Add(new Claim("MuftijstvoId", employee.MuftijstvoId.Value.ToString()));
+        }
 
         employee.KorisniciUloge
-                .Select(ku => ku.Uloga)  
-                .ToList()                
-                .ForEach(uloga => claims.Add(new Claim(ClaimTypes.Role, uloga.Naziv))); 
-
+                .Select(ku => ku.Uloga)
+                .ToList()
+                .ForEach(uloga => claims.Add(new Claim(ClaimTypes.Role, uloga.Naziv)));
 
         var token = new JwtSecurityToken(
             issuer: "https://localhost:7049",
@@ -74,5 +80,6 @@ public class AuthController : ControllerBase
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
 }//na prvom dependecy manageru(eMekteb) dodao i IS
-//na drugom(IS) dodao i drugi strihir
+ //na drugom(IS) dodao i drugi strihir

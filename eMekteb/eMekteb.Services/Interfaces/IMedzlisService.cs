@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace eMekteb.Services.Interfaces
 {
-    public interface IMedzlisService : ICRUDService<MedzlisM, MektebSearchObject, MedzlisInsert, MedzlisUpdate>
+    public interface IMedzlisService : ICRUDService<MedzlisM, MedzlisSearchObject, MedzlisInsert, MedzlisUpdate>
     {
     
     }

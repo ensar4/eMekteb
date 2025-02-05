@@ -18,6 +18,8 @@ namespace eMekteb.Model
         public int? UkupnoUcenika { get; set; }
         public double? ProsjecnaOcjena { get; set; }
         public double? ProsjecnoPrisustvo { get; set; }
+        public int MuftijstvoId { get; set; }
+
 
         //public virtual ICollection<Mekteb> Mektebi { get; set; } = new List<Mekteb>();
         //public virtual ICollection<Takmicenje> Takmicenje { get; set; } = new List<Takmicenje>();

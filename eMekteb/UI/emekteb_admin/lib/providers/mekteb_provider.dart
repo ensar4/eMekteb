@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:emekteb_admin/models/korisnik.dart';
 import 'package:emekteb_admin/models/mekteb.dart';
 import 'package:emekteb_admin/providers/base_provider.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +14,7 @@ class MektebProvider extends BaseProvider<Mekteb>{
     return Mekteb.fromJson(data);
   }
 
-  Future<int?> insert(String naziv, String adresa, String telefon) async {
+  Future<int?> insert(String naziv, String adresa, String telefon, int? medzlisId) async {
     final url = Uri.parse(fullUrl);
     var headers = getHeaders();
 
@@ -23,7 +24,7 @@ class MektebProvider extends BaseProvider<Mekteb>{
       body: json.encode({
         'naziv': naziv,
         'telefon':telefon,
-        'medzlisId': 1,
+        'medzlisId': medzlisId,
         'adresa': adresa,
       }),
     );

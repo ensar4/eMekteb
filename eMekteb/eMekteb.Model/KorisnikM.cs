@@ -27,7 +27,10 @@ namespace eMekteb.Services.Database
         public double? Prisustvo { get; set; }
         public string? NazivRazreda { get; set; }
         public double? Prosjek { get; set; }
+        public double? Ocjena { get; set; }
         public int? IdRazreda { get; set; }
+        public int? MedzlisId { get; set; }
+        public int? MuftijstvoId { get; set; }
 
 
 

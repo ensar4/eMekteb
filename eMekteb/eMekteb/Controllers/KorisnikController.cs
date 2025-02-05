@@ -24,20 +24,18 @@ namespace eMekteb.Controllers
         {
             return await service1.GetByRoditeljId(Roditeljid);
         }
-
         [HttpGet("/Ucenici")]
-        public async Task<PagedResult<KorisnikM>> GetUcenici(int? MektebId)
+        public async Task<PagedResult<KorisnikM>> GetUcenici(int? MektebId, int? MedzlisId)
         {
-
-            return await service1.GetUcenici(MektebId);
+            return await service1.GetUcenici(MektebId, MedzlisId);
         }
 
         [HttpGet("/Ucenici/{MektebId}")]
-        public async Task<PagedResult<KorisnikM>> GetUceniciByMektebId(int? MektebId)
+        public async Task<PagedResult<KorisnikM>> GetUceniciByMektebId(int? MektebId, int? MedzlisId)
         {
-
-            return await service1.GetUcenici(MektebId);
+            return await service1.GetUcenici(MektebId, MedzlisId);
         }
+
 
         [HttpGet("/UcenikHistory/{ucenikId}")]
         public async Task<PagedResult<KorisnikM>> GetUceniHistory(int? ucenikId)
@@ -47,32 +45,39 @@ namespace eMekteb.Controllers
         }
 
         [HttpGet("/Mualimi")]
-        public async Task<PagedResult<KorisnikM>> GetMualimi(int? MektebId)
+        public async Task<PagedResult<KorisnikM>> GetMualimi(int? MektebId, int? MedzlisId, int? MuftijstvoId)
         {
 
-            return await service1.GetMualimi(MektebId);
+            return await service1.GetMualimi(MektebId, MedzlisId, MuftijstvoId);
         }
 
 
         [HttpGet("/Mualimi/{MektebId}")]
-        public async Task<PagedResult<KorisnikM>> GetMualimiByMektebId(int? MektebId)
+        public async Task<PagedResult<KorisnikM>> GetMualimiByMektebId(int? MektebId, int? MedzlisId, int? MuftijstvoId)
         {
 
-            return await service1.GetMualimi(MektebId);
+            return await service1.GetMualimi(MektebId, MedzlisId, MuftijstvoId);
         }
 
         [HttpGet("/Komisija")]
-        public async Task<PagedResult<KorisnikM>> GetKomisija(int? MektebId)
+        public async Task<PagedResult<KorisnikM>> GetKomisija(int? MektebId, int? MedzlisId)
         {
 
-            return await service1.GetKomisija(MektebId);
+            return await service1.GetKomisija(MektebId, MedzlisId);
         }
 
         [HttpGet("/Admin")]
-        public async Task<PagedResult<KorisnikM>> GetAdmin(int? MektebId)
+        public async Task<PagedResult<KorisnikM>> GetAdmin(int? MektebId, int? MedzlisId, int? MuftijstvoId)
         {
 
-            return await service1.GetAdmin(MektebId);
+            return await service1.GetAdmin(MektebId, MedzlisId, MuftijstvoId);
+        }   
+        
+        [HttpGet("/SuperAdmin")]
+        public async Task<PagedResult<KorisnikM>> GetSuperAdmin(int? MektebId, int? MuftijstvoId)
+        {
+
+            return await service1.GetSuperAdmin(MektebId, MuftijstvoId);
         }
 
 

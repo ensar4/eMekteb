@@ -18,7 +18,7 @@ namespace eMekteb.Services.Seed
                     Id = 1,
                     Ime = "Dino",
                     Prezime = "Maksumic",
-                    Username = "admin",
+                    Username = "admin",                                                    
                     Telefon = "063355441",
                     Mail = "dino@gmail.com",
                     Spol = "M",
@@ -26,6 +26,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(1985, 09, 12),
                     ImeRoditelja = "Mehmed",
                     MektebId = 1,
+                    MedzlisId = 1,
                     LozinkaHash = "dP9XoZcTTTU8f4ddDbNLJalRQqQ=",
                     LozinkaSalt = "jmK1d1xnmg2DC0svh3UvRw=="
                 },
@@ -76,6 +77,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(1981, 09, 12),
                     ImeRoditelja = "Aner",
                     MektebId = 1,
+                    MedzlisId=1,
                     LozinkaHash = "AtSGH/z7qvkVdWoRnHgpVjtiw+M=",
                     LozinkaSalt = "XPD7niYAxH0Rify963NJDA=="
                 },
@@ -92,6 +94,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(1989, 09, 12),
                     ImeRoditelja = "Suad",
                     MektebId = 1,
+                    MedzlisId = 1,
                     LozinkaHash = "cKnCCVJWJjRXqM7XevrbN6B3RbM=",
                     LozinkaSalt = "cLnMQzMpSBWfc9nVetCRnw=="
                 },
@@ -558,6 +561,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(1989, 09, 12),
                     ImeRoditelja = "Suad",
                     MektebId = 2,
+                    MedzlisId = 1,
                     LozinkaHash = "cKnCCVJWJjRXqM7XevrbN6B3RbM=",
                     LozinkaSalt = "cLnMQzMpSBWfc9nVetCRnw=="
                 },
@@ -574,6 +578,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(1999, 09, 12),
                     ImeRoditelja = "Suad",
                     MektebId = 3,
+                    MedzlisId = 1,
                     LozinkaHash = "cKnCCVJWJjRXqM7XevrbN6B3RbM=",
                     LozinkaSalt = "cLnMQzMpSBWfc9nVetCRnw=="
                 },
@@ -582,6 +587,7 @@ namespace eMekteb.Services.Seed
                     Id = 33,
                     Ime = "Muhamed",
                     Prezime = "Hasić",
+                    MedzlisId = 1,
                     Username = "muhamed.hasic",
                     Telefon = "062598777",
                     Mail = "muhamed@gmail.com",
@@ -606,6 +612,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2000, 09, 12),
                     ImeRoditelja = "Nazif",
                     MektebId = 5,
+                    MedzlisId = 1,
                     LozinkaHash = "cKnCCVJWJjRXqM7XevrbN6B3RbM=",
                     LozinkaSalt = "cLnMQzMpSBWfc9nVetCRnw=="
                 },
@@ -624,6 +631,91 @@ namespace eMekteb.Services.Seed
                     MektebId = 6,
                     LozinkaHash = "cKnCCVJWJjRXqM7XevrbN6B3RbM=",
                     LozinkaSalt = "cLnMQzMpSBWfc9nVetCRnw=="
+                },
+                new Korisnik                                                        //Ovo je login za Muftijstvo Mostarsko
+                {
+                    Id = 38,
+                    Ime = "Seid",
+                    Prezime = "Smajkić",
+                    Username = "superadmin",
+                    Telefon = "061222555",
+                    Mail = "superadmin@gmail.com",
+                    Spol = "M",
+                    Status = "Aktivan",
+                    DatumRodjenja = new DateTime(1954, 09, 12),
+                    ImeRoditelja = "Omer",
+                    MektebId = 6,
+                    MuftijstvoId = 1,
+                    LozinkaHash = "dP9XoZcTTTU8f4ddDbNLJalRQqQ=",
+                    LozinkaSalt = "jmK1d1xnmg2DC0svh3UvRw=="
+                },
+                new Korisnik
+                {
+                    Id = 39,
+                    Ime = "Sefko",
+                    Prezime = "Tinjak",
+                    Username = "muftija",
+                    Telefon = "061222555",
+                    Mail = "muftija@gmail.com",
+                    Spol = "M",
+                    Status = "Aktivan",
+                    DatumRodjenja = new DateTime(1954, 09, 12),
+                    ImeRoditelja = "Omer",
+                    MektebId = 6,
+                    MuftijstvoId = 1,
+                    LozinkaHash = "dP9XoZcTTTU8f4ddDbNLJalRQqQ=",
+                    LozinkaSalt = "jmK1d1xnmg2DC0svh3UvRw=="
+                },
+                new Korisnik
+                {
+                    Id = 40,
+                    Ime = "Kenan",
+                    Prezime = "Ovcina",
+                    Username = "zamjenik",
+                    Telefon = "061222555",
+                    Mail = "zamjenik@gmail.com",
+                    Spol = "M",
+                    Status = "Aktivan",
+                    DatumRodjenja = new DateTime(1954, 09, 12),
+                    ImeRoditelja = "Omer",
+                    MektebId = 6,
+                    MedzlisId = 1,
+                    LozinkaHash = "dP9XoZcTTTU8f4ddDbNLJalRQqQ=",
+                    LozinkaSalt = "jmK1d1xnmg2DC0svh3UvRw=="
+                },
+                new Korisnik
+                {
+                    Id = 41,
+                    Ime = "Kenan",
+                    Prezime = "Music",
+                    Username = "kenan.music",
+                    Telefon = "061222555",
+                    Mail = "zamjenik@gmail.com",
+                    Spol = "M",
+                    Status = "Aktivan",
+                    DatumRodjenja = new DateTime(1954, 09, 12),
+                    ImeRoditelja = "Omer",
+                    MektebId = 17,
+                    MedzlisId = 2,
+                    LozinkaHash = "dP9XoZcTTTU8f4ddDbNLJalRQqQ=",
+                    LozinkaSalt = "jmK1d1xnmg2DC0svh3UvRw=="
+                },
+                new Korisnik 
+                {
+                    Id = 42,
+                    Ime = "Nedzad",
+                    Prezime = "Grabus",
+                    Username = "sarajevo",
+                    Telefon = "061222555",
+                    Mail = "superadmin@gmail.com",
+                    Spol = "M",
+                    Status = "Aktivan",
+                    DatumRodjenja = new DateTime(1954, 09, 12),
+                    ImeRoditelja = "Omer",
+                    MektebId = 17,
+                    MuftijstvoId = 2,
+                    LozinkaHash = "dP9XoZcTTTU8f4ddDbNLJalRQqQ=",
+                    LozinkaSalt = "jmK1d1xnmg2DC0svh3UvRw=="
                 }
 
 

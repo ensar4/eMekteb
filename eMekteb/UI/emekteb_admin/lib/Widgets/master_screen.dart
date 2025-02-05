@@ -1,4 +1,5 @@
 import 'package:emekteb_admin/Screens/ak_godine_screen.dart';
+import 'package:emekteb_admin/Screens/medzlisi_screen.dart';
 import 'package:emekteb_admin/Screens/mektebii_screen.dart';
 import 'package:emekteb_admin/Screens/postavke_screen.dart';
 import 'package:emekteb_admin/Screens/statistika_screen.dart';
@@ -29,6 +30,8 @@ class _MasterScreenState extends State<MasterScreen> {
   Widget build(BuildContext context) {
     String userRole = getCurrentUserRole();
     bool isKomisija = userRole == "Komisija";
+    bool isAdmin = userRole == "Admin";
+    bool isSuperAdmin = userRole == "SuperAdmin";
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey.shade100,
@@ -81,13 +84,23 @@ class _MasterScreenState extends State<MasterScreen> {
               const SizedBox(
                 height: 10,
               ),
-              if (!isKomisija)
+              if (!isKomisija && !isSuperAdmin)
                 ListTile(
                   title: const Text('Mektebi', textAlign: TextAlign.center,  style: TextStyle(color: Colors.white, fontSize: 18.0),),
                   onTap: () => Navigator.of(context).pushReplacement(
                     //pushReplacement  ili   push
                     MaterialPageRoute(
                       builder: (context) => const Mektebi(),
+                    ),
+                  ),
+                ),
+              if (isSuperAdmin)
+                ListTile(
+                  title: const Text('Medžlisi', textAlign: TextAlign.center,  style: TextStyle(color: Colors.white, fontSize: 18.0),),
+                  onTap: () => Navigator.of(context).pushReplacement(
+                    //pushReplacement  ili   push
+                    MaterialPageRoute(
+                      builder: (context) => const Medzlisi(),
                     ),
                   ),
                 ),
@@ -100,8 +113,7 @@ class _MasterScreenState extends State<MasterScreen> {
                     ),
                   ),
                 ),
-
-              if (!isKomisija)
+              if (!isKomisija && !isSuperAdmin)
                 ListTile(
                   title: const Text('Učenici', textAlign: TextAlign.center,  style: TextStyle(color: Colors.white, fontSize: 18.0),),
                   onTap: () => Navigator.of(context).pushReplacement(
@@ -110,6 +122,7 @@ class _MasterScreenState extends State<MasterScreen> {
                     ),
                   ),
                 ),
+              if (!isSuperAdmin)
               ListTile(
                 title: const Text('Takmičenja', textAlign: TextAlign.center,  style: TextStyle(color: Colors.white, fontSize: 18.0),),
                 onTap: () => Navigator.of(context).pushReplacement(
@@ -168,11 +181,15 @@ class _MasterScreenState extends State<MasterScreen> {
     );
   }
 
+
   String getCurrentUserRole() {
     if (Korisnik.uloge.contains("Komisija")) {
       return "Komisija";
-    } else {
+    }
+    else if (Korisnik.uloge.contains("Admin")){
       return "Admin";
     }
+    else
+      return "SuperAdmin";
   }
 }

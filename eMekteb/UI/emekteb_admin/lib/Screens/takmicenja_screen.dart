@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
 
+import '../models/korisnik.dart';
 import '../models/searches/search_result.dart';
 import '../models/takmicenje.dart';
 import 'mektebii_screen.dart';
@@ -23,6 +24,7 @@ class Takmicenja extends StatefulWidget {
 }
 
 class _ProfilInfoState extends State<Takmicenja> {
+  var medzlisIDe = Korisnik.medzlisId;
   late TakmicenjaProvider _takmicenjaProvider;
   int currentPage = 1;
   int numPages = 12;
@@ -49,7 +51,7 @@ class _ProfilInfoState extends State<Takmicenja> {
       });
 
       var data =
-          await _takmicenjaProvider.get(page: currentPage, pageSize: numPages, sort: false);
+          await _takmicenjaProvider.get(page: currentPage, pageSize: numPages, sort: false, medzlisId: medzlisIDe);
 
       setState(() {
         if (listaTakmicenja == null) {
@@ -422,7 +424,7 @@ class _ProfilInfoState extends State<Takmicenja> {
     String vrijemePocetka = '';
     String info = '';
     DateTime datumOdrzavanja = DateTime.now();
-
+    int? medzlisId = medzlisIDe;
     final TextEditingController datumOdrzavanjaController = TextEditingController();
 
     // Initializing the text fields with the current date values
@@ -528,7 +530,7 @@ class _ProfilInfoState extends State<Takmicenja> {
               onPressed: () async {
                 if (formKey.currentState!.validate()) {
                   formKey.currentState!.save();
-                  bool result = await provider.createTakmicenje(naziv, datumOdrzavanja, lokacija, vrijemePocetka, info);
+                  bool result = await provider.createTakmicenje(naziv, datumOdrzavanja, lokacija, vrijemePocetka, info, medzlisId);
                   if (result) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Takmičenje uspješno dodano')),

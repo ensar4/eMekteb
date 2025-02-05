@@ -21,6 +21,7 @@ class Ucenik{
   String? nazivRazreda;
   double? prisustvo;
   double? prosjek;
+  double? ocjena;
 
   Ucenik(this.id,
       this.ime,
@@ -37,6 +38,7 @@ class Ucenik{
       this.prisustvo,
       this.prosjek,
       this.nazivRazreda,
+      this.ocjena,
       );
   factory Ucenik.fromJson(Map<String, dynamic> json) => _$UcenikFromJson(json);
 

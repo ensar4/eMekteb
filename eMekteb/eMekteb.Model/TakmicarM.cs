@@ -16,10 +16,11 @@ namespace eMekteb.Services.Database
         public DateTime DatumRodjenja { get; set; }
         public int? UkupnoBodova { get; set; }
         public int KategorijaId { get; set; }
+        public int? MektebId { get; set; }
 
 
 
-       // public virtual ICollection<Bodovi> Bodovi { get; set; } = new List<Bodovi>();
+        // public virtual ICollection<Bodovi> Bodovi { get; set; } = new List<Bodovi>();
 
     }
 }

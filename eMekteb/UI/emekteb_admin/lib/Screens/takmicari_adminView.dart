@@ -7,10 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../models/mekteb.dart';
 import '../models/searches/search_result.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:collection/collection.dart'; // Add this at the top for searching list
+import '../providers/mekteb_provider.dart';
 
 void main() {
   runApp(const TakmicariAdmin(
@@ -29,18 +32,25 @@ class TakmicariAdmin extends StatefulWidget {
 class _TakmicariAdminState extends State<TakmicariAdmin> {
   List<Takmicar> filteredList = [];
   bool isLoading = false;
+  bool isLoading2 = false;
   SearchResult<Takmicar>? listaTakmicara;
   int ukupnoTakmicara = 1;
-
+  int ukupnoMekteba = 1;
+  SearchResult<Mekteb>? listaMekteba;
+  List<Mekteb> filteredList2 = [];
   late TakmicarProvider _takmicarProvider;
   Set<int?> ratedItems = {}; // Assuming each item has a unique ID
+  late MektebProvider _mektebProvider;
+  var medzlisId = Korisnik.medzlisId;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _takmicarProvider = context.read<TakmicarProvider>();
+    _mektebProvider = context.read<MektebProvider>();
 
     fetchData();
+    fetchDataMektebs();
   }
 
 
@@ -67,6 +77,35 @@ class _TakmicariAdminState extends State<TakmicariAdmin> {
         isLoading = false;
       });
     }
+  }
+  Future<void> fetchDataMektebs({String? filter}) async {
+    if (!isLoading2) {
+      setState(() {
+        isLoading2 = true;
+        // Clear existing data when the filter changes
+        listaMekteba = null;
+        filteredList2.clear();
+      });
+
+      var data = await _mektebProvider.get(medzlisId: medzlisId);
+
+      setState(() {
+        if (listaMekteba == null) {
+          listaMekteba = data;
+          ukupnoMekteba = data.count;
+        } else {
+          listaMekteba!.result.addAll(data.result);
+        }
+
+        filteredList2 = listaMekteba?.result ?? [];
+        isLoading = false;
+      });
+    }
+  }
+
+  String getMektebNaziv(int mektebId) {
+    var mekteb = listaMekteba?.result.firstWhereOrNull((m) => m.id == mektebId);
+    return mekteb?.naziv ?? 'N/A';
   }
 
   @override
@@ -153,6 +192,7 @@ class _TakmicariAdminState extends State<TakmicariAdmin> {
             columns: [
               const DataColumn(label: Text('Ime')),
               const DataColumn(label: Text('Prezime')),
+              const DataColumn(label: Text('Mekteb')),
               const DataColumn(label: Text('Datum Rodjenja')),
               if (!isKomisija)
                 const DataColumn(label: Text('Ukupno Bodova')),
@@ -166,6 +206,7 @@ class _TakmicariAdminState extends State<TakmicariAdmin> {
                 cells: [
                   DataCell(Text(item.ime.toString())),
                   DataCell(Text(item.prezime.toString())),
+                  DataCell(Text(getMektebNaziv(item.mektebId!.toInt()))),
                   DataCell(
                       Text((DateFormat.yMMMd().format(item.datumRodjenja)))),
                   if (!isKomisija)
@@ -309,63 +350,71 @@ class _TakmicariAdminState extends State<TakmicariAdmin> {
       return "Admin";
   }
 
+  void _createPdfReport(BuildContext context, List<Takmicar> filteredList, String naziv, String nivo) async {
+    final pdf = pw.Document();
+    final fontData = await rootBundle.load('assets/fonts/OpenSans-VariableFont_wdth,wght.ttf');
+    final ttf = pw.Font.ttf(fontData);
 
- void _createPdfReport(BuildContext context, List<Takmicar> filteredList, String naziv, String nivo) async {
-   final pdf = pw.Document();
-   final fontData = await rootBundle.load('assets/fonts/OpenSans-VariableFont_wdth,wght.ttf');
-   final ttf = pw.Font.ttf(fontData);
+    String now = DateFormat('dd.MM.yyyy HH:mm').format(DateTime.now());
 
-   String now = DateFormat('dd.MM.yyyy HH:mm').format(DateTime.now());
-   pdf.addPage(
-     pw.Page(
-       build: (pw.Context context) => pw.Column(
-           crossAxisAlignment: pw.CrossAxisAlignment.center,
-           children: [
-             pw.Text("Islamska zajednica u Bosni i Hercegovini", style: pw.TextStyle(fontSize: 12, font: ttf)),
-             pw.Text("Medžlis Islamske zajednice Mostar", style: pw.TextStyle(fontSize: 12, font: ttf)),
-             pw.SizedBox(height: 20),
-           pw.Text(
-             "Rang lista / $naziv - nivo $nivo",
-             style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold, font: ttf),
-           ),
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) => pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.center,
+          children: [
+            pw.Text("Islamska zajednica u Bosni i Hercegovini", style: pw.TextStyle(fontSize: 12, font: ttf)),
+            pw.Text("Medžlis Islamske zajednice Mostar", style: pw.TextStyle(fontSize: 12, font: ttf)),
+            pw.SizedBox(height: 20),
+            pw.Text(
+              "Rang lista / $naziv - nivo $nivo",
+              style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold, font: ttf),
+            ),
+            pw.SizedBox(height: 20),
+            pw.TableHelper.fromTextArray(
+              cellStyle: pw.TextStyle(font: ttf),
+              headerDecoration: pw.BoxDecoration(color: PdfColors.grey300),
+              data: <List<String>>[
+                <String>[
+                  'R.br.', // Redni broj
+                  'Ime',
+                  'Prezime',
+                  'Mekteb',  // Dodaj Mekteb kolonu
+                  'Datum rodjenja',
+                  'Ukupno bodova',
+                ],
+                ...filteredList.asMap().entries.map(
+                      (entry) {
+                    var mekteb = listaMekteba?.result.firstWhere(
+                          (m) => m.id == entry.value.mektebId
+                    );
 
-           pw.SizedBox(height: 20),
-       pw.TableHelper.fromTextArray(
-         cellStyle: pw.TextStyle(font: ttf),
-         data: <List<String>>[
-           <String>[
-             'Ime',
-             'Prezime',
-             'Datum Rodjenja',
-             'Ukupno Bodova',
-           ],
-           ...filteredList.map(
-                 (item) => [
-               item.ime.toString(),
-               item.prezime.toString(),
-               DateFormat.yMMMd().format(item.datumRodjenja),
-               (item.ukupnoBodova?.toString() ?? 'N/A'),
+                    return [
+                      (entry.key + 1).toString(), // Redni broj
+                      entry.value.ime.toString(),
+                      entry.value.prezime.toString(),
+                      mekteb?.naziv ?? 'N/A',  // Dodaj naziv Mekteba
+                      DateFormat('dd.MM.yyyy').format(entry.value.datumRodjenja),
+                      (entry.value.ukupnoBodova?.toString() ?? 'N/A'),
+                    ];
+                  },
+                ).toList(),
+              ],
+            ),
+            pw.SizedBox(height: 20),
+            pw.Text(
+              now,
+              style: pw.TextStyle(fontSize: 14, font: ttf),
+            ),
+          ],
+        ),
+      ),
+    );
 
-             ],
-           ).toList(),
-         ],
-       ),
-         pw.SizedBox(height: 20),
-         pw.Text(
-           now,
-           style: pw.TextStyle(fontSize: 14, font: ttf),
-         ),
-     ],
-       )
-     ),
-   );
-
-   await Printing.layoutPdf(
-     onLayout: (PdfPageFormat format) async => pdf.save(),
-   );
-   fetchData();
- }
-
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => pdf.save(),
+    );
+    fetchData();
+  }
 
 
 

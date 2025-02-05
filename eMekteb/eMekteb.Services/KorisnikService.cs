@@ -252,7 +252,10 @@ namespace eMekteb.Services
             {
                 query = query.Where(y => y.Prezime.StartsWith(search.Prezime));
             }
-
+            if (search?.NeededId != null)
+            {
+                query = query.Where(m => m.MedzlisId == search.NeededId);
+            }
             if (!string.IsNullOrWhiteSpace(search.FTS))
             {
                 query = query.Where(y => y.Ime.Contains(search.FTS) || y.Prezime.Contains(search.FTS));
@@ -310,7 +313,7 @@ namespace eMekteb.Services
             }
 
             var hash = GenerateHash(entity.LozinkaSalt, password);
-
+ var ucenikRoleName = "Admin";
             if (hash != entity.LozinkaHash)
             {
                 return null;
@@ -321,17 +324,27 @@ namespace eMekteb.Services
 
    
 
-        public async Task<PagedResult<KorisnikM>> GetMualimi(int? Id)
+        public async Task<PagedResult<KorisnikM>> GetMualimi(int? Id, int? MedzlisId, int? MuftijstvoId)
         {
             var ucenikRoleName = "Imam";
 
             var uceniciQuery = _dbContext.Set<Korisnik>()
                 .Where(k => k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == ucenikRoleName));
 
+
             if (Id.HasValue)
             {
                 uceniciQuery = uceniciQuery.Where(k => k.MektebId == Id.Value);
             }
+            if (MedzlisId.HasValue)
+            {
+                uceniciQuery = uceniciQuery.Where(k => k.MedzlisId == MedzlisId.Value);
+            } 
+            if (MuftijstvoId.HasValue)
+            {
+                uceniciQuery = uceniciQuery.Where(k => k.Medzlis.MuftijstvoId == MuftijstvoId.Value);
+            }
+
 
             var ucenici = await uceniciQuery.ToListAsync();
 
@@ -344,7 +357,7 @@ namespace eMekteb.Services
             return result;
         }
 
-        public async Task<PagedResult<KorisnikM>> GetKomisija(int? Id)
+        public async Task<PagedResult<KorisnikM>> GetKomisija(int? Id, int? MedzlisId)
         {
             var RoleName = "Komisija";
 
@@ -354,6 +367,10 @@ namespace eMekteb.Services
             if (Id.HasValue)
             {
                 komisijaQuery = komisijaQuery.Where(k => k.MektebId == Id.Value);
+            }
+            if (MedzlisId.HasValue)
+            {
+                komisijaQuery = komisijaQuery.Where(k => k.MedzlisId == MedzlisId.Value);
             }
 
             var komisija = await komisijaQuery.ToListAsync();
@@ -367,7 +384,7 @@ namespace eMekteb.Services
             return result;
         }
 
-        public async Task<PagedResult<KorisnikM>> GetAdmin(int? Id)
+        public async Task<PagedResult<KorisnikM>> GetAdmin(int? Id, int? MedzlisId, int? MuftijstvoId)
         {
             var RoleName = "Admin";
 
@@ -378,8 +395,44 @@ namespace eMekteb.Services
             {
                 adminQuery = adminQuery.Where(k => k.MektebId == Id.Value);
             }
+            if (MedzlisId.HasValue)
+            {
+                adminQuery = adminQuery.Where(k => k.MedzlisId == MedzlisId.Value);
+            } 
+            if (MuftijstvoId.HasValue)
+            {
+                adminQuery = adminQuery.Where(k => k.Medzlis!.MuftijstvoId == MuftijstvoId.Value);
+            }
 
             var admin = await adminQuery.ToListAsync();
+
+            PagedResult<KorisnikM> result = new PagedResult<KorisnikM>
+            {
+                Count = admin.Count,
+                Result = _mapper.Map<List<KorisnikM>>(admin)
+            };
+
+            return result;
+        } 
+        
+        public async Task<PagedResult<KorisnikM>> GetSuperAdmin(int? Id, int? MuftijstvoId)
+        {
+            var RoleName = "SuperAdmin";
+
+            var superAdminQuery = _dbContext.Set<Korisnik>()
+                .Where(k => k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == RoleName));
+
+            if (Id.HasValue)
+            {
+                superAdminQuery = superAdminQuery.Where(k => k.MektebId == Id.Value);
+            }
+   
+            if (MuftijstvoId.HasValue)
+            {
+                superAdminQuery = superAdminQuery.Where(k => k.MuftijstvoId == MuftijstvoId.Value);
+            }
+
+            var admin = await superAdminQuery.ToListAsync();
 
             PagedResult<KorisnikM> result = new PagedResult<KorisnikM>
             {
@@ -609,8 +662,11 @@ namespace eMekteb.Services
 
 
 
+
+
+
         //Get ucenici by mekteb && Get svi ucenici
-        public async Task<PagedResult<KorisnikM>> GetUcenici(int? mektebId)
+        public async Task<PagedResult<KorisnikM>> GetUcenici(int? mektebId, int? MedzlisId)
         {
             var ucenikRoleName = "Ucenik";
 
@@ -620,26 +676,34 @@ namespace eMekteb.Services
                 .FirstOrDefaultAsync();
 
             var uceniciQuery = _dbContext.Set<Korisnik>()
-                .Where(k => k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == ucenikRoleName))
-                .Join(_dbContext.RazredKorisnik,
-                      k => k.Id,
-                      kr => kr.KorisnikId,
-                      (k, kr) => new { Korisnik = k, KorisnikRazred = kr })
-                .Join(_dbContext.Razred,
-                      kr => kr.KorisnikRazred.RazredId,
-                      r => r.Id,
-                      (kr, r) => new { kr.Korisnik, Razred = r })
-                .Join(_dbContext.AkademskaRazred,
-                      r => r.Razred.Id,
-                      ra => ra.RazredId,
-                      (r, ra) => new { r.Korisnik, r.Razred, RazredAkademska = ra })
-                .Where(ra => ra.RazredAkademska.AkademskaGodinaId == lastAkademskaGodinaId).Distinct();
+                 .Where(k => k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == ucenikRoleName))
+                 .Join(_dbContext.RazredKorisnik,
+                       k => k.Id,
+                       kr => kr.KorisnikId,
+                       (k, kr) => new { Korisnik = k, KorisnikRazred = kr })
+                 .Join(_dbContext.Razred,
+                       kr => kr.KorisnikRazred.RazredId,
+                       r => r.Id,
+                       (kr, r) => new { kr.Korisnik, Razred = r })
+                 .Join(_dbContext.Mekteb,  // Add this join to include Mekteb
+                       r => r.Razred.MektebId,
+                       m => m.Id,
+                       (r, m) => new { r.Korisnik, Razred = r.Razred, Mekteb = m })
+                 .Join(_dbContext.AkademskaRazred,
+                       r => r.Razred.Id,
+                       ra => ra.RazredId,
+                       (r, ra) => new { r.Korisnik, r.Razred, r.Mekteb, RazredAkademska = ra })
+                 .Where(ra => ra.RazredAkademska.AkademskaGodinaId == lastAkademskaGodinaId)
+                 .Distinct();
 
             if (mektebId.HasValue)
             {
                 uceniciQuery = uceniciQuery.Where(k => k.Razred.MektebId == mektebId.Value);
             }
-
+            if (MedzlisId.HasValue)
+            {
+                uceniciQuery = uceniciQuery.Where(k => k.Mekteb.MedzlisId == MedzlisId.Value); // Now, Mekteb is available
+            }
             var uceniciWithAttendance = await uceniciQuery
                 .Distinct()
                 .ToListAsync();

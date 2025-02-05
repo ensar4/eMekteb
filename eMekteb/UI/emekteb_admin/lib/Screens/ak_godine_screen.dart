@@ -1,5 +1,6 @@
 import 'package:emekteb_admin/Widgets/master_screen.dart';
 import 'package:emekteb_admin/models/akademska_godina.dart';
+import 'package:emekteb_admin/models/korisnik.dart';
 import 'package:emekteb_admin/providers/akademskagodina_provider.dart';
 import 'package:emekteb_admin/providers/akademskamekteb_provider.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,8 @@ class AkGodine extends StatefulWidget {
 }
 
 class _ProfilInfoState extends State<AkGodine> {
+  var medzlisIde = Korisnik.medzlisId;
+  var muftijstvoIde = Korisnik.muftijstvoId;
   late AkademskagodinaProvider _akademskaProvider;
   late AkademskaMektebProvider _akademskaMektebProvider;
   late AkademskaRazredProvider _akademskaRazredProvider;
@@ -58,7 +61,11 @@ class _ProfilInfoState extends State<AkGodine> {
     _akademskaRazredProvider = context.read<AkademskaRazredProvider>();
     fetchDataMektebi();
     fetchDataRazredi();
-    fetchData();
+    if(muftijstvoIde!=null) {
+      fetchDataForMuftijstvo();
+    } else {
+      fetchData();
+    }
   }
 
   Future<void> fetchData({String? filter}) async {
@@ -71,7 +78,7 @@ class _ProfilInfoState extends State<AkGodine> {
       });
 
       var data = await _akademskaProvider.get(
-          page: currentPage, pageSize: numPages, sort: isSortAsc);
+          page: currentPage, pageSize: numPages, sort: isSortAsc, medzlisId: medzlisIde);
 
       setState(() {
         if (listaAkademskih == null) {
@@ -86,6 +93,34 @@ class _ProfilInfoState extends State<AkGodine> {
       });
     }
   }
+
+  Future<void> fetchDataForMuftijstvo({String? filter}) async {
+    if (!isLoading) {
+      setState(() {
+        isLoading = true;
+        // Clear existing data when the filter changes
+        listaAkademskih = null;
+        filteredList.clear();
+      });
+
+      var data = await _akademskaProvider.getForMuftijstvo(
+          page: currentPage, pageSize: numPages, sort: isSortAsc, muftijstvoId: muftijstvoIde);
+
+      setState(() {
+        if (listaAkademskih == null) {
+          listaAkademskih = data;
+          ukupnoMekteba = data.count;
+        } else {
+          listaAkademskih!.result.addAll(data.result);
+        }
+        filteredList = listaAkademskih?.result ?? [];
+        //print(filteredList.isNotEmpty ? filteredList[0].naziv : 'No data');
+        isLoading = false;
+      });
+    }
+  }
+
+  //jer su mektebi spojeni na akademsku godinu pa da se spoje i sa novom akGodinom
   Future<void> fetchDataMektebi({String? filter}) async {
     if (!isLoading2) {
       setState(() {
@@ -111,6 +146,7 @@ class _ProfilInfoState extends State<AkGodine> {
     }
   }
 
+  //jer su razredi spojeni na akademsku godinu pa da se spoje i sa novom akGodinom
   Future<void> fetchDataRazredi({String? filter}) async {
     if (!isLoading3) {
       setState(() {
@@ -520,11 +556,11 @@ class _ProfilInfoState extends State<AkGodine> {
                       const SnackBar(content: Text('Akademska godina uspješno dodana')),
                     );
 
-                    // Loop through all mektebs in filteredListM and insert AkademskaMekteb records
+                    // Loop through all mektebs in filteredListM and insert AkademskaMekteb records in many to many tbl
                     for (Mekteb mekteb in filteredListM) {
                       await _akademskaMektebProvider.insertAkademskaMekteb(akademskaGodinaId, mekteb.id);
                     }
-
+                    // Loop through all razreds in razreds and insert AkademskaRazred records in many to many tbl
                     for (Razred razred in filteredListRazredi) {
                       await _akademskaRazredProvider.insertAkademskaRazred(akademskaGodinaId, razred.id);
                     }

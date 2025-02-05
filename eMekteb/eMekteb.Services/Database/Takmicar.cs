@@ -21,6 +21,10 @@ namespace eMekteb.Services.Database
         public int KategorijaId { get; set; }
         public virtual Kategorija? Kategorija { get; set; }
 
+        [ForeignKey("Mekteb")]
+        public int? MektebId { get; set; }
+        public virtual Mekteb? Mekteb { get; set; }
+
 
     }
 }

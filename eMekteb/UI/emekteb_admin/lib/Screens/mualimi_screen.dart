@@ -1,4 +1,5 @@
 import 'package:emekteb_admin/Widgets/master_screen.dart';
+import 'package:emekteb_admin/models/korisnik.dart';
 import 'package:emekteb_admin/models/mualim.dart';
 import 'package:emekteb_admin/providers/mualim_provider.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,8 @@ class Muallimi extends StatefulWidget {
 }
 
 class _ProfilInfoState extends State<Muallimi> {
+  var medzlisIde = Korisnik.medzlisId;
+  var muftijstvoIde = Korisnik.muftijstvoId;
   late MualimProvider _mualimProvider;
 
   SearchResult<Mualim>? listaMualima;
@@ -35,7 +38,11 @@ class _ProfilInfoState extends State<Muallimi> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _mualimProvider = context.read<MualimProvider>();
-    fetchData();
+    if(muftijstvoIde!=null) {
+      fetchDataByMuftijstvo();
+    } else {
+      fetchData();
+    }
   }
 
   Future<void> fetchData({String? filter}) async {
@@ -47,7 +54,32 @@ class _ProfilInfoState extends State<Muallimi> {
         filteredList.clear();
       });
 
-      var data = await _mualimProvider.get(page: currentPage, pageSize: numPages, sort: isSortAsc);
+      var data = await _mualimProvider.get(page: currentPage, pageSize: numPages, sort: isSortAsc, medzlisId: medzlisIde);
+
+      setState(() {
+        if (listaMualima == null) {
+          listaMualima = data;
+          ukupnoMualima = data.count;
+        } else {
+          listaMualima!.result.addAll(data.result);
+        }
+
+        filteredList = listaMualima?.result ?? [];
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> fetchDataByMuftijstvo({String? filter}) async {
+    if (!isLoading) {
+      setState(() {
+        isLoading = true;
+        // Clear existing data when the filter changes
+        listaMualima = null;
+        filteredList.clear();
+      });
+
+      var data = await _mualimProvider.getForMuftijstvo(page: currentPage, pageSize: numPages, sort: isSortAsc, muftijstvoId: muftijstvoIde);
 
       setState(() {
         if (listaMualima == null) {

@@ -16,7 +16,9 @@ abstract class BaseProvider<T> with ChangeNotifier{
   String get fullUrl => '$_baseUrl$_endpoint';
   String get baseOfUrl => '$_baseUrl';
 
-  Future<SearchResult<T>> get({TextEditingController? filterController, int? page, int? pageSize, bool? sort,}) async {
+  //napraviti novi get za nivo muftijstva jer nam nece trebati ovo int? medzlisId
+
+  Future<SearchResult<T>> get({TextEditingController? filterController, int? page, int? pageSize, bool? sort, int? medzlisId}) async {
     var url = "$_baseUrl$_endpoint?";
 
     var queryParameters = <String, dynamic>{};
@@ -29,6 +31,10 @@ abstract class BaseProvider<T> with ChangeNotifier{
       queryParameters['IsAsc'] = sort.toString();
     }
 
+    if (medzlisId != null) {
+      queryParameters['MedzlisId'] = medzlisId.toString();
+    }
+    //print(medzlisId);
     if (page != null) {
       queryParameters['Page'] = page.toString();
     }
@@ -42,6 +48,7 @@ abstract class BaseProvider<T> with ChangeNotifier{
     var headers = getHeaders();
 
     var response = await http.get(uri, headers: headers);
+      print(url);
 
 
     if (isValidResponse(response)) {
@@ -52,7 +59,54 @@ abstract class BaseProvider<T> with ChangeNotifier{
       for (var item in data['result']) {
         result.result.add(fromJson(item));
       }
+      return result;
+    } else {
+      throw Exception("Error with response");
+    }
+  }
 
+// novi get za nivo muftijstva
+  Future<SearchResult<T>> getForMuftijstvo({TextEditingController? filterController, int? page, int? pageSize, bool? sort, int? muftijstvoId}) async {
+    var url = "$_baseUrl$_endpoint?";
+
+    var queryParameters = <String, dynamic>{};
+
+    if (filterController != null && filterController.text.isNotEmpty) {
+      queryParameters['FTS'] = Uri.encodeComponent(filterController.text);
+    }
+
+    if (sort != null) {
+      queryParameters['IsAsc'] = sort.toString();
+    }
+
+    if (muftijstvoId != null) {
+      queryParameters['MuftijstvoId'] = muftijstvoId.toString();
+    }
+    //print(medzlisId);
+    if (page != null) {
+      queryParameters['Page'] = page.toString();
+    }
+
+    if (pageSize != null) {
+      queryParameters['PageSize'] = pageSize.toString();
+    }
+    url += Uri(queryParameters: queryParameters).query;
+
+    var uri = Uri.parse(url);
+    var headers = getHeaders();
+
+    var response = await http.get(uri, headers: headers);
+      print("url for muftijstvo");print(url);
+
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      var result = SearchResult<T>();
+      result.count = data['count'];
+
+      for (var item in data['result']) {
+        result.result.add(fromJson(item));
+      }
       return result;
     } else {
       throw Exception("Error with response");

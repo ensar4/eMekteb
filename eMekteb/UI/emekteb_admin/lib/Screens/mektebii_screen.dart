@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'package:emekteb_admin/Widgets/master_screen.dart';
+import 'package:emekteb_admin/models/korisnik.dart';
 import 'package:emekteb_admin/providers/akademskagodina_provider.dart';
 import 'package:emekteb_admin/providers/akademskamekteb_provider.dart';
 import 'package:emekteb_admin/providers/mekteb_provider.dart';
@@ -27,6 +28,7 @@ class _ProfilInfoState extends State<Mektebi> {
   late MektebProvider _mektebProvider;
   late AkademskaMektebProvider _akademskaMektebProvider;
   late AkademskagodinaProvider _akademskaProvider;
+  var medzlisIde = Korisnik.medzlisId;
 
   SearchResult<Mekteb>? listaMekteba;
   List<Mekteb> filteredList = [];
@@ -58,7 +60,7 @@ class _ProfilInfoState extends State<Mektebi> {
         filteredList.clear();
       });
 
-      var data = await _mektebProvider.get(filterController: searchController, page: currentPage, pageSize: numPages, sort: isSortAsc);
+      var data = await _mektebProvider.get(filterController: searchController, page: currentPage, pageSize: numPages, sort: isSortAsc, medzlisId: medzlisIde);
 
       setState(() {
         if (listaMekteba == null) {
@@ -480,7 +482,7 @@ class _ProfilInfoState extends State<Mektebi> {
     String naziv = '';
     String telefon = '';
     String adresa = '';
-
+    int? medzlisId = medzlisIde;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -547,7 +549,7 @@ class _ProfilInfoState extends State<Mektebi> {
                   formKey.currentState!.save();
 
                   // First, insert the new Mekteb
-                  int? mektebResult = await provider.insert(naziv, adresa, telefon);
+                  int? mektebResult = await provider.insert(naziv, adresa, telefon, medzlisId);
 
                   if (mektebResult != null) {
                     ScaffoldMessenger.of(context).showSnackBar(

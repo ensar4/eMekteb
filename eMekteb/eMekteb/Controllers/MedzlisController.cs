@@ -9,9 +9,9 @@ namespace eMekteb.Controllers
 {
 
     [ApiController]
-    public class MedzlisController : BaseCRUDController<MedzlisM, MektebSearchObject, MedzlisInsert, MedzlisUpdate>
+    public class MedzlisController : BaseCRUDController<MedzlisM, MedzlisSearchObject, MedzlisInsert, MedzlisUpdate>
     {
-        public MedzlisController(ILogger<BaseController<MedzlisM, MektebSearchObject>> logger, IMedzlisService service) : base(logger, service)
+        public MedzlisController(ILogger<BaseController<MedzlisM, MedzlisSearchObject>> logger, IMedzlisService service) : base(logger, service)
         {
         }
     }

@@ -24,7 +24,8 @@ Komisija fromJson(data) {
       String imeRoditelja,
       int mektebId,
       String password,
-      String passwordPotvrda
+      String passwordPotvrda,
+      int medzlisId
       ) async {
     final url = Uri.parse('$baseOfUrl''Korisnik');
     var headers = getHeaders();
@@ -45,6 +46,7 @@ Komisija fromJson(data) {
         'razredId': 2,
         'password': password,
         'passwordPotvrda': passwordPotvrda,
+        'medzlisId': medzlisId,
       }),
     );
 
@@ -67,10 +69,13 @@ Komisija fromJson(data) {
       String imeRoditelja,
       int mektebId,
       String password,
-      String passwordPotvrda
+      String passwordPotvrda,
+      int medzlisId
       ) async {
     final url = Uri.parse('$baseOfUrl''Korisnik');
     var headers = getHeaders();
+    print("medzlisId:");
+    print(medzlisId);
     final response = await http.post(
       url,
       headers: headers,
@@ -88,9 +93,10 @@ Komisija fromJson(data) {
         'razredId': 2,
         'password': password,
         'passwordPotvrda': passwordPotvrda,
+        'medzlisId' : medzlisId
       }),
     );
-
+     print(response.body);
     if (response.statusCode == 200) {
       final korisnikId = json.decode(response.body)['id'];
       return await _addRoleToKorisnik(korisnikId, 1);
@@ -98,6 +104,7 @@ Komisija fromJson(data) {
       return false;
     }
   }
+
   Future<bool> _addRoleToKorisnik(int korisnikId, int ulogaId) async {
     final url = Uri.parse('$baseOfUrl''KorisniciUloge');
     var headers = getHeaders();

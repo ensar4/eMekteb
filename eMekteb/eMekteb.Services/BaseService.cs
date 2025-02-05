@@ -30,12 +30,12 @@ namespace eMekteb.Services
         public virtual async Task<PagedResult<T>> Get(TSearch? search)
         {
             var query = _dbContext.Set<TDb>().AsQueryable();
+            query = AddFilter(query, search);
+            query = AddInclude(query, search);
 
             PagedResult<T> result = new PagedResult<T>();
             result.Count = await query.CountAsync();
 
-            query = AddFilter(query, search);
-            query = AddInclude(query, search);
 
             if (search?.Page.HasValue == true && search?.PageSize.HasValue == true)
             {

@@ -1,5 +1,6 @@
 import 'package:emekteb_admin/Widgets/master_screen.dart';
 import 'package:emekteb_admin/models/akademska_godina.dart';
+import 'package:emekteb_admin/models/korisnik.dart';
 import 'package:emekteb_admin/providers/akademskagodina_provider.dart';
 import 'package:emekteb_admin/providers/medzlis_provider.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,8 @@ class Statistika extends StatefulWidget {
 }
 
 class _ProfilInfoState extends State<Statistika> {
+
+  var medzlisIde = Korisnik.medzlisId;
   late MektebProvider _mektebProvider;
   String dropdownValue1 = '1';
   SearchResult<Mekteb>? listaMekteba;
@@ -38,19 +41,18 @@ class _ProfilInfoState extends State<Statistika> {
   int numPages = 12; // Adjust the page size according to your backend configuration
   bool isLoading = false;
   bool isSortAsc = false;
-
+  Mekteb? selectedMekteb;
 
   late AkademskagodinaProvider _akademskaGodinaProvider;
   String dropdownValue2 = '1';
   SearchResult<AkademskaGodina>? listaGodina;
   int ukupnoGodina = 1;
   List<AkademskaGodina> filteredListGodine = [];
+  AkademskaGodina? selectedGodina;
 
   late MedzlisProvider _medzlisProvider;
   SearchResult<Medzlis>? medzlis;
   List<Medzlis> filteredMedzlis = [];
-  Mekteb? selectedMekteb;
-  AkademskaGodina? selectedGodina;
 
   final GlobalKey chartKey = GlobalKey();
 
@@ -69,12 +71,11 @@ class _ProfilInfoState extends State<Statistika> {
     if (!isLoading) {
       setState(() {
         isLoading = true;
-        // Clear existing data when the filter changes
         listaMekteba = null;
         filteredListMektebs.clear();
       });
 
-      var data = await _mektebProvider.get(page: currentPage, pageSize: numPages, sort: isSortAsc);
+      var data = await _mektebProvider.get(medzlisId: medzlisIde);
 
       setState(() {
         if (listaMekteba == null) {
@@ -93,12 +94,11 @@ class _ProfilInfoState extends State<Statistika> {
     if (!isLoading) {
       setState(() {
         isLoading = true;
-        // Clear existing data when the filter changes
         listaGodina = null;
         filteredListGodine.clear();
       });
 
-      var data = await _akademskaGodinaProvider.get(page: currentPage, pageSize: numPages, sort: isSortAsc);
+      var data = await _akademskaGodinaProvider.get(page: currentPage, pageSize: numPages, sort: isSortAsc, medzlisId: medzlisIde);
 
       setState(() {
         if (listaGodina == null) {
@@ -118,12 +118,11 @@ class _ProfilInfoState extends State<Statistika> {
     if (!isLoading) {
       setState(() {
         isLoading = true;
-        // Clear existing data when the filter changes
         medzlis = null;
         filteredMedzlis.clear();
       });
 
-      var data = await _medzlisProvider.get(page: currentPage, pageSize: numPages, sort: isSortAsc);
+      var data = await _medzlisProvider.get(page: currentPage, pageSize: numPages, sort: isSortAsc, medzlisId: medzlisIde);
 
       setState(() {
         if (medzlis == null) {

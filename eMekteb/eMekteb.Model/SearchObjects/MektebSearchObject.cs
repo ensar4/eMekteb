@@ -12,5 +12,6 @@ namespace eMekteb.Model.SearchObjects
         public string? FTS { get; set; }
         public bool? IsAsc { get; set; }
         public bool? IsAscProsjek { get; set; }
+        public int? MedzlisId { get; set; }
     }
 }

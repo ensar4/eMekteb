@@ -12,8 +12,8 @@ using eMekteb.Services.Database;
 namespace eMekteb.Services.Migrations
 {
     [DbContext(typeof(eMektebContext))]
-    [Migration("20241205210131_init")]
-    partial class init
+    [Migration("20250204185248_fixSeed6")]
+    partial class fixSeed6
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1559,6 +1559,41 @@ namespace eMekteb.Services.Migrations
                             DatumIzmjene = new DateTime(2024, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             KorisnikId = 37,
                             UlogaId = 2
+                        },
+                        new
+                        {
+                            Id = 38,
+                            DatumIzmjene = new DateTime(2024, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            KorisnikId = 38,
+                            UlogaId = 6
+                        },
+                        new
+                        {
+                            Id = 39,
+                            DatumIzmjene = new DateTime(2024, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            KorisnikId = 39,
+                            UlogaId = 6
+                        },
+                        new
+                        {
+                            Id = 40,
+                            DatumIzmjene = new DateTime(2024, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            KorisnikId = 39,
+                            UlogaId = 1
+                        },
+                        new
+                        {
+                            Id = 41,
+                            DatumIzmjene = new DateTime(2024, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            KorisnikId = 41,
+                            UlogaId = 1
+                        },
+                        new
+                        {
+                            Id = 42,
+                            DatumIzmjene = new DateTime(2024, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            KorisnikId = 42,
+                            UlogaId = 6
                         });
                 });
 
@@ -1591,7 +1626,13 @@ namespace eMekteb.Services.Migrations
                     b.Property<string>("Mail")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("MedzlisId")
+                        .HasColumnType("int");
+
                     b.Property<int>("MektebId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MuftijstvoId")
                         .HasColumnType("int");
 
                     b.Property<string>("NazivRazreda")
@@ -1626,7 +1667,11 @@ namespace eMekteb.Services.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MedzlisId");
+
                     b.HasIndex("MektebId");
+
+                    b.HasIndex("MuftijstvoId");
 
                     b.HasIndex("RazredId");
 
@@ -1644,6 +1689,7 @@ namespace eMekteb.Services.Migrations
                             LozinkaHash = "dP9XoZcTTTU8f4ddDbNLJalRQqQ=",
                             LozinkaSalt = "jmK1d1xnmg2DC0svh3UvRw==",
                             Mail = "dino@gmail.com",
+                            MedzlisId = 1,
                             MektebId = 1,
                             Prezime = "Maksumic",
                             Spol = "M",
@@ -1693,6 +1739,7 @@ namespace eMekteb.Services.Migrations
                             LozinkaHash = "AtSGH/z7qvkVdWoRnHgpVjtiw+M=",
                             LozinkaSalt = "XPD7niYAxH0Rify963NJDA==",
                             Mail = "armin@gmail.com",
+                            MedzlisId = 1,
                             MektebId = 1,
                             Prezime = "Abaza",
                             Spol = "M",
@@ -1709,6 +1756,7 @@ namespace eMekteb.Services.Migrations
                             LozinkaHash = "cKnCCVJWJjRXqM7XevrbN6B3RbM=",
                             LozinkaSalt = "cLnMQzMpSBWfc9nVetCRnw==",
                             Mail = "atif@gmail.com",
+                            MedzlisId = 1,
                             MektebId = 1,
                             Prezime = "Mujkic",
                             Spol = "M",
@@ -2172,6 +2220,7 @@ namespace eMekteb.Services.Migrations
                             LozinkaHash = "cKnCCVJWJjRXqM7XevrbN6B3RbM=",
                             LozinkaSalt = "cLnMQzMpSBWfc9nVetCRnw==",
                             Mail = "muhjudin@gmail.com",
+                            MedzlisId = 1,
                             MektebId = 2,
                             Prezime = "Bećoja",
                             Spol = "M",
@@ -2188,6 +2237,7 @@ namespace eMekteb.Services.Migrations
                             LozinkaHash = "cKnCCVJWJjRXqM7XevrbN6B3RbM=",
                             LozinkaSalt = "cLnMQzMpSBWfc9nVetCRnw==",
                             Mail = "sanjin@gmail.com",
+                            MedzlisId = 1,
                             MektebId = 3,
                             Prezime = "Šahić",
                             Spol = "M",
@@ -2204,6 +2254,7 @@ namespace eMekteb.Services.Migrations
                             LozinkaHash = "cKnCCVJWJjRXqM7XevrbN6B3RbM=",
                             LozinkaSalt = "cLnMQzMpSBWfc9nVetCRnw==",
                             Mail = "muhamed@gmail.com",
+                            MedzlisId = 1,
                             MektebId = 4,
                             Prezime = "Hasić",
                             Spol = "M",
@@ -2220,6 +2271,7 @@ namespace eMekteb.Services.Migrations
                             LozinkaHash = "cKnCCVJWJjRXqM7XevrbN6B3RbM=",
                             LozinkaSalt = "cLnMQzMpSBWfc9nVetCRnw==",
                             Mail = "sefik@gmail.com",
+                            MedzlisId = 1,
                             MektebId = 5,
                             Prezime = "Čavčić",
                             Spol = "M",
@@ -2242,6 +2294,91 @@ namespace eMekteb.Services.Migrations
                             Status = "Aktivan",
                             Telefon = "061222555",
                             Username = "suljo.cikotic"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            DatumRodjenja = new DateTime(1954, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Ime = "Seid",
+                            ImeRoditelja = "Omer",
+                            LozinkaHash = "dP9XoZcTTTU8f4ddDbNLJalRQqQ=",
+                            LozinkaSalt = "jmK1d1xnmg2DC0svh3UvRw==",
+                            Mail = "superadmin@gmail.com",
+                            MektebId = 6,
+                            MuftijstvoId = 1,
+                            Prezime = "Smajkić",
+                            Spol = "M",
+                            Status = "Aktivan",
+                            Telefon = "061222555",
+                            Username = "superadmin"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            DatumRodjenja = new DateTime(1954, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Ime = "Sefko",
+                            ImeRoditelja = "Omer",
+                            LozinkaHash = "dP9XoZcTTTU8f4ddDbNLJalRQqQ=",
+                            LozinkaSalt = "jmK1d1xnmg2DC0svh3UvRw==",
+                            Mail = "muftija@gmail.com",
+                            MektebId = 6,
+                            MuftijstvoId = 1,
+                            Prezime = "Tinjak",
+                            Spol = "M",
+                            Status = "Aktivan",
+                            Telefon = "061222555",
+                            Username = "muftija"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            DatumRodjenja = new DateTime(1954, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Ime = "Kenan",
+                            ImeRoditelja = "Omer",
+                            LozinkaHash = "dP9XoZcTTTU8f4ddDbNLJalRQqQ=",
+                            LozinkaSalt = "jmK1d1xnmg2DC0svh3UvRw==",
+                            Mail = "zamjenik@gmail.com",
+                            MedzlisId = 1,
+                            MektebId = 6,
+                            Prezime = "Ovcina",
+                            Spol = "M",
+                            Status = "Aktivan",
+                            Telefon = "061222555",
+                            Username = "zamjenik"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            DatumRodjenja = new DateTime(1954, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Ime = "Kenan",
+                            ImeRoditelja = "Omer",
+                            LozinkaHash = "dP9XoZcTTTU8f4ddDbNLJalRQqQ=",
+                            LozinkaSalt = "jmK1d1xnmg2DC0svh3UvRw==",
+                            Mail = "zamjenik@gmail.com",
+                            MedzlisId = 2,
+                            MektebId = 17,
+                            Prezime = "Music",
+                            Spol = "M",
+                            Status = "Aktivan",
+                            Telefon = "061222555",
+                            Username = "kenan.music"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            DatumRodjenja = new DateTime(1954, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Ime = "Nedzad",
+                            ImeRoditelja = "Omer",
+                            LozinkaHash = "dP9XoZcTTTU8f4ddDbNLJalRQqQ=",
+                            LozinkaSalt = "jmK1d1xnmg2DC0svh3UvRw==",
+                            Mail = "superadmin@gmail.com",
+                            MektebId = 17,
+                            MuftijstvoId = 2,
+                            Prezime = "Grabus",
+                            Spol = "M",
+                            Status = "Aktivan",
+                            Telefon = "061222555",
+                            Username = "sarajevo"
                         });
                 });
 
@@ -2259,6 +2396,9 @@ namespace eMekteb.Services.Migrations
                     b.Property<string>("Mail")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("MuftijstvoId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Naziv")
                         .HasColumnType("nvarchar(max)");
 
@@ -2266,6 +2406,8 @@ namespace eMekteb.Services.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MuftijstvoId");
 
                     b.ToTable("Medzlis");
 
@@ -2275,7 +2417,35 @@ namespace eMekteb.Services.Migrations
                             Id = 1,
                             Adresa = "Čiče Miličevića, Mostar 88000",
                             Mail = "medzlismostar@gmail.com",
+                            MuftijstvoId = 1,
                             Naziv = "Medzlis Mostar",
+                            Telefon = "036 550-727"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Adresa = "Čiče Miličevića, Stolac 88000",
+                            Mail = "medzlisstolac@gmail.com",
+                            MuftijstvoId = 1,
+                            Naziv = "Medzlis Stolac",
+                            Telefon = "036 550-727"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Adresa = "Čiče Miličevića, Čapljina 88000",
+                            Mail = "medzlisca@gmail.com",
+                            MuftijstvoId = 1,
+                            Naziv = "Medzlis Čapljina",
+                            Telefon = "036 550-727"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Adresa = "Čiče Miličevića, Sarajevo 88000",
+                            Mail = "medzlisdarajevo@gmail.com",
+                            MuftijstvoId = 2,
+                            Naziv = "Medzlis Sarajevo",
                             Telefon = "036 550-727"
                         });
                 });
@@ -2354,6 +2524,129 @@ namespace eMekteb.Services.Migrations
                             MedzlisId = 1,
                             Naziv = "Mekteb Vrapčići",
                             Telefon = "036 585-965"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Adresa = "Mostar",
+                            MedzlisId = 1,
+                            Naziv = "Mekteb Zalik 2",
+                            Telefon = "036 585-967"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Adresa = "Mostar",
+                            MedzlisId = 1,
+                            Naziv = "Mekteb Luka 2",
+                            Telefon = "036 585-963"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Adresa = "Mostar",
+                            MedzlisId = 1,
+                            Naziv = "Mekteb Ričina",
+                            Telefon = "036 585-962"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Adresa = "Mostar",
+                            MedzlisId = 1,
+                            Naziv = "Mekteb Podhum",
+                            Telefon = "036 585-961"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Adresa = "Mostar",
+                            MedzlisId = 1,
+                            Naziv = "Mekteb Pijesak",
+                            Telefon = "036 585-965"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Adresa = "Mostar",
+                            MedzlisId = 1,
+                            Naziv = "Mekteb Balinovac",
+                            Telefon = "036 585-961"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Adresa = "Mostar",
+                            MedzlisId = 1,
+                            Naziv = "Mekteb Jasenica",
+                            Telefon = "036 585-965"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Adresa = "Mostar",
+                            MedzlisId = 1,
+                            Naziv = "Mekteb Kočine",
+                            Telefon = "036 585-961"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Adresa = "Mostar",
+                            MedzlisId = 1,
+                            Naziv = "Mekteb Brankovac",
+                            Telefon = "036 585-965"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Adresa = "Sarajevo",
+                            MedzlisId = 2,
+                            Naziv = "Mekteb Alipasino C",
+                            Telefon = "036 585-965"
+                        });
+                });
+
+            modelBuilder.Entity("eMekteb.Services.Database.Muftijstvo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Adresa")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Mail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Naziv")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefon")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Muftijstvo");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Adresa = "Čiče Miličevića, Mostar 88000",
+                            Mail = "muftijstvomostar@gmail.com",
+                            Naziv = "Muftijstvo Mostarsko",
+                            Telefon = "036 550-727"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Adresa = "Čiče Miličevića, Sarajevo 88000",
+                            Mail = "muftijstvosarajevo@gmail.com",
+                            Naziv = "Muftijstvo Sarajevsko",
+                            Telefon = "036 550-727"
                         });
                 });
 
@@ -3622,6 +3915,9 @@ namespace eMekteb.Services.Migrations
                     b.Property<int>("KategorijaId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("MektebId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Prezime")
                         .HasColumnType("nvarchar(max)");
 
@@ -3632,6 +3928,8 @@ namespace eMekteb.Services.Migrations
 
                     b.HasIndex("KategorijaId");
 
+                    b.HasIndex("MektebId");
+
                     b.ToTable("Takmicar");
 
                     b.HasData(
@@ -3641,6 +3939,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2000, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Lejla",
                             KategorijaId = 1,
+                            MektebId = 1,
                             Prezime = "Marić",
                             UkupnoBodova = 15
                         },
@@ -3650,6 +3949,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2000, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Hasan",
                             KategorijaId = 1,
+                            MektebId = 2,
                             Prezime = "Gološ",
                             UkupnoBodova = 14
                         },
@@ -3659,6 +3959,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2001, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Zejd",
                             KategorijaId = 2,
+                            MektebId = 3,
                             Prezime = "Marić",
                             UkupnoBodova = 17
                         },
@@ -3668,6 +3969,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2001, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Sadzid",
                             KategorijaId = 2,
+                            MektebId = 1,
                             Prezime = "Marić",
                             UkupnoBodova = 15
                         },
@@ -3677,6 +3979,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2002, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Amna",
                             KategorijaId = 3,
+                            MektebId = 5,
                             Prezime = "Baralija",
                             UkupnoBodova = 17
                         },
@@ -3686,6 +3989,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2002, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Selma",
                             KategorijaId = 3,
+                            MektebId = 4,
                             Prezime = "Bučuk",
                             UkupnoBodova = 16
                         },
@@ -3695,6 +3999,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2000, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Kenan",
                             KategorijaId = 4,
+                            MektebId = 3,
                             Prezime = "Baralija",
                             UkupnoBodova = 15
                         },
@@ -3704,6 +4009,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2001, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Osman",
                             KategorijaId = 5,
+                            MektebId = 3,
                             Prezime = "Brkan",
                             UkupnoBodova = 14
                         },
@@ -3713,6 +4019,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2002, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Amar",
                             KategorijaId = 6,
+                            MektebId = 2,
                             Prezime = "Brkan",
                             UkupnoBodova = 13
                         },
@@ -3722,6 +4029,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2000, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Lejla",
                             KategorijaId = 7,
+                            MektebId = 1,
                             Prezime = "Marić",
                             UkupnoBodova = 14
                         },
@@ -3731,6 +4039,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2000, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Hasan",
                             KategorijaId = 7,
+                            MektebId = 2,
                             Prezime = "Gološ",
                             UkupnoBodova = 15
                         },
@@ -3740,6 +4049,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2001, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Zejd",
                             KategorijaId = 8,
+                            MektebId = 3,
                             Prezime = "Marić",
                             UkupnoBodova = 16
                         },
@@ -3749,6 +4059,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2001, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Sadzid",
                             KategorijaId = 8,
+                            MektebId = 1,
                             Prezime = "Marić",
                             UkupnoBodova = 17
                         },
@@ -3758,6 +4069,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2002, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Amna",
                             KategorijaId = 9,
+                            MektebId = 4,
                             Prezime = "Baralija",
                             UkupnoBodova = 14
                         },
@@ -3767,6 +4079,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2002, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Selma",
                             KategorijaId = 9,
+                            MektebId = 5,
                             Prezime = "Bučuk",
                             UkupnoBodova = 15
                         },
@@ -3776,6 +4089,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2000, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Kenan",
                             KategorijaId = 10,
+                            MektebId = 2,
                             Prezime = "Baralija",
                             UkupnoBodova = 16
                         },
@@ -3785,6 +4099,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2001, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Osman",
                             KategorijaId = 10,
+                            MektebId = 3,
                             Prezime = "Brkan",
                             UkupnoBodova = 14
                         },
@@ -3794,6 +4109,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2002, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Amar",
                             KategorijaId = 11,
+                            MektebId = 3,
                             Prezime = "Brkan",
                             UkupnoBodova = 15
                         },
@@ -3803,6 +4119,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2002, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Salih",
                             KategorijaId = 12,
+                            MektebId = 3,
                             Prezime = "Marić",
                             UkupnoBodova = 11
                         },
@@ -3812,6 +4129,7 @@ namespace eMekteb.Services.Migrations
                             DatumRodjenja = new DateTime(2000, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Ime = "Ruvejda",
                             KategorijaId = 7,
+                            MektebId = 5,
                             Prezime = "Kaminić",
                             UkupnoBodova = 12
                         });
@@ -3913,6 +4231,11 @@ namespace eMekteb.Services.Migrations
                         {
                             Id = 5,
                             Naziv = "Komisija"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Naziv = "SuperAdmin"
                         });
                 });
 
@@ -4409,11 +4732,19 @@ namespace eMekteb.Services.Migrations
 
             modelBuilder.Entity("eMekteb.Services.Database.Korisnik", b =>
                 {
+                    b.HasOne("eMekteb.Services.Database.Medzlis", "Medzlis")
+                        .WithMany()
+                        .HasForeignKey("MedzlisId");
+
                     b.HasOne("eMekteb.Services.Database.Mekteb", "Mekteb")
                         .WithMany("Korisnik")
                         .HasForeignKey("MektebId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("eMekteb.Services.Database.Muftijstvo", "Muftijstvo")
+                        .WithMany()
+                        .HasForeignKey("MuftijstvoId");
 
                     b.HasOne("eMekteb.Services.Database.Razred", null)
                         .WithMany("Ucenici")
@@ -4423,9 +4754,24 @@ namespace eMekteb.Services.Migrations
                         .WithMany("Djeca")
                         .HasForeignKey("RoditeljId");
 
+                    b.Navigation("Medzlis");
+
                     b.Navigation("Mekteb");
 
+                    b.Navigation("Muftijstvo");
+
                     b.Navigation("Roditelj");
+                });
+
+            modelBuilder.Entity("eMekteb.Services.Database.Medzlis", b =>
+                {
+                    b.HasOne("eMekteb.Services.Database.Muftijstvo", "Muftijstvo")
+                        .WithMany("Medzlisi")
+                        .HasForeignKey("MuftijstvoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Muftijstvo");
                 });
 
             modelBuilder.Entity("eMekteb.Services.Database.Mekteb", b =>
@@ -4520,7 +4866,13 @@ namespace eMekteb.Services.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("eMekteb.Services.Database.Mekteb", "Mekteb")
+                        .WithMany()
+                        .HasForeignKey("MektebId");
+
                     b.Navigation("Kategorija");
+
+                    b.Navigation("Mekteb");
                 });
 
             modelBuilder.Entity("eMekteb.Services.Database.Takmicenje", b =>
@@ -4609,6 +4961,11 @@ namespace eMekteb.Services.Migrations
                     b.Navigation("Korisnik");
 
                     b.Navigation("Obavijesti");
+                });
+
+            modelBuilder.Entity("eMekteb.Services.Database.Muftijstvo", b =>
+                {
+                    b.Navigation("Medzlisi");
                 });
 
             modelBuilder.Entity("eMekteb.Services.Database.Razred", b =>

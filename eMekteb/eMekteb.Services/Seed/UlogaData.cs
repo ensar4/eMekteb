@@ -37,6 +37,11 @@ namespace eMekteb.Services.Seed
                 {
                     Id = 5,
                     Naziv = "Komisija"
+                },
+                new Uloga
+                {
+                    Id = 6,
+                    Naziv = "SuperAdmin"
                 }
               
             );

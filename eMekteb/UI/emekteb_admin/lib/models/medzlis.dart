@@ -13,8 +13,10 @@ class Medzlis{
   int? ukupnoUcenika;
   double? prosjecnaOcjena;
   double? prosjecnoPrisustvo;
+  int? muftijstvoId;
 
-  Medzlis(this.id,
+  Medzlis(
+      this.id,
       this.naziv,
       this.adresa,
       this.telefon,
@@ -22,7 +24,8 @@ class Medzlis{
       this.ukupnoMekteba,
       this.ukupnoUcenika,
       this.prosjecnaOcjena,
-      this.prosjecnoPrisustvo
+      this.prosjecnoPrisustvo,
+      this.muftijstvoId
       );
 
   factory Medzlis.fromJson(Map<String, dynamic> json) => _$MedzlisFromJson(json);

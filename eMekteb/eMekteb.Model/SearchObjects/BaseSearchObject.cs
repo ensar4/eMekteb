@@ -10,5 +10,7 @@ namespace eMekteb.Model.SearchObjects
     {
         public int? Page { get; set; }
         public int? PageSize { get; set; }
+        public int? NeededId { get; set; }
+
     }
 }

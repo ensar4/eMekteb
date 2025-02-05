@@ -66,7 +66,10 @@ namespace eMekteb.Services
             {
                 query = query.Where(y => y.Naziv.StartsWith(search.naziv));
             }
-
+            if (search?.MedzlisId != null)
+            {
+                query = query.Where(m => m.MedzlisId == search.MedzlisId);
+            }
             if (!string.IsNullOrWhiteSpace(search.FTS))
             {
                 query = query.Where(y => y.Naziv.Contains(search.FTS));
@@ -142,6 +145,74 @@ namespace eMekteb.Services
                 {
                     mektebM.Mualim = null; 
                 }
+            }
+
+            return result;
+        }
+
+
+        public async Task<PagedResult<MektebM>> GetByMedzlisId(int medzlisId)
+        {
+            var query = _dbContext.Mekteb.Where(m => m.MedzlisId == medzlisId);
+
+            var result = new PagedResult<MektebM>
+            {
+                Count = await query.CountAsync(),
+                Result = await query.Select(m => new MektebM
+                {
+                    Id = m.Id,
+                    Naziv = m.Naziv
+                }).ToListAsync()
+            };
+
+            foreach (var mektebM in result.Result)
+            {
+                mektebM.UkupnoUcenika = await _dbContext.Korisnik
+                    .Where(u => u.MektebId == mektebM.Id && u.KorisniciUloge.Any(ku => ku.Uloga.Naziv == "Ucenik"))
+                    .CountAsync();
+
+                var korisniciIds = await _dbContext.Korisnik
+                    .Where(k => k.MektebId == mektebM.Id)
+                    .Select(k => k.Id)
+                    .ToListAsync();
+
+                var zadace = await _dbContext.Zadaca
+                    .Where(z => korisniciIds.Contains(z.KorisnikId))
+                    .Include(z => z.Ocjene)
+                    .ToListAsync();
+
+                if (zadace.Any())
+                {
+                    mektebM.ProsjecnaOcjena = zadace.Average(z => z.Ocjene.Ocjena);
+                }
+                else
+                {
+                    mektebM.ProsjecnaOcjena = null;
+                }
+
+                var prisustva = await _dbContext.Prisustvo
+                    .Where(p => korisniciIds.Contains(p.KorisnikId))
+                    .ToListAsync();
+
+                if (prisustva.Any())
+                {
+                    double averageAttendance = prisustva
+                        .GroupBy(p => p.KorisnikId)
+                        .Select(g => g.Count(p => (bool)p.Prisutan) / (double)g.Count())
+                        .Average() * 100;
+                    mektebM.ProsjecnoPrisustvo = averageAttendance;
+                }
+                else
+                {
+                    mektebM.ProsjecnoPrisustvo = null;
+                }
+
+                var imam = await _dbContext.Korisnik
+                    .Where(k => k.MektebId == mektebM.Id && k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == "imam"))
+                    .Select(k => new { k.Ime, k.Prezime })
+                    .FirstOrDefaultAsync();
+
+                mektebM.Mualim = imam != null ? $"{imam.Ime} {imam.Prezime}" : null;
             }
 
             return result;

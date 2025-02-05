@@ -13,6 +13,7 @@ namespace eMekteb.Model
         public string? Adresa { get; set; }
         public string? Telefon { get; set; }
         public string? Mail { get; set; }
+        public int MuftijstvoId { get; set; }
 
     }
 }

@@ -20,6 +20,8 @@ Komisija _$KomisijaFromJson(Map<String, dynamic> json) => Komisija(
       json['mail'] as String?,
       json['spol'] as String?,
       json['imeRoditelja'] as String?,
+      (json['medzlisId'] as num?)?.toInt(),
+      (json['muftijstvoId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$KomisijaToJson(Komisija instance) => <String, dynamic>{
@@ -34,4 +36,6 @@ Map<String, dynamic> _$KomisijaToJson(Komisija instance) => <String, dynamic>{
       'imeRoditelja': instance.imeRoditelja,
       'datumRodjenja': instance.datumRodjenja?.toIso8601String(),
       'mektebId': instance.mektebId,
+      'medzlisId': instance.medzlisId,
+      'muftijstvoId': instance.muftijstvoId,
     };

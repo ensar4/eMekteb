@@ -14,6 +14,7 @@ namespace eMekteb.Services.Interfaces
     {
         Task<PagedResult<TakmicarM>> GetByKategorijaId(int kategorijaId);
         Task<TakmicarM> Update(TakmicarM takmicar);
+        Task<TakmicarM> UpdatePoints(int id, int points);
     }
 
 }

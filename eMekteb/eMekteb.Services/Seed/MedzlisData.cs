@@ -20,7 +20,35 @@ namespace eMekteb.Services.Seed
                     Adresa = "Čiče Miličevića, Mostar 88000",
                     Telefon= "036 550-727",
                     Naziv = "Medzlis Mostar",
-                    Mail = "medzlismostar@gmail.com"
+                    Mail = "medzlismostar@gmail.com",
+                    MuftijstvoId = 1
+                },
+                new Medzlis
+                {
+                    Id = 3,
+                    Adresa = "Čiče Miličevića, Stolac 88000",
+                    Telefon= "036 550-727",
+                    Naziv = "Medzlis Stolac",
+                    Mail = "medzlisstolac@gmail.com",
+                    MuftijstvoId = 1
+                },
+                new Medzlis
+                {
+                    Id = 4,
+                    Adresa = "Čiče Miličevića, Čapljina 88000",
+                    Telefon= "036 550-727",
+                    Naziv = "Medzlis Čapljina",
+                    Mail = "medzlisca@gmail.com",
+                    MuftijstvoId = 1
+                },
+                new Medzlis
+                {
+                    Id = 2,
+                    Adresa = "Čiče Miličevića, Sarajevo 88000",
+                    Telefon= "036 550-727",
+                    Naziv = "Medzlis Sarajevo",
+                    Mail = "medzlisdarajevo@gmail.com",
+                    MuftijstvoId = 2
                 }
               
             );

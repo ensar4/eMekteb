@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../models/korisnik.dart';
 import '../models/searches/search_result.dart';
 import '../models/ucenik.dart';
 import '../providers/mekteb_provider.dart';
@@ -27,6 +28,7 @@ class Ucenici extends StatefulWidget {
 }
 
 class _ProfilInfoState extends State<Ucenici> {
+  var medzlidIde = Korisnik.medzlisId;
   late UceniciProvider _uceniciProvider;
   late MektebProvider _mektebProvider;
 
@@ -66,7 +68,7 @@ class _ProfilInfoState extends State<Ucenici> {
         filteredList.clear();
       });
 
-      var data = await _uceniciProvider.get(filterController: searchController, page: currentPage, pageSize: numPages, sort: isSortAsc);
+      var data = await _uceniciProvider.get(filterController: searchController, page: currentPage, pageSize: numPages, sort: isSortAsc, medzlisId: medzlidIde);
 
       setState(() {
         if (listaUcenika == null) {
@@ -310,6 +312,8 @@ class _ProfilInfoState extends State<Ucenici> {
       ),
     );
   }
+
+
   Widget SearchByName() {
     return Container(
       width: 250, // Set a fixed width for the search box
@@ -435,73 +439,65 @@ class _ProfilInfoState extends State<Ucenici> {
 
   Future<void> _createPdfReport(BuildContext context, List<Ucenik> filteredList, String ukupno) async {
     final pdf = pw.Document();
-    String now = DateFormat('dd.MM.yyyy HH:mm').format(DateTime.now());
-
-    // Debugging: Check if filteredList is empty
-   // print("FilteredList length: ${filteredList.length}");
-
-    // Load custom font from assets
     final fontData = await rootBundle.load("assets/fonts/OpenSans-VariableFont_wdth,wght.ttf");
     final ttf = pw.Font.ttf(fontData.buffer.asByteData());
 
+    String now = DateFormat('dd.MM.yyyy HH:mm').format(DateTime.now());
+
     pdf.addPage(
       pw.Page(
+        pageFormat: PdfPageFormat.a4.copyWith(marginBottom: 20, marginLeft: 20, marginRight: 20), // Manji margini
         build: (pw.Context context) => pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.center,
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            pw.Text("Islamska zajednica u Bosni i Hercegovini", style: pw.TextStyle(fontSize: 12, font: ttf)),
-            pw.Text("Medžlis Islamske zajednice Mostar", style: pw.TextStyle(fontSize: 12, font: ttf)),
-            pw.SizedBox(height: 20),
+            pw.Text("Islamska zajednica u Bosni i Hercegovini", style: pw.TextStyle(fontSize: 10, font: ttf)),
+            pw.Text("Medžlis Islamske zajednice Mostar", style: pw.TextStyle(fontSize: 10, font: ttf)),
+            pw.SizedBox(height: 10),
             pw.Text(
-              "Svi ucenici",
-              style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold, font: ttf),
+              "Svi učenici",
+              style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold, font: ttf),
             ),
-            pw.SizedBox(height: 20),
+            pw.SizedBox(height: 10),
 
-            // Table with header and data rows
-            pw.Table(
-              border: pw.TableBorder.all(),
-              children: [
-                // Table Header
-                pw.TableRow(
-                  decoration: pw.BoxDecoration(color: PdfColors.grey300),
-                  children: [
-                    pw.Text('Ime', style: pw.TextStyle(font: ttf, fontWeight: pw.FontWeight.bold)),
-                    pw.Text('Ime roditelja', style: pw.TextStyle(font: ttf, fontWeight: pw.FontWeight.bold)),
-                    pw.Text('Prezime', style: pw.TextStyle(font: ttf, fontWeight: pw.FontWeight.bold)),
-                    pw.Text('Datum rodjenja', style: pw.TextStyle(font: ttf, fontWeight: pw.FontWeight.bold)),
-                    pw.Text('Nivo', style: pw.TextStyle(font: ttf, fontWeight: pw.FontWeight.bold)),
-                    pw.Text('Prosjek', style: pw.TextStyle(font: ttf, fontWeight: pw.FontWeight.bold)),
-                    pw.Text('Prisustvo', style: pw.TextStyle(font: ttf, fontWeight: pw.FontWeight.bold)),
+            // Tabela sa prilagođenim dimenzijama
+            pw.TableHelper.fromTextArray(
+              columnWidths: {
+                0: const pw.FixedColumnWidth(25),  // R.br.
+                1: const pw.FixedColumnWidth(70),  // Ime
+                2: const pw.FixedColumnWidth(70),  // Ime roditelja
+                3: const pw.FixedColumnWidth(70),  // Prezime
+                4: const pw.FixedColumnWidth(60),  // Datum rođenja
+                5: const pw.FixedColumnWidth(60),  // Nivo
+                6: const pw.FixedColumnWidth(50),  // Prosjek
+                7: const pw.FixedColumnWidth(50),  // Prisustvo
+              },
+              cellAlignment: pw.Alignment.centerLeft,
+              cellStyle: pw.TextStyle(font: ttf, fontSize: 8), // Manji font za bolju vidljivost
+              headerStyle: pw.TextStyle(font: ttf, fontSize: 9, fontWeight: pw.FontWeight.bold),
+              headerDecoration: pw.BoxDecoration(color: PdfColors.grey300),
+              data: <List<String>>[
+                <String>['R.br.', 'Ime', 'Ime roditelja', 'Prezime', 'Datum rođenja', 'Nivo', 'Prosjek', 'Prisustvo'],
+                ...filteredList.asMap().entries.map(
+                      (entry) => [
+                    (entry.key + 1).toString(),
+                    entry.value.ime?.toString() ?? '',
+                    entry.value.imeRoditelja?.toString() ?? '',
+                    entry.value.prezime?.toString() ?? '',
+                    entry.value.datumRodjenja != null
+                        ? DateFormat('dd.MM.yyyy').format(entry.value.datumRodjenja!)
+                        : 'N/A',
+                    entry.value.nazivRazreda?.toString() ?? '',
+                    entry.value.prosjek?.toStringAsFixed(1) ?? '0.00',
+                    "${entry.value.prisustvo?.toStringAsFixed(1) ?? '0.00'} %",
                   ],
-                ),
-
-                // Table Data Rows
-                ...filteredList.map((item) {
-                  return pw.TableRow(
-                    children: [
-                      pw.Text(item.ime?.toString() ?? '', style: pw.TextStyle(font: ttf)),
-                      pw.Text("(${item.imeRoditelja?.toString() ?? ''})", style: pw.TextStyle(font: ttf)),
-                      pw.Text(item.prezime?.toString() ?? '', style: pw.TextStyle(font: ttf)),
-                      pw.Text(
-                        item.datumRodjenja != null
-                            ? DateFormat('dd.MM.yyyy').format(item.datumRodjenja!)
-                            : 'N/A',
-                        style: pw.TextStyle(font: ttf),
-                      ),
-                      pw.Text(item.nazivRazreda?.toString() ?? '', style: pw.TextStyle(font: ttf)),
-                      pw.Text(item.prosjek?.toStringAsFixed(1) ?? '0.00', style: pw.TextStyle(font: ttf)),
-                      pw.Text("${item.prisustvo?.toStringAsFixed(1) ?? '0.00'} %", style: pw.TextStyle(font: ttf)),
-                    ],
-                  );
-                }).toList(),
+                ).toList(),
               ],
             ),
 
-            pw.SizedBox(height: 20),
+            pw.SizedBox(height: 10),
             pw.Text(
               now,
-              style: pw.TextStyle(fontSize: 14, font: ttf),
+              style: pw.TextStyle(fontSize: 10, font: ttf),
             ),
           ],
         ),
@@ -513,6 +509,7 @@ class _ProfilInfoState extends State<Ucenici> {
     );
     fetchData();
   }
+
 
 
 

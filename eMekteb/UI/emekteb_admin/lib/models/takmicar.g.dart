@@ -13,6 +13,7 @@ Takmicar _$TakmicarFromJson(Map<String, dynamic> json) => Takmicar(
       DateTime.parse(json['datumRodjenja'] as String),
       (json['kategorijaId'] as num?)?.toInt(),
       (json['ukupnoBodova'] as num?)?.toInt(),
+      (json['mektebId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$TakmicarToJson(Takmicar instance) => <String, dynamic>{
@@ -22,4 +23,5 @@ Map<String, dynamic> _$TakmicarToJson(Takmicar instance) => <String, dynamic>{
       'datumRodjenja': instance.datumRodjenja.toIso8601String(),
       'kategorijaId': instance.kategorijaId,
       'ukupnoBodova': instance.ukupnoBodova,
+      'mektebId': instance.mektebId,
     };

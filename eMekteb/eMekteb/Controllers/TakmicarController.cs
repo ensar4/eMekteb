@@ -25,18 +25,9 @@ namespace eMekteb.Controllers
         }
 
         [HttpPut("{id}/points")]
-        public async Task<IActionResult> UpdatePoints(int id, [FromBody] int points)
+        public async Task<TakmicarM> UpdatePoints(int id, [FromBody] int points)
         {
-            var takmicar = await service1.GetById(id);
-            if (takmicar == null)
-            {
-                return NotFound();
-            }
-
-            takmicar.UkupnoBodova += points;
-            await service1.Update(takmicar);
-
-            return Ok(takmicar);
+            return await service1.UpdatePoints(id, points);
         }
     }
 }

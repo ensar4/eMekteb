@@ -16,6 +16,90 @@ Ucenik fromJson(data) {
     return Ucenik.fromJson(data);
   }
 
+
+  Future<SearchResult<Ucenik>> getById3(
+      int? id, {
+        DateTime? datumOd,
+        DateTime? datumDo,
+        int? minOcjena,
+        int? maxOcjena,
+      }) async {
+    // Base URL construction
+    var url = "$baseOfUrl""Ucenici/$id";
+
+    // Build query parameters
+    var queryParams = <String, String>{};
+    if (datumOd != null) {
+      queryParams['datumOd'] = datumOd.toIso8601String();
+    }
+    if (datumDo != null) {
+      queryParams['datumDo'] = datumDo.toIso8601String();
+    }
+    if (minOcjena != null) {
+      queryParams['minOcjena'] = minOcjena.toString();
+    }
+    if (maxOcjena != null) {
+      queryParams['maxOcjena'] = maxOcjena.toString();
+    }
+
+    // Append query parameters to the URL
+    if (queryParams.isNotEmpty) {
+      var uri = Uri.parse(url).replace(queryParameters: queryParams);
+      url = uri.toString();
+    }
+
+    // Request setup
+    var uri = Uri.parse(url);
+    var headers = getHeaders();
+
+    // HTTP GET request
+    var response = await http.get(uri, headers: headers);
+    print(url);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      if (data is! Map<String, dynamic>) {
+        throw Exception("Unexpected JSON format");
+      }
+
+      var result = SearchResult<Ucenik>();
+
+      // Parse 'count'
+      if (data.containsKey('count') && data['count'] is int) {
+        result.count = data['count'];
+      } else {
+        throw Exception("Invalid or missing 'count' field");
+      }
+
+      // Parse 'result'
+      if (data.containsKey('result') && data['result'] is List) {
+        for (var item in data['result']) {
+          result.result.add(fromJson(item));
+        }
+      } else {
+        throw Exception("Invalid or missing 'result' field");
+      }
+
+      return result;
+    } else {
+      throw Exception("Error with response");
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   Future<SearchResult<Ucenik>> getUcenikHistory(int? id) async {
     var url = "$baseOfUrl""UcenikHistory/$id";
 

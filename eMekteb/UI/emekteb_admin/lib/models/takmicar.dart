@@ -11,6 +11,7 @@ class Takmicar{
   DateTime datumRodjenja;
   int? kategorijaId;
   int? ukupnoBodova;
+  int? mektebId;
 
 
   Takmicar(
@@ -19,7 +20,8 @@ class Takmicar{
       this.prezime,
       this.datumRodjenja,
       this.kategorijaId,
-      this.ukupnoBodova
+      this.ukupnoBodova,
+      this.mektebId
       );
   factory Takmicar.fromJson(Map<String, dynamic> json) => _$TakmicarFromJson(json);
 

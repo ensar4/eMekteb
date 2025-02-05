@@ -12,6 +12,6 @@ namespace eMekteb.Services.Interfaces
 {
     public interface IMektebService : ICRUDService<MektebM, MektebSearchObject, MektebInsert, MektebUpdate>
     {
-       
+        Task<PagedResult<MektebM>> GetByMedzlisId(int medzlisId);
     }
 }

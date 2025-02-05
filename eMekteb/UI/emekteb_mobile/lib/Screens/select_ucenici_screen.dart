@@ -1,3 +1,4 @@
+import 'package:emekteb_mobile/Screens/pregled_ocjena_screen.dart';
 import 'package:emekteb_mobile/Screens/ucenici_IIINivo_screen.dart';
 import 'package:emekteb_mobile/Screens/ucenici_IINivo_screen.dart';
 import 'package:emekteb_mobile/Screens/ucenici_INivo_screen.dart';
@@ -34,6 +35,8 @@ class _SelectUceniciState extends State<SelectUcenici> {
                     _buildLevelButtons(context),
                     SizedBox(height: 20),
                     _buildAllStudentsButton(),
+                    //SizedBox(height: 20),
+                   // _buildOcjeneButton(),
                   ],
                 ),
               ),
@@ -97,6 +100,28 @@ class _SelectUceniciState extends State<SelectUcenici> {
     );
   }
 
+  //Widget _buildOcjeneButton() {
+  //  return ElevatedButton(
+  //    style: ElevatedButton.styleFrom(
+  //      backgroundColor: Color(0xFF8D88D0),
+  //      shape: RoundedRectangleBorder(
+  //        borderRadius: BorderRadius.circular(20),
+  //      ),
+  //      padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 12.0),
+  //    ),
+  //    onPressed: () {
+  //      Navigator.of(context).push(
+  //        MaterialPageRoute(
+  //          builder: (context) => const Ocjene(),
+  //        ),
+  //      );
+  //    },
+  //    child: const Text(
+  //      'Ocjene',
+  //      style: TextStyle(fontSize: 18, color: Colors.white),
+  //    ),
+  //  );
+  //}
   // Widget for level buttons (e.g., I nivo, II nivo, etc.)
   Widget _buildLevelButtons(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;

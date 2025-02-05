@@ -25,11 +25,17 @@ namespace eMekteb.Services
 
             foreach (var aGm in result.Result)
             {
+                var mektebIds = await _dbContext.Mekteb
+                    .Where(m => (search.MedzlisId.HasValue && m.MedzlisId == search.MedzlisId) ||
+                                (search.MuftijstvoId.HasValue && m.Medzlis.MuftijstvoId == search.MuftijstvoId))
+                    .Select(m => m.Id)
+                    .ToListAsync();
+
                 aGm.UkupnoMekteba = await _dbContext.AkademskaMekteb
-                    .CountAsync(am => am.AkademskaGodinaId == aGm.Id);
+                    .CountAsync(am => am.AkademskaGodinaId == aGm.Id && mektebIds.Contains(am.MektebId));
 
                 var razredIds = await _dbContext.AkademskaRazred
-                    .Where(ag => ag.AkademskaGodinaId == aGm.Id)
+                    .Where(ag => ag.AkademskaGodinaId == aGm.Id && mektebIds.Contains((int)ag.Razred.MektebId))
                     .Select(ag => ag.RazredId)
                     .ToListAsync();
 
@@ -41,24 +47,16 @@ namespace eMekteb.Services
                     continue;
                 }
 
-                // Fetch Ucenik IDs connected to the found RazredIds via KorisnikRazred
-                //var korisniciIds = await _dbContext.RazredKorisnik
-                //    .Where(kr => razredIds.Contains(kr.RazredId))
-                //    .Select(kr => kr.KorisnikId)
-                //    .ToListAsync();
-
-                //aGm.UkupnoUcenika = korisniciIds.Count;
-
                 var korisniciIds = await _dbContext.RazredKorisnik
                     .Where(kr => razredIds.Contains(kr.RazredId))
                     .Select(kr => kr.KorisnikId)
-                    .Distinct() 
+                    .Distinct()
                     .ToListAsync();
 
                 aGm.UkupnoUcenika = korisniciIds.Count;
 
                 var zadace = await _dbContext.Zadaca
-                    .Where(z => razredIds.Contains(z.RazredId))  
+                    .Where(z => razredIds.Contains(z.RazredId))
                     .Include(z => z.Ocjene)
                     .ToListAsync();
 
@@ -73,7 +71,7 @@ namespace eMekteb.Services
                 }
 
                 var prisustva = await _dbContext.Prisustvo
-                    .Where(p => razredIds.Contains((int)p.RazredId))  
+                    .Where(p => razredIds.Contains((int)p.RazredId))
                     .ToListAsync();
 
                 if (prisustva.Count > 0)
@@ -92,7 +90,46 @@ namespace eMekteb.Services
 
             return result;
         }
+        public override IQueryable<AkademskaGodina> AddFilter(IQueryable<AkademskaGodina> query, AkademskaGodSearchObject? search)
+        {
+            if (search?.MedzlisId.HasValue == true)
+            {
+                query = query.Where(ag => _dbContext.AkademskaMekteb
+                    .Any(am => am.AkademskaGodinaId == ag.Id &&
+                               _dbContext.Mekteb.Any(m => m.Id == am.MektebId && m.MedzlisId == search.MedzlisId)));
+            }
 
+            if (search?.MuftijstvoId.HasValue == true)
+            {
+                query = query.Where(ag => _dbContext.AkademskaMekteb
+                    .Any(am => am.AkademskaGodinaId == ag.Id &&
+                               _dbContext.Mekteb.Any(m => m.Id == am.MektebId && m.Medzlis.MuftijstvoId == search.MuftijstvoId)));
+            }
+
+            if (search?.IsAsc == true)
+            {
+                query = query.OrderBy(y => y.Naziv);
+            }
+            else
+            {
+                query = query.OrderByDescending(y => y.Naziv);
+            }
+
+            return base.AddFilter(query, search);
+        }
+
+        //public override IQueryable<AkademskaGodina> AddFilter(IQueryable<AkademskaGodina> query, AkademskaGodSearchObject? search)
+        //{
+
+        //    if (search?.IsAsc == true)
+        //    {
+        //        query = query.OrderBy(y => y.Naziv);
+        //    }
+        //    else
+        //        query = query.OrderByDescending(y => y.Naziv);
+
+        //    return base.AddFilter(query, search);
+        //}
         public async Task<AkademskaGodinaM?> GetLastAkGAsync()
         {
             var last = await _dbContext.Set<AkademskaGodina>()
@@ -100,22 +137,6 @@ namespace eMekteb.Services
                                                  .FirstOrDefaultAsync();
 
             return _mapper.Map<AkademskaGodinaM>(last);
-        }
-
-        public override IQueryable<AkademskaGodina> AddFilter(IQueryable<AkademskaGodina> query, AkademskaGodSearchObject? search)
-        {
-
-            if (search?.IsAsc == true)
-            {
-                query = query.OrderBy(y => y.Naziv);
-            }
-            else
-                query = query.OrderByDescending(y => y.Naziv);
-
-            return base.AddFilter(query, search);
-
-
-
         }
 
     }

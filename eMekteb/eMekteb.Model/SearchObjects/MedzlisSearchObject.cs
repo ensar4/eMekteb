@@ -10,5 +10,9 @@ namespace eMekteb.Model.SearchObjects
     {
         public string? naziv { get; set; }
         public string? FTS { get; set; }
+        public bool? IsAsc { get; set; }
+        public bool? IsAscProsjek { get; set; }
+        public int? MedzlisId { get; set; }
+        public int? MuftijstvoId { get; set; }
     }
 }

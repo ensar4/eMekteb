@@ -11,6 +11,8 @@ class Korisnik{
   static String? imeRoditelja;
   static int? mektebId;
   static int? razredId;
+  static int? medzlisId;
+  static int? muftijstvoId;
   static String? token;
   static List<String> uloge=[];
 

@@ -22,6 +22,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2000, 02, 01),
                     UkupnoBodova = 15,
                     KategorijaId = 1,
+                    MektebId = 1,
                 },
                 new Takmicar
                 {
@@ -31,6 +32,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2000, 02, 01),
                     UkupnoBodova = 14,
                     KategorijaId = 1,
+                    MektebId = 2,
                 },
                 new Takmicar
                 {
@@ -40,6 +42,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2001, 02, 01),
                     UkupnoBodova = 17,
                     KategorijaId = 2,
+                    MektebId = 3,
                 },
                 new Takmicar
                 {
@@ -49,6 +52,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2001, 02, 01),
                     UkupnoBodova = 15,
                     KategorijaId = 2,
+                    MektebId = 1,
                 },
                 new Takmicar
                 {
@@ -58,6 +62,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2002, 02, 01),
                     UkupnoBodova = 17,
                     KategorijaId = 3,
+                    MektebId = 5,
                 },
                 new Takmicar
                 {
@@ -67,6 +72,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2002, 02, 01),
                     UkupnoBodova = 16,
                     KategorijaId = 3,
+                    MektebId = 4,
                 },
                 new Takmicar
                 {
@@ -76,6 +82,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2000, 02, 01),
                     UkupnoBodova = 15,
                     KategorijaId = 4,
+                    MektebId = 3,
                 },
                 new Takmicar
                 {
@@ -85,6 +92,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2001, 02, 01),
                     UkupnoBodova = 14,
                     KategorijaId = 5,
+                    MektebId = 3,
                 },
                 new Takmicar
                 {
@@ -94,6 +102,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2002, 02, 01),
                     UkupnoBodova = 13,
                     KategorijaId = 6,
+                    MektebId = 2,
                 },
                 new Takmicar
                 {
@@ -103,6 +112,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2000, 02, 01),
                     UkupnoBodova = 14,
                     KategorijaId = 7,
+                    MektebId = 1,
                 },
                 new Takmicar
                 {
@@ -112,6 +122,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2000, 02, 01),
                     UkupnoBodova = 15,
                     KategorijaId = 7,
+                    MektebId = 2,
                 },
                 new Takmicar
                 {
@@ -121,6 +132,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2001, 02, 01),
                     UkupnoBodova = 16,
                     KategorijaId = 8,
+                    MektebId = 3,
                 },
                 new Takmicar
                 {
@@ -130,6 +142,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2001, 02, 01),
                     UkupnoBodova = 17,
                     KategorijaId = 8,
+                    MektebId = 1,
                 },
                 new Takmicar
                 {
@@ -139,6 +152,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2002, 02, 01),
                     UkupnoBodova = 14,
                     KategorijaId = 9,
+                    MektebId = 4,
                 },
                 new Takmicar
                 {
@@ -148,6 +162,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2002, 02, 01),
                     UkupnoBodova = 15,
                     KategorijaId = 9,
+                    MektebId = 5,
                 },
                 new Takmicar
                 {
@@ -157,6 +172,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2000, 02, 01),
                     UkupnoBodova = 16,
                     KategorijaId = 10,
+                    MektebId = 2,
                 },
                 new Takmicar
                 {
@@ -166,6 +182,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2001, 02, 01),
                     UkupnoBodova = 14,
                     KategorijaId = 10,
+                    MektebId = 3,
                 },
                 new Takmicar
                 {
@@ -175,6 +192,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2002, 02, 01),
                     UkupnoBodova = 15,
                     KategorijaId = 11,
+                    MektebId = 3,
                 },
                 new Takmicar
                 {
@@ -184,6 +202,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2002, 02, 01),
                     UkupnoBodova = 11,
                     KategorijaId = 12,
+                    MektebId = 3,
                 },
                 new Takmicar
                 {
@@ -193,6 +212,7 @@ namespace eMekteb.Services.Seed
                     DatumRodjenja = new DateTime(2000, 02, 01),
                     UkupnoBodova = 12,
                     KategorijaId = 7,
+                    MektebId = 5,
                 }
             );
         }

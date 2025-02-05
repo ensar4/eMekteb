@@ -20,6 +20,7 @@ namespace eMekteb.Services.Database
         {
         }
 
+        public DbSet<Muftijstvo> Muftijstvo { get; set; }
         public DbSet<Cas> Cas { get; set; }
         public DbSet<Medzlis> Medzlis { get;set; }
         public DbSet<Mekteb> Mekteb { get; set; }
@@ -48,6 +49,7 @@ namespace eMekteb.Services.Database
 
                 modelBuilder.ApplyConfigurationsFromAssembly(typeof(eMektebContext).Assembly);
 
+                modelBuilder.Entity<Muftijstvo>().SeedData();
                 modelBuilder.Entity<AkademskaGodina>().SeedData();
                 modelBuilder.Entity<AkademskaMekteb>().SeedData();
                 modelBuilder.Entity<AkademskaRazred>().SeedData();

@@ -1,4 +1,5 @@
 import 'package:emekteb_admin/Widgets/master_screen.dart';
+import 'package:emekteb_admin/models/korisnik.dart';
 import 'package:emekteb_admin/models/mualim.dart';
 import 'package:emekteb_admin/providers/mualim_provider.dart';
 import 'package:flutter/material.dart';
@@ -26,12 +27,12 @@ class MektebDetalji extends StatefulWidget {
   final Mekteb? mekteb;
   const MektebDetalji({super.key, this.mekteb});
 
-
   @override
   State<MektebDetalji> createState() => _MektebDetaljiState();
 }
 
 class _MektebDetaljiState extends State<MektebDetalji> {
+  var medzlisIde = Korisnik.medzlisId;
   late MualimProvider _mualimProvider;
   SearchResult<Mualim>? listaMualima;
   List<Mualim> filteredListMualims = [];
@@ -45,12 +46,12 @@ class _MektebDetaljiState extends State<MektebDetalji> {
   List<Ucenik> filteredList = [];
   TextEditingController searchController = TextEditingController();
   int currentPage = 1; // Track the current page
-  int numPages = 12; // Adjust the page size according to your backend configuration
+  int numPages =
+      12; // Adjust the page size according to your backend configuration
   bool isLoading = false;
   bool isLoading2 = false;
   int ukupnoUcenika = 1;
   bool isSortAsc = false;
-
 
   @override
   void didChangeDependencies() {
@@ -60,9 +61,6 @@ class _MektebDetaljiState extends State<MektebDetalji> {
     fetchDataMualims();
     fetchDataUcenici();
   }
-
-
-
 
   Future<void> fetchDataMualims({String? filter}) async {
     if (!isLoading) {
@@ -114,7 +112,6 @@ class _MektebDetaljiState extends State<MektebDetalji> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return MasterScreen(
@@ -134,90 +131,122 @@ class _MektebDetaljiState extends State<MektebDetalji> {
       ),
     );
   }
+
   Widget _rutaDugme() {
+    String userRole = getCurrentUserRole();
+    bool isKomisija = userRole == "Komisija";
+    bool isSuperAdmin = userRole == "SuperAdmin";
     return Padding(
       padding: const EdgeInsets.all(30.0),
-      child: Row(
+      child: Column(
         children: [
-          BackButton(
-            onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => const Mektebi(),
-                ),
-              );
-            },
-          ),
-          const SizedBox(width: 20),
-          GestureDetector(
-            child: const Text(
-              "Mektebi",
-              style: TextStyle(fontSize: 16),
-            ),
-            onTap: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => const Mektebi(),
-                ),
-              );
-            },
-          ),
-          const SizedBox(width: 8), // Adjusted spacing
-          Text(
-            "/ ${widget.mekteb?.naziv}",
-            style: const TextStyle(fontSize: 16),
-          ), const SizedBox(width: 20), // Adjusted spacing
-          Text(
-            "(Adresa: ${widget.mekteb?.adresa}, ",
-            style: const TextStyle(fontSize: 16),
-          ), const SizedBox(width: 2), // Adjusted spacing
-          Text(
-            "Telefon: ${widget.mekteb?.telefon})",
-            style: const TextStyle(fontSize: 16),
-          ),
-          const Spacer(), // Creates space between breadcrumb and buttons
-          ElevatedButton(
-            onPressed: () => _showCreateForm(context, _mualimProvider),
-            style: ElevatedButton.styleFrom(
-              shape: const RoundedRectangleBorder(),
-              padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 18.0),
-            ),
-            child: const Row(
-              children: [
-                Icon(Icons.add),
-                SizedBox(width: 10),
-                Text(
-                  "MUALLIM",
+          Row(
+            children: [
+              if(!isSuperAdmin)
+              BackButton(
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const Mektebi(),
+                    ),
+                  );
+                },
+              ),
+              if(isSuperAdmin)
+              BackButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+              const SizedBox(width: 20),
+              GestureDetector(
+                child: const Text(
+                  "Mektebi",
                   style: TextStyle(fontSize: 16),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 20),
-          ElevatedButton(
-            onPressed: () {
-              _createPdfReport(context, filteredList, widget.mekteb?.naziv as String, filteredListMualims);
-
-            },
-            style: ElevatedButton.styleFrom(
-              shape: const RoundedRectangleBorder(),
-              padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 18.0),
-            ),
-            child: const Row(
-              children: [
-                Icon(Icons.download),
-                SizedBox(width: 10),
-                Text(
-                  "IZVJEŠTAJ",
-                  style: TextStyle(fontSize: 16),
+                onTap: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+              const SizedBox(width: 8), // Adjusted spacing
+              Text(
+                "/ ${widget.mekteb?.naziv}",
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(width: 20), // Adjusted spacing
+              Text(
+                "(Adresa: ${widget.mekteb?.adresa}  | ",
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(width: 2), // Adjusted spacing
+              Text(
+                "Telefon: ${widget.mekteb?.telefon})",
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(width: 20),
+              const Spacer(),
+              if (!isSuperAdmin)
+                ElevatedButton(
+                  onPressed: () => _showCreateForm(context, _mualimProvider),
+                  style: ElevatedButton.styleFrom(
+                    shape: const RoundedRectangleBorder(),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 18.0),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.add),
+                      SizedBox(width: 10),
+                      Text(
+                        "MUALLIM",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              const SizedBox(width: 20),
+              ElevatedButton(
+                onPressed: () {
+                  _createPdfReport(context, filteredList,
+                      widget.mekteb?.naziv as String, filteredListMualims);
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: const RoundedRectangleBorder(),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 18.0),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.download),
+                    SizedBox(width: 10),
+                    Text(
+                      "IZVJEŠTAJ",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+            Text(
+              "Prosječna ocjena: ${widget.mekteb?.prosjecnaOcjena?.toStringAsFixed(1) ?? '0.00'}  | ",
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(width: 2), // Adjusted spacing
+            Text(
+              "Prosječno prisustvo: ${widget.mekteb?.prosjecnoPrisustvo?.toStringAsFixed(0) ?? '0.00'}%",
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ])
         ],
       ),
     );
   }
+
   Widget _mualimiBox() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -243,6 +272,7 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                   itemBuilder: (context, index) {
                     return Text(
                       "• ${filteredListMualims[index].ime} ${filteredListMualims[index].prezime}",
+                      //"• ${filteredListMualims[index].ime} ${filteredListMualims[index].prezime}" " (Telefon: " "${filteredListMualims[index].telefon})",
                       style: const TextStyle(fontSize: 20),
                     );
                   },
@@ -255,8 +285,7 @@ class _MektebDetaljiState extends State<MektebDetalji> {
     );
   }
 
-
-  Widget _filteri(){
+  Widget _filteri() {
     return Padding(
         padding: const EdgeInsets.all(30),
         child: Row(
@@ -275,8 +304,7 @@ class _MektebDetaljiState extends State<MektebDetalji> {
             ),
             SearchByName(),
           ],
-        )
-    );
+        ));
   }
 
   Widget btnORderByProsjek() {
@@ -335,7 +363,7 @@ class _MektebDetaljiState extends State<MektebDetalji> {
             sortDataByPrisustvo(dropdownValue2);
           });
         },
-        items: ['Prisustvo', 'Veće - Manje','Manje - Veće']
+        items: ['Prisustvo', 'Veće - Manje', 'Manje - Veće']
             .map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -368,8 +396,15 @@ class _MektebDetaljiState extends State<MektebDetalji> {
             filterByNivo(dropdownValue3);
           });
         },
-        items: ['Nivo', 'I nivo', 'II nivo', 'III nivo', 'Sufara', 'Tedžvid', 'Hatma']
-            .map<DropdownMenuItem<String>>((String value) {
+        items: [
+          'Nivo',
+          'I nivo',
+          'II nivo',
+          'III nivo',
+          'Sufara',
+          'Tedžvid',
+          'Hatma'
+        ].map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(value),
@@ -379,7 +414,7 @@ class _MektebDetaljiState extends State<MektebDetalji> {
     );
   }
 
-  Widget SearchByName(){
+  Widget SearchByName() {
     return Container(
       width: 250,
       child: TextField(
@@ -390,8 +425,7 @@ class _MektebDetaljiState extends State<MektebDetalji> {
         decoration: const InputDecoration(
           hintText: "Pretraga",
           isDense: true, // Visina fielda
-          contentPadding:
-          EdgeInsets.only(left: 20, right: 20), // Visina fielda
+          contentPadding: EdgeInsets.only(left: 20, right: 20), // Visina fielda
           border: OutlineInputBorder(),
           prefixIcon: Align(
             widthFactor: 1.0,
@@ -409,39 +443,42 @@ class _MektebDetaljiState extends State<MektebDetalji> {
     return isLoading
         ? const Center(child: CircularProgressIndicator())
         : listaUcenika == null
-        ? const Center(child: Text('No data available'))
-        : SingleChildScrollView(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          child: DataTable(
-            dataTextStyle: const TextStyle(fontSize: 16),
-            columns: const [
-              DataColumn(
-                label: Text('Ime'),
-              ),
-              DataColumn(label: Text('Prezime')),
-              DataColumn(label: Text('Nivo')),
-              DataColumn(label: Text('Prosjek')),
-              DataColumn(label: Text('Prisustvo')),
-            ],
-            rows: filteredList.map<DataRow>((item) {
-              return DataRow(
-                cells: [
-                  DataCell(Text(item.ime.toString())),
-                  DataCell(Text(item.prezime.toString())),
-                  DataCell(Text(item.nazivRazreda.toString())),
-                  DataCell(Text(item.prosjek?.toStringAsFixed(1) ?? '0.00')),
-                  DataCell(Text('${item.prisustvo?.toStringAsFixed(0) ?? '0.00'}%')),
-                ],
+            ? const Center(child: Text('No data available'))
+            : SingleChildScrollView(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: DataTable(
+                      dataTextStyle: const TextStyle(fontSize: 16),
+                      columns: const [
+                        DataColumn(
+                          label: Text('Ime'),
+                        ),
+                        DataColumn(label: Text('Prezime')),
+                        DataColumn(label: Text('Nivo')),
+                        DataColumn(label: Text('Prosjek')),
+                        DataColumn(label: Text('Prisustvo')),
+                      ],
+                      rows: filteredList.map<DataRow>((item) {
+                        return DataRow(
+                          cells: [
+                            DataCell(Text(item.ime.toString())),
+                            DataCell(Text(item.prezime.toString())),
+                            DataCell(Text(item.nazivRazreda.toString())),
+                            DataCell(Text(
+                                item.prosjek?.toStringAsFixed(1) ?? '0.00')),
+                            DataCell(Text(
+                                '${item.prisustvo?.toStringAsFixed(0) ?? '0.00'}%')),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
               );
-            }).toList(),
-          ),
-        ),
-      ),
-    );
   }
+
   void sortDataByPrisustvo(String sortBy) {
     setState(() {
       if (sortBy == 'Prisustvo') {
@@ -472,21 +509,30 @@ class _MektebDetaljiState extends State<MektebDetalji> {
         filteredList = listaUcenika?.result ?? [];
       } else {
         filteredList = listaUcenika?.result
-            .where((ucenik) => (ucenik.ime != null && ucenik.ime!.toLowerCase().contains(query.toLowerCase())) ||
-            (ucenik.prezime != null && ucenik.prezime!.toLowerCase().contains(query.toLowerCase())))
-            .toList() ??
+                .where((ucenik) =>
+                    (ucenik.ime != null &&
+                        ucenik.ime!
+                            .toLowerCase()
+                            .contains(query.toLowerCase())) ||
+                    (ucenik.prezime != null &&
+                        ucenik.prezime!
+                            .toLowerCase()
+                            .contains(query.toLowerCase())))
+                .toList() ??
             [];
       }
     });
   }
-
 
   void filterByNivo(String nivo) {
     setState(() {
       if (nivo == 'Nivo') {
         filteredList = listaUcenika?.result ?? [];
       } else {
-        filteredList = listaUcenika?.result.where((item) => item.nazivRazreda == nivo).toList() ?? [];
+        filteredList = listaUcenika?.result
+                .where((item) => item.nazivRazreda == nivo)
+                .toList() ??
+            [];
       }
     });
   }
@@ -505,11 +551,14 @@ class _MektebDetaljiState extends State<MektebDetalji> {
     String password = '';
     String passwordPotvrda = '';
     int? mektebId = widget.mekteb?.id;
+    int? medzlisId = medzlisIde;
 
-    final TextEditingController datumRodjenjaController = TextEditingController();
+    final TextEditingController datumRodjenjaController =
+        TextEditingController();
 
     // Initializing the text fields with the current date values
-    datumRodjenjaController.text = datumRodjenja.toLocal().toString().split(' ')[0];
+    datumRodjenjaController.text =
+        datumRodjenja.toLocal().toString().split(' ')[0];
 
     showDialog(
       context: context,
@@ -517,7 +566,8 @@ class _MektebDetaljiState extends State<MektebDetalji> {
         return AlertDialog(
           title: const Text('Dodaj mualima'),
           content: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.2, // Set the width to 80% of the screen width
+            width: MediaQuery.of(context).size.width *
+                0.2, // Set the width to 80% of the screen width
             child: SingleChildScrollView(
               child: Form(
                 key: formKey,
@@ -549,7 +599,8 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                       },
                     ),
                     TextFormField(
-                      decoration: const InputDecoration(labelText: 'Korisničko ime'),
+                      decoration:
+                          const InputDecoration(labelText: 'Korisničko ime'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Unesite korisničko ime za mualima';
@@ -580,7 +631,8 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Unesite mail mualima';
-                        } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                        } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                            .hasMatch(value)) {
                           return 'Neispravan format maila!';
                         }
                         return null;
@@ -608,28 +660,29 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                         return null;
                       },
                     ),
-                   // DropdownButtonFormField<String>(
-                   //   decoration: const InputDecoration(labelText: 'Status'),
-                   //   value: status,
-                   //   items: ['Aktivan', 'Neaktivan'].map((String value) {
-                   //     return DropdownMenuItem<String>(
-                   //       value: value,
-                   //       child: Text(value),
-                   //     );
-                   //   }).toList(),
-                   //   onChanged: (newValue) {
-                   //     status = newValue!;
-                   //   },
-                   //   validator: (value) {
-                   //     if (value == null || value.isEmpty) {
-                   //       return 'Unesite status mualima';
-                   //     }
-                   //     return null;
-                   //   },
-                   // ),
+                    // DropdownButtonFormField<String>(
+                    //   decoration: const InputDecoration(labelText: 'Status'),
+                    //   value: status,
+                    //   items: ['Aktivan', 'Neaktivan'].map((String value) {
+                    //     return DropdownMenuItem<String>(
+                    //       value: value,
+                    //       child: Text(value),
+                    //     );
+                    //   }).toList(),
+                    //   onChanged: (newValue) {
+                    //     status = newValue!;
+                    //   },
+                    //   validator: (value) {
+                    //     if (value == null || value.isEmpty) {
+                    //       return 'Unesite status mualima';
+                    //     }
+                    //     return null;
+                    //   },
+                    // ),
                     TextFormField(
                       controller: datumRodjenjaController,
-                      decoration: const InputDecoration(labelText: 'Datum rođenja'),
+                      decoration:
+                          const InputDecoration(labelText: 'Datum rođenja'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Unesite datum rođenja mualima';
@@ -647,13 +700,17 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                         if (picked != null && picked != datumRodjenja) {
                           setState(() {
                             datumRodjenja = picked;
-                            datumRodjenjaController.text = datumRodjenja.toLocal().toString().split(' ')[0];
+                            datumRodjenjaController.text = datumRodjenja
+                                .toLocal()
+                                .toString()
+                                .split(' ')[0];
                           });
                         }
                       },
                     ),
                     TextFormField(
-                      decoration: const InputDecoration(labelText: 'Ime roditelja'),
+                      decoration:
+                          const InputDecoration(labelText: 'Ime roditelja'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Unesite ime jednog roditelja';
@@ -677,7 +734,8 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                       },
                     ),
                     TextFormField(
-                      decoration: const InputDecoration(labelText: 'Potvrda passworda'),
+                      decoration:
+                          const InputDecoration(labelText: 'Potvrda passworda'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Potvrdite password';
@@ -706,18 +764,18 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                 if (formKey.currentState!.validate()) {
                   formKey.currentState!.save();
                   bool result = await provider.insert(
-                    ime,
-                    prezime,
-                    username,
-                    telefon,
-                    mail,
-                    spol,
-                    datumRodjenja,
-                    imeRoditelja,
-                    mektebId!,
-                    password,
-                    passwordPotvrda,
-                  );
+                      ime,
+                      prezime,
+                      username,
+                      telefon,
+                      mail,
+                      spol,
+                      datumRodjenja,
+                      imeRoditelja,
+                      mektebId!,
+                      password,
+                      passwordPotvrda,
+                      medzlisId!);
                   if (result) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Mualim uspješno dodan')),
@@ -726,7 +784,8 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                     Navigator.of(context).pop();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Greška pri dodavanju mualima')),
+                      const SnackBar(
+                          content: Text('Greška pri dodavanju mualima')),
                     );
                   }
                 }
@@ -737,9 +796,12 @@ class _MektebDetaljiState extends State<MektebDetalji> {
       },
     );
   }
-  void _createPdfReport(BuildContext context, List<Ucenik> filteredList, String naziv, List<Mualim> filteredListMualim) async {
+
+  void _createPdfReport(BuildContext context, List<Ucenik> filteredList,
+      String naziv, List<Mualim> filteredListMualim) async {
     final pdf = pw.Document();
-    final fontData = await rootBundle.load('assets/fonts/OpenSans-VariableFont_wdth,wght.ttf');
+    final fontData = await rootBundle
+        .load('assets/fonts/OpenSans-VariableFont_wdth,wght.ttf');
     final ttf = pw.Font.ttf(fontData);
 
     String now = DateFormat('dd.MM.yyyy HH:mm').format(DateTime.now());
@@ -749,23 +811,31 @@ class _MektebDetaljiState extends State<MektebDetalji> {
         build: (pw.Context context) => pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.center,
           children: [
-            pw.Text("Islamska zajednica u Bosni i Hercegovini", style: pw.TextStyle(fontSize: 12, font: ttf)),
-            pw.Text("Medžlis Islamske zajednice Mostar", style: pw.TextStyle(fontSize: 12, font: ttf)),
+            pw.Text("Islamska zajednica u Bosni i Hercegovini",
+                style: pw.TextStyle(fontSize: 12, font: ttf)),
+            pw.Text("Medžlis Islamske zajednice Mostar",
+                style: pw.TextStyle(fontSize: 12, font: ttf)),
             pw.SizedBox(height: 20),
             pw.Text(
               "$naziv ",
-              style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold, font: ttf),
+              style: pw.TextStyle(
+                  fontSize: 18, fontWeight: pw.FontWeight.bold, font: ttf),
             ),
             pw.SizedBox(height: 20),
             pw.Text(
               "Mualim: ${filteredListMualim[0].ime} ${filteredListMualim[0].prezime}",
-              style: pw.TextStyle(fontSize: 18, font: ttf),
+              style: pw.TextStyle(fontSize: 14, font: ttf),
             ),
             pw.SizedBox(height: 20),
             pw.TableHelper.fromTextArray(
-              cellStyle: pw.TextStyle(font: ttf), // Apply font to table cells
+              cellStyle: pw.TextStyle(
+                  font: ttf, fontSize: 10), // Apply font to table cells
+              headerStyle: pw.TextStyle(
+                  font: ttf, fontSize: 9, fontWeight: pw.FontWeight.bold),
+              headerDecoration: pw.BoxDecoration(color: PdfColors.grey300),
               data: <List<String>>[
                 <String>[
+                  'R.br.', // Dodan redni broj
                   'Ime',
                   'Ime roditelja',
                   'Prezime',
@@ -774,17 +844,25 @@ class _MektebDetaljiState extends State<MektebDetalji> {
                   'Prosjek',
                   'Prisustvo',
                 ],
-                ...filteredList.map(
-                      (item) => [
-                    item.ime.toString(),
-                    "(${item.imeRoditelja.toString()})",
-                    item.prezime.toString(),
-                    item.datumRodjenja != null ? DateFormat('dd.MM.yyyy').format(item.datumRodjenja!) : 'N/A',
-                    item.nazivRazreda.toString(),
-                    item.prosjek?.toStringAsFixed(1) ?? '0.00',
-                    "${item.prisustvo?.toStringAsFixed(1) ?? '0.00'} %",
-                  ],
-                ).toList(),
+                ...filteredList
+                    .asMap()
+                    .entries
+                    .map(
+                      (entry) => [
+                        (entry.key + 1).toString(), // Generiše redni broj
+                        entry.value.ime.toString(),
+                        "(${entry.value.imeRoditelja.toString()})",
+                        entry.value.prezime.toString(),
+                        entry.value.datumRodjenja != null
+                            ? DateFormat('dd.MM.yyyy')
+                                .format(entry.value.datumRodjenja!)
+                            : 'N/A',
+                        entry.value.nazivRazreda.toString(),
+                        entry.value.prosjek?.toStringAsFixed(1) ?? '0.00',
+                        "${entry.value.prisustvo?.toStringAsFixed(1) ?? '0.00'} %",
+                      ],
+                    )
+                    .toList(),
               ],
             ),
             pw.SizedBox(height: 20),
@@ -803,5 +881,12 @@ class _MektebDetaljiState extends State<MektebDetalji> {
     fetchDataUcenici();
   }
 
-
+  String getCurrentUserRole() {
+    if (Korisnik.uloge.contains("Komisija")) {
+      return "Komisija";
+    } else if (Korisnik.uloge.contains("Admin")) {
+      return "Admin";
+    } else
+      return "SuperAdmin";
+  }
 }

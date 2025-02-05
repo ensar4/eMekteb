@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:emekteb_admin/Screens/medzlisi_screen.dart';
 import 'package:emekteb_admin/Screens/mektebii_screen.dart';
+import 'package:emekteb_admin/Screens/postavke_screen.dart';
 import 'package:emekteb_admin/Screens/takmicenja_screen.dart';
 import 'package:emekteb_admin/models/korisnik.dart';
 import 'package:emekteb_admin/providers/admin_provider.dart';
@@ -14,9 +16,11 @@ import 'package:emekteb_admin/providers/mekteb_provider.dart';
 import 'package:emekteb_admin/providers/mualim_provider.dart';
 import 'package:emekteb_admin/providers/password_provider.dart';
 import 'package:emekteb_admin/providers/razred_provider.dart';
+import 'package:emekteb_admin/providers/superadmin_provider.dart';
 import 'package:emekteb_admin/providers/takmicar_provider.dart';
 import 'package:emekteb_admin/providers/takmicenja_provider.dart';
 import 'package:emekteb_admin/providers/ucenici_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:provider/provider.dart';
@@ -84,6 +88,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => PasswordProvider()),
         ChangeNotifierProvider(create: (_) => KomisijaProvider()),
         ChangeNotifierProvider(create: (_) => AdminProvider()),
+        ChangeNotifierProvider(create: (_) => SuperAdminProvider()),
         ChangeNotifierProvider(create: (_) => AkademskaMektebProvider()),
         ChangeNotifierProvider(create: (_) => AkademskaRazredProvider()),
         ChangeNotifierProvider(create: (_) => RazredProvider()),
@@ -121,113 +126,164 @@ class LoginPage extends StatelessWidget {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  @override
-  Widget build(BuildContext context) {
-    _authProvider = context.read<AuthProvider>();
-    return Scaffold(
-      body: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxHeight: 900, maxWidth: 400),
+   @override
+   Widget build(BuildContext context) {
+     _authProvider = context.read<AuthProvider>();
+     return Scaffold(
+       body: Center(
+         child: Container(
+           constraints: const BoxConstraints(maxHeight: 900, maxWidth: 400),
            child: Padding(
              padding: const EdgeInsets.only(top: 30.0),
              child: Column(
-              children: [
-                Image.asset("assets/images/login.png", width: 200, height: 200,),
-                const Text("e-Mekteb", style: TextStyle(fontSize: 40),),
-                const SizedBox(height: 80,),
-                TextField(
-                  decoration: const InputDecoration(
-                    labelText: "Korisničko ime",
-                    border: OutlineInputBorder(
-                       //borderRadius: BorderRadius.circular(8.0),
+               children: [
+                 Image.asset(
+                   "assets/images/login.png",
+                   width: 200,
+                   height: 200,
+                 ),
+                 const Text(
+                   "e-Mekteb",
+                   style: TextStyle(fontSize: 40),
+                 ),
+                 const SizedBox(
+                   height: 80,
+                 ),
+                 TextField(
+                   decoration: const InputDecoration(
+                     labelText: "Korisničko ime",
+                     border: OutlineInputBorder(),
+                   ),
+                   controller: _usernameController,
+                 ),
+                 const SizedBox(
+                   height: 15,
+                 ),
+                 TextField(
+                   decoration: const InputDecoration(
+                     labelText: "Lozinka",
+                     border: OutlineInputBorder(),
+                   ),
+                   controller: _passwordController,
+                   obscureText: true, // Hide password
+                 ),
+                 const SizedBox(
+                   height: 1,
+                 ),
+                 // "Zaboravljena lozinka?" clickable text
+                 Focus(
+                   skipTraversal: true,
+                   child: Align(
+                     alignment: Alignment.centerRight,
+                     child: TextButton(
+                       onPressed: () {
+                         // Add your logic for handling forgot password here
+                         print("Zaboravljena lozinka clicked");
+                         // Example: Navigate to a forgot password screen
+                         // Navigator.of(context).push(
+                         //   MaterialPageRoute(
+                         //     builder: (context) => ForgotPasswordScreen(),
+                         //   ),
+                         // );
+                       },
+                       child: Text(
+                         "Zaboravljena lozinka?",
+                         style: TextStyle(
+                           color: Colors.blue.shade800, // Make it look like a link
+                           fontSize: 12,
+                         ),
+                       ),
+                     ),
                    ),
                  ),
-                  controller: _usernameController,
-                ),
-                const SizedBox(height: 15,),
-                TextField(
-                  decoration: const InputDecoration(
-                    labelText: "Lozinka",
-                    border: OutlineInputBorder(
-                      //borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  controller: _passwordController,
-                  obscureText: true, // set this property to true
-                  ),
-                const SizedBox(height: 30,),
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      var token = await _authProvider.login(
-                        _usernameController.text,
-                        _passwordController.text,
-                      );
+                 const SizedBox(
+                   height: 30,
+                 ),
+                 ElevatedButton(
+                   onPressed: () async {
+                     try {
+                       var token = await _authProvider.login(
+                         _usernameController.text,
+                         _passwordController.text,
+                       );
 
                        _authProvider.getUser(token);
-                      if( Korisnik.uloge.contains("Komisija")){
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => const Takmicenja(),
-                          ),
-                        );
-                      }
-                      else if (Korisnik.uloge.contains("Admin")){
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => const Mektebi(),
-                          ),
-                        );
-                      } else {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: const Text("Greška"),
-                              content: const Text("Prijava nije moguća."),
-                              actions: [
-                                TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: const Text("OK"))
-                              ],
-                            ));
-                            _usernameController.clear();
-                            _passwordController.clear();
-                      }
-                    } catch (e) {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: const Text("Greška"),
-                            content: Text("$e"),
-                            actions: [
-                              TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text("OK"))
-                            ],
-                          ));
-                      _usernameController.clear();
-                      _passwordController.clear();
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(
-                     // borderRadius: BorderRadius.circular(8.0), // Border radius
-                    ),
-                    padding: const EdgeInsets.only(left: 32.0, right: 32.0, top: 16.0, bottom: 16.0),
-                    // Padding
-                  ),
-                  child: const Text("PRIJAVA", style: TextStyle(fontSize: 16), ),
-
-                ),
-              ],
+                       if (Korisnik.uloge.contains("Komisija")) {
+                         Navigator.of(context).pushReplacement(
+                           MaterialPageRoute(
+                             builder: (context) => const Takmicenja(),
+                           ),
+                         );
+                       } else if (Korisnik.uloge.contains("Admin")) {
+                         Navigator.of(context).pushReplacement(
+                           MaterialPageRoute(
+                             builder: (context) => const Mektebi(),
+                           ),
+                         );
+                       } else if (Korisnik.uloge.contains("SuperAdmin")) {
+                         print("Korisnik.muftijstvoId:");
+                         print(Korisnik.muftijstvoId);
+                         Navigator.of(context).pushReplacement(
+                           MaterialPageRoute(
+                             builder: (context) => const Medzlisi(),
+                           ),
+                         );
+                       } else {
+                         showDialog(
+                           context: context,
+                           builder: (BuildContext context) => AlertDialog(
+                             title: const Text("Greška"),
+                             content: const Text("Prijava nije moguća."),
+                             actions: [
+                               TextButton(
+                                 onPressed: () => Navigator.pop(context),
+                                 child: const Text("OK"),
+                               ),
+                             ],
+                           ),
+                         );
+                         _usernameController.clear();
+                         _passwordController.clear();
+                       }
+                     } catch (e) {
+                       showDialog(
+                         context: context,
+                         builder: (BuildContext context) => AlertDialog(
+                           title: const Text("Greška"),
+                           content: Text("$e"),
+                           actions: [
+                             TextButton(
+                               onPressed: () => Navigator.pop(context),
+                               child: const Text("OK"),
+                             ),
+                           ],
+                         ),
+                       );
+                       _usernameController.clear();
+                       _passwordController.clear();
+                     }
+                   },
+                   style: ElevatedButton.styleFrom(
+                     shape: const RoundedRectangleBorder(),
+                     padding: const EdgeInsets.only(
+                       left: 32.0,
+                       right: 32.0,
+                       top: 16.0,
+                       bottom: 16.0,
+                     ),
+                   ),
+                   child: const Text(
+                     "PRIJAVA",
+                     style: TextStyle(fontSize: 16),
+                   ),
+                 ),
+               ],
              ),
            ),
-
-        ),
-      ),
-
-    );
-  }
+         ),
+       ),
+     );
+   }
 
 }
 

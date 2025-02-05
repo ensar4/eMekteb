@@ -132,6 +132,14 @@ namespace eMekteb.Services.Seed
                     Adresa = "Mostar",
                     Telefon = "036 585-965",
                     Naziv = "Mekteb Brankovac"
+                },
+                new Mekteb
+                {
+                    Id = 17,
+                    MedzlisId = 2,
+                    Adresa = "Sarajevo",
+                    Telefon = "036 585-965",
+                    Naziv = "Mekteb Alipasino C"
                 }
             );
         }

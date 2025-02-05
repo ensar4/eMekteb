@@ -271,6 +271,42 @@ namespace eMekteb.Services.Seed
                     DatumIzmjene = new DateTime(2024, 08, 20),
                     KorisnikId = 37,
                     UlogaId = 2
+                },
+                new KorisniciUloge
+                {
+                    Id = 38,
+                    DatumIzmjene = new DateTime(2024, 08, 20),
+                    KorisnikId = 38,
+                    UlogaId = 6
+                },
+                new KorisniciUloge
+                {
+                    Id = 39,
+                    DatumIzmjene = new DateTime(2024, 08, 20),
+                    KorisnikId = 39,
+                    UlogaId = 6
+                },
+                new KorisniciUloge
+                {
+                    Id = 40,
+                    DatumIzmjene = new DateTime(2024, 08, 20),
+                    KorisnikId = 39,
+                    UlogaId = 1
+                },
+                new KorisniciUloge
+                {
+                    Id = 41,
+                    DatumIzmjene = new DateTime(2024, 08, 20),
+                    KorisnikId = 41,
+                    UlogaId = 1
+                }
+                ,
+                new KorisniciUloge
+                {
+                    Id = 42,
+                    DatumIzmjene = new DateTime(2024, 08, 20),
+                    KorisnikId = 42,
+                    UlogaId = 6
                 }
 
 
