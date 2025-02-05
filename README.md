@@ -22,10 +22,6 @@ MOBILE:
     - username: roditelj
     - password: test
 
-### API se otvara na link:
-https://localhost:7160/swagger/index.html
-### IS se otvara na link:
-https://localhost:7049/swagger/index.html
 
 ### RabbitMq
 RabbitMQ komunikacija se uspostavlja na desktop dijelu kada admin doda korisnika sa ulogom "komisija" 
