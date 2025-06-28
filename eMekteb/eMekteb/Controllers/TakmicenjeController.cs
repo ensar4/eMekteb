@@ -27,5 +27,17 @@ namespace eMekteb.Controllers
             }
             return Ok(result);
         }
+        [HttpGet("{takmicenjeId}/bodovi-po-mektebu")]
+        public async Task<IActionResult> GetUkupniBodoviPoMektebu(int takmicenjeId)
+        {
+            var result = await service1.GetUkupniBodoviPoMektebu(takmicenjeId);
+
+            return Ok(new
+            {
+                result = result,
+                count = result.Count
+            });
+        }
+
     }
 }

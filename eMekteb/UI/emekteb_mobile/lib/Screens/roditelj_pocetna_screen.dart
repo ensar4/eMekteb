@@ -1,15 +1,18 @@
 import 'package:emekteb_mobile/Screens/roditelj_kamp_screen.dart';
 import 'package:emekteb_mobile/Screens/roditelj_prisustvo_screen.dart';
 import 'package:emekteb_mobile/Screens/roditelj_uspjeh_screen.dart';
+import 'package:emekteb_mobile/Screens/roditelj_zadaca_screen.dart';
 import 'package:emekteb_mobile/Widgets/master_screen.dart';
 import 'package:emekteb_mobile/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/korisnik.dart';
 import '../models/searches/search_result.dart';
 import '../models/slika.dart';
 import '../providers/slika_provider.dart';
 import '../providers/user_provider.dart';
+import 'login_screen.dart';
 import 'obavijesti_screen.dart';
 
 class RoditeljPocetna extends StatefulWidget {
@@ -160,6 +163,8 @@ class _RoditeljPocetnaState extends State<RoditeljPocetna> {
       {'title': 'Uspjeh', 'image': 'assets/images/uspjeh.png', 'icon': Icons.emoji_events, 'color': Colors.green.shade600},
       {'title': 'Kamp', 'image': 'assets/images/tenis.png', 'icon': Icons.sports_basketball_sharp, 'color': Colors.orange},
       {'title': 'Prisustvo', 'image': 'assets/images/prisustvo.png', 'icon': Icons.percent, 'color': Colors.cyan.shade400},
+      {'title': 'Zadaća', 'image': 'assets/images/lekcije.png', 'icon': Icons.menu_book, 'color': Colors.green.shade400},
+      {'title': 'Odjavi se', 'image': 'assets/images/logout.png', 'icon': Icons.logout, 'color': Colors.blue,},
     ];
 
     return Padding(
@@ -185,6 +190,9 @@ class _RoditeljPocetnaState extends State<RoditeljPocetna> {
                     context,
                     MaterialPageRoute(builder: (context) => const ObavijestiScreen()),
                   );
+                  break;
+                case 'Odjavi se':
+                  _logout(context);
                   break;
                 case 'Uspjeh':
                   if (selectedUcenik != null) {
@@ -218,6 +226,26 @@ class _RoditeljPocetnaState extends State<RoditeljPocetna> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => RoditeljPrisustvoScreen(
+                          ucenik: filteredListUcenici.firstWhere(
+                                (ucenik) => ucenik.ime == selectedUcenik,
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Molimo vas odaberite dijete.'),
+                      ),
+                    );
+                  }
+                  break;
+                  case 'Zadaća':
+                  if (selectedUcenik != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RoditeljZadacaScreen(
                           ucenik: filteredListUcenici.firstWhere(
                                 (ucenik) => ucenik.ime == selectedUcenik,
                           ),
@@ -287,6 +315,17 @@ class _RoditeljPocetnaState extends State<RoditeljPocetna> {
             ),
           );
         },
+      ),
+    );
+  }
+  Future<void> _logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    Korisnik.reset();
+    Provider.of<UserProvider>(context, listen: false).clearUser();
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => LoginPage(),
       ),
     );
   }

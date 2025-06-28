@@ -20,7 +20,6 @@ namespace eMekteb.Services.Database
         public virtual Takmicenje? Takmicenje { get; set; }
 
 
-        //public virtual ICollection<TakmicenjeKategorija> TakmicenjeKategorije { get; set; } = new List<TakmicenjeKategorija>();
         public virtual ICollection<Takmicar> Takmicari { get; set; } = new List<Takmicar>();
 
     }

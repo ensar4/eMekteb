@@ -16,7 +16,24 @@ abstract class BaseProvider<T> with ChangeNotifier{
   String get fullUrl => '$_baseUrl$_endpoint';
   String get baseOfUrl => '$_baseUrl';
 
-  //napraviti novi get za nivo muftijstva jer nam nece trebati ovo int? medzlisId
+  Future<void> changePassword(ChangePasswordRequest request) async {
+    var url = Uri.parse("${_baseUrl}Korisnik/change-password");
+
+    var headers = getHeaders();
+    var body = jsonEncode(request.toJson());
+
+    var response = await http.post(url, headers: headers, body: body);
+
+
+    if (response.statusCode < 299) {
+    } else if (response.statusCode == 400) {
+      throw "Netačna stara lozinka";
+    } else if (response.statusCode == 401) {
+      throw "Unauthorized";
+    } else {
+      throw "Server error";
+    }
+  }
 
   Future<SearchResult<T>> get({TextEditingController? filterController, int? page, int? pageSize, bool? sort, int? medzlisId}) async {
     var url = "$_baseUrl$_endpoint?";
@@ -113,42 +130,6 @@ abstract class BaseProvider<T> with ChangeNotifier{
     }
   }
 
-
-T fromJson (data){
-    throw Exception("Method not implemented");
-}
-
-  Map<String, String> getHeaders() => {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer ${Korisnik.token ?? ""}"
-  };
-
-  bool isValidResponse(http.Response response) {
-    if (response.statusCode < 299) {
-      return true;
-    } else if (response.statusCode == 401) {
-      throw Exception("Unauthorized");
-    } else {
-      throw Exception("Server error");
-    }
-  }
-
-  Future<bool> delete(int? id) async {
-    final url = Uri.parse('$_baseUrl$_endpoint/$id');
-    var headers = getHeaders();
-
-    final response = await http.delete(
-      url,
-      headers: headers
-    );
-
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      throw Exception('Failed to delete item: ${response.statusCode}');
-    }
-  }
-
   Future<SearchResult<T>> getById2(int? id) async {
     var url = "$_baseUrl$_endpoint/$id";
 
@@ -186,23 +167,61 @@ T fromJson (data){
     }
   }
 
-  Future<void> changePassword(ChangePasswordRequest request) async {
-    var url = Uri.parse("${_baseUrl}Korisnik/change-password");
 
-    var headers = getHeaders();
-    var body = jsonEncode(request.toJson());
+  T fromJson (data){
+    throw Exception("Method not implemented");
+  }
 
-    var response = await http.post(url, headers: headers, body: body);
+  Map<String, String> getHeaders() => {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${Korisnik.token ?? ""}"
+  };
 
-
+  bool isValidResponse(http.Response response) {
     if (response.statusCode < 299) {
-    } else if (response.statusCode == 400) {
-      throw "Netačna stara lozinka";
+      return true;
     } else if (response.statusCode == 401) {
-      throw "Unauthorized";
+      throw Exception("Unauthorized");
     } else {
-      throw "Server error";
+      throw Exception("Server error");
     }
   }
+
+  Future<bool> delete(int? id) async {
+    final url = Uri.parse('$_baseUrl$_endpoint/$id');
+    var headers = getHeaders();
+
+    final response = await http.delete(
+        url,
+        headers: headers
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to delete item: ${response.statusCode}');
+    }
+  }
+
+  Future<void> resetPassword(String email) async {
+    final url = Uri.parse('${_baseUrl}Korisnik/reset-password');
+    final headers = getHeaders();
+
+    final body = jsonEncode({
+      "email": email,
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode < 299) {
+      // ok
+      return;
+    } else if (response.statusCode == 404) {
+      throw "Korisnik sa ovom email adresom nije pronađen.";
+    } else {
+      throw "Greška na serveru.";
+    }
+  }
+
 
 }

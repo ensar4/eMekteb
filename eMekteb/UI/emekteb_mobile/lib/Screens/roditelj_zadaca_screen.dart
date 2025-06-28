@@ -7,21 +7,26 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/searches/search_result.dart';
+import '../models/user.dart';
 import '../models/zadaca.dart';
 import '../providers/user_provider.dart';
 
 void main() {
-  runApp(const ZadacaScreen());
+  runApp(RoditeljZadacaScreen(
+    ucenik: null,
+  ));
 }
 
-class ZadacaScreen extends StatefulWidget {
-  const ZadacaScreen({super.key});
+
+class RoditeljZadacaScreen extends StatefulWidget {
+  final User? ucenik;
+  const RoditeljZadacaScreen({super.key, this.ucenik});
 
   @override
-  State<ZadacaScreen> createState() => _ZadacaState();
+  State<RoditeljZadacaScreen> createState() => _ZadacaState();
 }
 
-class _ZadacaState extends State<ZadacaScreen> {
+class _ZadacaState extends State<RoditeljZadacaScreen> {
   late ZadacaProvider _zadacaProvider;
   late UserProvider _UserProvider;
 
@@ -58,7 +63,7 @@ class _ZadacaState extends State<ZadacaScreen> {
       });
 
       var data =
-          await _zadacaProvider.getById2(_UserProvider.user!.id);
+          await _zadacaProvider.getById2(widget.ucenik?.id);
 
       setState(() {
         if (listaZadaca == null) {

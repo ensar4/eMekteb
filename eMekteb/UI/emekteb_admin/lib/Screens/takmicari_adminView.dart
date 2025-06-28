@@ -254,9 +254,76 @@ class _TakmicariAdminState extends State<TakmicariAdmin> {
       ),
     );
   }
+
+
+  void _createPdfReport(BuildContext context, List<Takmicar> filteredList, String naziv, String nivo) async {
+    final pdf = pw.Document();
+    final fontData = await rootBundle.load('assets/fonts/OpenSans-VariableFont_wdth,wght.ttf');
+    final ttf = pw.Font.ttf(fontData);
+
+    String now = DateFormat('dd.MM.yyyy HH:mm').format(DateTime.now());
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) => pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.center,
+          children: [
+            pw.Text("Islamska zajednica u Bosni i Hercegovini", style: pw.TextStyle(fontSize: 12, font: ttf)),
+            pw.Text("Medžlis Islamske zajednice Mostar", style: pw.TextStyle(fontSize: 12, font: ttf)),
+            pw.SizedBox(height: 20),
+            pw.Text(
+              "Rang lista / $naziv - nivo $nivo",
+              style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold, font: ttf),
+            ),
+            pw.SizedBox(height: 20),
+            pw.TableHelper.fromTextArray(
+              cellStyle: pw.TextStyle(font: ttf),
+              headerDecoration: pw.BoxDecoration(color: PdfColors.grey300),
+              data: <List<String>>[
+                <String>[
+                  'R.br.', // Redni broj
+                  'Ime',
+                  'Prezime',
+                  'Mekteb',  // Dodaj Mekteb kolonu
+                  'Datum rodjenja',
+                  'Ukupno bodova',
+                ],
+                ...filteredList.asMap().entries.map(
+                      (entry) {
+                    var mekteb = listaMekteba?.result.firstWhere(
+                            (m) => m.id == entry.value.mektebId
+                    );
+
+                    return [
+                      (entry.key + 1).toString(), // Redni broj
+                      entry.value.ime.toString(),
+                      entry.value.prezime.toString(),
+                      mekteb?.naziv ?? 'N/A',  // Dodaj naziv Mekteba
+                      DateFormat('dd.MM.yyyy').format(entry.value.datumRodjenja),
+                      (entry.value.ukupnoBodova?.toString() ?? 'N/A'),
+                    ];
+                  },
+                ).toList(),
+              ],
+            ),
+            pw.SizedBox(height: 20),
+            pw.Text(
+              now,
+              style: pw.TextStyle(fontSize: 14, font: ttf),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => pdf.save(),
+    );
+    fetchData();
+  }
+
   void showRatingDialog(Takmicar item) {
     int? _selectedRating;
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -348,72 +415,6 @@ class _TakmicariAdminState extends State<TakmicariAdmin> {
       return "Komisija";
     } else
       return "Admin";
-  }
-
-  void _createPdfReport(BuildContext context, List<Takmicar> filteredList, String naziv, String nivo) async {
-    final pdf = pw.Document();
-    final fontData = await rootBundle.load('assets/fonts/OpenSans-VariableFont_wdth,wght.ttf');
-    final ttf = pw.Font.ttf(fontData);
-
-    String now = DateFormat('dd.MM.yyyy HH:mm').format(DateTime.now());
-
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) => pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.center,
-          children: [
-            pw.Text("Islamska zajednica u Bosni i Hercegovini", style: pw.TextStyle(fontSize: 12, font: ttf)),
-            pw.Text("Medžlis Islamske zajednice Mostar", style: pw.TextStyle(fontSize: 12, font: ttf)),
-            pw.SizedBox(height: 20),
-            pw.Text(
-              "Rang lista / $naziv - nivo $nivo",
-              style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold, font: ttf),
-            ),
-            pw.SizedBox(height: 20),
-            pw.TableHelper.fromTextArray(
-              cellStyle: pw.TextStyle(font: ttf),
-              headerDecoration: pw.BoxDecoration(color: PdfColors.grey300),
-              data: <List<String>>[
-                <String>[
-                  'R.br.', // Redni broj
-                  'Ime',
-                  'Prezime',
-                  'Mekteb',  // Dodaj Mekteb kolonu
-                  'Datum rodjenja',
-                  'Ukupno bodova',
-                ],
-                ...filteredList.asMap().entries.map(
-                      (entry) {
-                    var mekteb = listaMekteba?.result.firstWhere(
-                          (m) => m.id == entry.value.mektebId
-                    );
-
-                    return [
-                      (entry.key + 1).toString(), // Redni broj
-                      entry.value.ime.toString(),
-                      entry.value.prezime.toString(),
-                      mekteb?.naziv ?? 'N/A',  // Dodaj naziv Mekteba
-                      DateFormat('dd.MM.yyyy').format(entry.value.datumRodjenja),
-                      (entry.value.ukupnoBodova?.toString() ?? 'N/A'),
-                    ];
-                  },
-                ).toList(),
-              ],
-            ),
-            pw.SizedBox(height: 20),
-            pw.Text(
-              now,
-              style: pw.TextStyle(fontSize: 14, font: ttf),
-            ),
-          ],
-        ),
-      ),
-    );
-
-    await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => pdf.save(),
-    );
-    fetchData();
   }
 
 

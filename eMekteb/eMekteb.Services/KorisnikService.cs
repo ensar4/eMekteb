@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using eMekteb.Model;
+using eMekteb.Model.Helpers;
 using eMekteb.Model.Request;
 using eMekteb.Model.SearchObjects;
 using eMekteb.Services.Database;
@@ -16,7 +17,9 @@ namespace eMekteb.Services
 {
     public class KorisnikService : BaseCRUDService<KorisnikM, Korisnik, KorisnikSearchObject, KorisnikInsert, KorisnikUpdate>, IKorisnikService
     {
-        public KorisnikService(eMektebContext dbContext, IMapper mapper) : base(dbContext, mapper)
+
+        public KorisnikService(eMektebContext dbContext, IMapper mapper)
+            : base(dbContext, mapper)
         {
         }
 
@@ -758,6 +761,48 @@ namespace eMekteb.Services
             return result;
         }
 
+        private string GenerateRandomPassword(int length = 10)
+        {
+            const string valid = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789!@#$";
+            var res = new StringBuilder();
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                var uintBuffer = new byte[sizeof(uint)];
+                while (res.Length < length)
+                {
+                    rng.GetBytes(uintBuffer);
+                    var num = BitConverter.ToUInt32(uintBuffer, 0);
+                    res.Append(valid[(int)(num % (uint)valid.Length)]);
+                }
+            }
+            return res.ToString();
+        }
+        public async Task<bool> ResetPassword(string email)
+        {
+            var korisnik = _dbContext.Korisnik.FirstOrDefault(x => x.Mail == email);
+
+            if (korisnik == null)
+                return false;
+
+            var novaLozinka = GenerateRandomPassword();
+
+            korisnik.LozinkaSalt = GenerateSalt();
+            korisnik.LozinkaHash = GenerateHash(korisnik.LozinkaSalt, novaLozinka);
+
+            await _dbContext.SaveChangesAsync();
+
+            var mail = new MailObjekat
+            {
+                mailAdresa = korisnik.Mail,
+                subject = "Reset lozinke - eMekteb",
+                poruka = $"Vaša nova lozinka je: <b>{novaLozinka}</b><br>Molimo vas da je promijenite nakon prve prijave."
+            };
+
+            var mailService = new MailSendingService();
+            mailService.PosaljiMail(mail);
+
+            return true;
+        }
 
 
 

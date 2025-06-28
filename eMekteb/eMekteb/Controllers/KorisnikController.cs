@@ -4,6 +4,7 @@ using eMekteb.Model.SearchObjects;
 using eMekteb.Services;
 using eMekteb.Services.Database;
 using eMekteb.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eMekteb.Controllers
@@ -47,7 +48,7 @@ namespace eMekteb.Controllers
         [HttpGet("/Mualimi")]
         public async Task<PagedResult<KorisnikM>> GetMualimi(int? MektebId, int? MedzlisId, int? MuftijstvoId)
         {
-
+            
             return await service1.GetMualimi(MektebId, MedzlisId, MuftijstvoId);
         }
 
@@ -145,6 +146,18 @@ namespace eMekteb.Controllers
             var result = await service1.CreateStudentWithParentAsync(studentInsert, parentInsert);
 
             return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var success = await service1.ResetPassword(request.Email);
+
+            if (!success)
+                return NotFound("Korisnik sa ovom email adresom nije pronađen.");
+
+            return Ok("Nova lozinka je poslana na vašu email adresu.");
         }
 
 

@@ -213,6 +213,156 @@ namespace eMekteb.Services.Seed
                     UkupnoBodova = 12,
                     KategorijaId = 7,
                     MektebId = 5,
+                },
+                new Takmicar
+                {
+                    Id = 35,
+                    Ime = "Selma",
+                    Prezime = "Čavčić",
+                    DatumRodjenja = new DateTime(2000, 02, 01),
+                    UkupnoBodova = 12,
+                    KategorijaId = 7,
+                    MektebId = 5,
+                },
+                new Takmicar
+                {
+                    Id = 21,
+                    Ime = "Ejla",
+                    Prezime = "Kodrić",
+                    DatumRodjenja = new DateTime(2000, 02, 01),
+                    UkupnoBodova = 12,
+                    KategorijaId = 7,
+                    MektebId = 5,
+                },
+                new Takmicar
+                {
+                    Id = 22,
+                    Ime = "Amna",
+                    Prezime = "Hasić",
+                    DatumRodjenja = new DateTime(2000, 02, 01),
+                    UkupnoBodova = 12,
+                    KategorijaId = 7,
+                    MektebId = 5,
+                },
+                new Takmicar
+                {
+                    Id = 23,
+                    Ime = "Sanela",
+                    Prezime = "Čevra",
+                    DatumRodjenja = new DateTime(2000, 02, 01),
+                    UkupnoBodova = 12,
+                    KategorijaId = 7,
+                    MektebId = 5,
+                },
+                new Takmicar
+                {
+                    Id = 24,
+                    Ime = "Sajra",
+                    Prezime = "Penava",
+                    DatumRodjenja = new DateTime(2000, 02, 01),
+                    UkupnoBodova = 16,
+                    KategorijaId = 7,
+                    MektebId = 5,
+                },
+                new Takmicar
+                {
+                    Id = 25,
+                    Ime = "Emina",
+                    Prezime = "Gosto",
+                    DatumRodjenja = new DateTime(2000, 02, 01),
+                    UkupnoBodova = 17,
+                    KategorijaId = 7,
+                    MektebId = 5,
+                },
+                new Takmicar
+                {
+                    Id = 26,
+                    Ime = "Emela",
+                    Prezime = "Karadža",
+                    DatumRodjenja = new DateTime(2000, 02, 01),
+                    UkupnoBodova = 18,
+                    KategorijaId = 7,
+                    MektebId = 5,
+                },
+                new Takmicar
+                {
+                    Id = 27,
+                    Ime = "Ela",
+                    Prezime = "Memić",
+                    DatumRodjenja = new DateTime(2000, 02, 01),
+                    UkupnoBodova = 13,
+                    KategorijaId = 7,
+                    MektebId = 13,
+                },
+                new Takmicar
+                {
+                    Id = 28,
+                    Ime = "Enisa",
+                    Prezime = "Mulać",
+                    DatumRodjenja = new DateTime(2000, 02, 01),
+                    UkupnoBodova = 15,
+                    KategorijaId = 7,
+                    MektebId = 12,
+                },
+                new Takmicar
+                {
+                    Id = 29,
+                    Ime = "Zijada",
+                    Prezime = "Mustafić",
+                    DatumRodjenja = new DateTime(2000, 02, 01),
+                    UkupnoBodova = 19,
+                    KategorijaId = 7,
+                    MektebId = 11,
+                },
+                new Takmicar
+                {
+                    Id = 30,
+                    Ime = "Ilhana",
+                    Prezime = "Mahinić",
+                    DatumRodjenja = new DateTime(2000, 02, 01),
+                    UkupnoBodova = 18,
+                    KategorijaId = 7,
+                    MektebId = 10,
+                },
+                new Takmicar
+                {
+                    Id = 31,
+                    Ime = "Ilma",
+                    Prezime = "Merzić",
+                    DatumRodjenja = new DateTime(2000, 02, 01),
+                    UkupnoBodova = 17,
+                    KategorijaId = 7,
+                    MektebId = 9,
+                },
+                new Takmicar
+                {
+                    Id = 32,
+                    Ime = "Inela",
+                    Prezime = "Maksumić",
+                    DatumRodjenja = new DateTime(2000, 02, 01),
+                    UkupnoBodova = 15,
+                    KategorijaId = 7,
+                    MektebId = 8,
+                },
+                new Takmicar
+                {
+                    Id = 33,
+                    Ime = "Irnela",
+                    Prezime = "Memić",
+                    DatumRodjenja = new DateTime(2000, 02, 01),
+                    UkupnoBodova = 13,
+                    KategorijaId = 7,
+                    MektebId = 7,
+                },
+                new Takmicar
+                {
+                    Id = 34,
+                    Ime = "Ismihana",
+                    Prezime = "Marić",
+                    DatumRodjenja = new DateTime(2000, 02, 01),
+                    UkupnoBodova = 14,
+                    KategorijaId = 7,
+                    MektebId = 6,
                 }
             );
         }

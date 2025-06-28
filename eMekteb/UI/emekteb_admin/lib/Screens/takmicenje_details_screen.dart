@@ -1,5 +1,6 @@
 import 'package:emekteb_admin/Screens/takmicari_adminView.dart';
 import 'package:emekteb_admin/Screens/takmicenja_screen.dart';
+import 'package:emekteb_admin/Screens/takmicenje_mektebi_screen.dart';
 import 'package:emekteb_admin/Widgets/master_screen.dart';
 import 'package:emekteb_admin/models/takmicenje.dart';
 import 'package:emekteb_admin/providers/kategorija_provider.dart';
@@ -126,7 +127,32 @@ class _MektebDetaljiState extends State<TakmicenjeDetalji> {
                   ),
                 ],
               ),
-            )
+            ),
+          SizedBox(
+            width: 10,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+              //pushReplacement  ili   push
+              MaterialPageRoute(
+                builder: (context) => TakmicenjeMektebi(takmicenje: widget.takmicenje),
+              ),
+            ); },
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(Icons.format_list_numbered),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  "RANG MEKTEBA",
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          )
         ], //Buttons for sort filtering
       ),
     );
@@ -148,7 +174,6 @@ class _MektebDetaljiState extends State<TakmicenjeDetalji> {
           return InkWell(
             onTap: () {
               Navigator.of(context).push(
-                //pushReplacement  ili   push
                 MaterialPageRoute(
                   builder: (context) => TakmicariAdmin(kategorija: kategorija),
                 ),

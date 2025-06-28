@@ -125,10 +125,11 @@ class LoginPage extends StatelessWidget {
    late AuthProvider _authProvider;
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-
+   late PasswordProvider _passwordProvider;
    @override
    Widget build(BuildContext context) {
      _authProvider = context.read<AuthProvider>();
+     _passwordProvider = context.read<PasswordProvider>();
      return Scaffold(
        body: Center(
          child: Container(
@@ -176,15 +177,64 @@ class LoginPage extends StatelessWidget {
                    child: Align(
                      alignment: Alignment.centerRight,
                      child: TextButton(
-                       onPressed: () {
-                         // Add your logic for handling forgot password here
-                         print("Zaboravljena lozinka clicked");
-                         // Example: Navigate to a forgot password screen
-                         // Navigator.of(context).push(
-                         //   MaterialPageRoute(
-                         //     builder: (context) => ForgotPasswordScreen(),
-                         //   ),
-                         // );
+                         onPressed: () async {
+                           final TextEditingController emailController = TextEditingController();
+
+                           await showDialog(
+                           context: context,
+                           builder: (context) {
+                             return AlertDialog(
+                               title: Text('Reset lozinke'),
+                               content: TextField(
+                                 controller: emailController,
+                                 keyboardType: TextInputType.emailAddress,
+                                 decoration: InputDecoration(
+                                   labelText: 'Unesite vašu email adresu',
+                                 ),
+                               ),
+                               actions: [
+                                 TextButton(
+                                   onPressed: () => Navigator.of(context).pop(),
+                                   child: Text('Otkaži'),
+                                 ),
+                                 TextButton(
+                                   onPressed: () async {
+                                     final email = emailController.text.trim();
+
+                                     if (email.isEmpty) {
+                                       Navigator.of(context).pop();
+                                       ScaffoldMessenger.of(context)
+                                           .showSnackBar(
+                                         SnackBar(content: Text(
+                                             'Email adresa je obavezna.')),
+                                       );
+                                       return;
+                                     }
+
+                                     try {
+                                       await Provider.of<PasswordProvider>(
+                                           context, listen: false)
+                                           .resetPassword(email);
+                                       Navigator.of(context).pop();
+                                       ScaffoldMessenger.of(context)
+                                           .showSnackBar(
+                                         SnackBar(content: Text(
+                                             'Nova lozinka je poslana na vaš email.')),
+                                       );
+                                     } catch (e) {
+                                       Navigator.of(context).pop();
+                                       ScaffoldMessenger.of(context)
+                                           .showSnackBar(
+                                         SnackBar(content: Text(e.toString())),
+                                       );
+                                     }
+                                   },
+                                   child: Text('Pošalji'),
+                                 ),
+                               ],
+                             );
+                           },
+                           );
                        },
                        child: Text(
                          "Zaboravljena lozinka?",

@@ -633,7 +633,7 @@ class _ProfilInfoState extends State<Postavke> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Admini e-Mekteba',
+                'Admini za nivo medžlisa',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               Align(

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using eMekteb.Model;
+using eMekteb.Model.DTOs;
 using eMekteb.Model.Request;
 using eMekteb.Model.SearchObjects;
 using eMekteb.Services.Database;
@@ -55,6 +56,23 @@ namespace eMekteb.Services
                 query = query.OrderByDescending(y => y.Godina);
 
             return base.AddFilter(query, search);
+        }
+
+        public async Task<List<MektebBodoviDto>> GetUkupniBodoviPoMektebu(int takmicenjeId)
+        {
+            var result = await _dbContext.Takmicar
+                .Where(t => t.Kategorija!.TakmicenjeId == takmicenjeId && t.MektebId != null)
+                .GroupBy(t => new { t.MektebId, t.Mekteb!.Naziv })
+                .Select(g => new MektebBodoviDto
+                {
+                    MektebId = g.Key.MektebId!.Value,
+                    NazivMekteba = g.Key.Naziv,
+                    UkupnoBodova = g.Sum(x => x.UkupnoBodova ?? 0)
+                })
+                .OrderByDescending(x => x.UkupnoBodova)
+                .ToListAsync();
+
+            return result;
         }
 
 

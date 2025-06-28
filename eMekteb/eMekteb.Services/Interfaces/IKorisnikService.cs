@@ -25,7 +25,7 @@ namespace eMekteb.Services.Interfaces
         Task<PagedResult<KorisnikM>> GetByRoditeljId(int roditeljId);
         Task<PagedResult<KorisnikM>> GetUcenikHistory(int? ucenikId);
 
-
+        Task<bool> ResetPassword(string email);
 
 
     }

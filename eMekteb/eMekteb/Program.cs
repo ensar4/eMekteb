@@ -47,6 +47,7 @@ builder.Services.AddTransient<IAkademskaRazredService, AkademskaRazredService>()
 builder.Services.AddTransient<IRazredKorisnikService, RazredKorisnikService>();
 builder.Services.AddTransient<IMuftijstvoService, MuftijstvoService>();
 
+
 builder.Services.AddTransient<BaseState>();
 builder.Services.AddTransient<InitialState>();
 builder.Services.AddTransient<DraftState>();
