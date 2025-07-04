@@ -184,7 +184,28 @@ namespace eMekteb.Services
             return result;
         }
 
-       
+
+        private async Task<string> GenerateUniqueUsernameAsync(string baseUsername)
+        {
+            var usernames = await _dbContext.Korisnik
+                .Where(k => k.Username.StartsWith(baseUsername))
+                .Select(k => k.Username)
+                .ToListAsync();
+
+            if (!usernames.Contains(baseUsername))
+                return baseUsername;
+
+            int counter = 1;
+            string newUsername;
+
+            do
+            {
+                newUsername = $"{baseUsername}{counter}";
+                counter++;
+            } while (usernames.Contains(newUsername));
+
+            return newUsername;
+        }
 
 
         public async Task<UcenikRoditeljResponse> CreateStudentWithParentAsync(KorisnikInsert studentInsert, KorisnikInsert parentInsert)
@@ -195,6 +216,7 @@ namespace eMekteb.Services
             Korisnik parentEntity;
             if (existingParent == null)
             {
+                parentInsert.Username = await GenerateUniqueUsernameAsync(parentInsert.Username);
                 parentEntity = _mapper.Map<Korisnik>(parentInsert);
                 await BeforeInsert(parentEntity, parentInsert);
 
@@ -206,6 +228,9 @@ namespace eMekteb.Services
                 parentEntity = existingParent;
             }
 
+            // GENERIŠI UNIQUE USERNAME za učenika
+            studentInsert.Username = await GenerateUniqueUsernameAsync(studentInsert.Username);
+
             var studentEntity = _mapper.Map<Korisnik>(studentInsert);
 
             studentEntity.RoditeljId = parentEntity.Id;
@@ -214,6 +239,29 @@ namespace eMekteb.Services
 
             _dbContext.Korisnik.Add(studentEntity);
             await _dbContext.SaveChangesAsync();
+
+            var mailText = $@"
+                 <p>Poštovani {parentEntity.Ime} {parentEntity.Prezime},</p>
+                 <p>Vaš korisnički profil za eMekteb je uspješno kreiran.</p>
+                 <p><strong>Username:</strong> {parentEntity.Username}<br/>
+                 <strong>Privremena lozinka:</strong> test</p>
+
+                 <p>Također, kreiran je korisnički račun za Vaše dijete:</p>
+                 <p><strong>Ime djeteta:</strong> {studentEntity.Ime} {studentEntity.Prezime}<br/>
+                 <strong>Username djeteta:</strong> {studentEntity.Username}</p>
+
+                 <p>Molimo Vas da prilikom prve prijave promijenite lozinku.</p>
+                 <p>Lijep pozdrav,<br/>eMekteb tim</p>";
+
+            var mailObj = new MailObjekat
+            {
+                mailAdresa = parentEntity.Mail,
+                subject = "Vaš korisnički profil na eMektebu",
+                poruka = mailText
+            };
+
+            var mailService = new MailSendingService();
+            mailService.PosaljiMail(mailObj);
 
             return new UcenikRoditeljResponse
             {
@@ -663,11 +711,6 @@ namespace eMekteb.Services
             return result;
         }
 
-
-
-
-
-
         //Get ucenici by mekteb && Get svi ucenici
         public async Task<PagedResult<KorisnikM>> GetUcenici(int? mektebId, int? MedzlisId)
         {
@@ -679,7 +722,7 @@ namespace eMekteb.Services
                 .FirstOrDefaultAsync();
 
             var uceniciQuery = _dbContext.Set<Korisnik>()
-                 .Where(k => k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == ucenikRoleName))
+                 .Where(k => k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == ucenikRoleName) && k.Status == "Aktivan")
                  .Join(_dbContext.RazredKorisnik,
                        k => k.Id,
                        kr => kr.KorisnikId,
@@ -688,7 +731,7 @@ namespace eMekteb.Services
                        kr => kr.KorisnikRazred.RazredId,
                        r => r.Id,
                        (kr, r) => new { kr.Korisnik, Razred = r })
-                 .Join(_dbContext.Mekteb,  // Add this join to include Mekteb
+                 .Join(_dbContext.Mekteb,
                        r => r.Razred.MektebId,
                        m => m.Id,
                        (r, m) => new { r.Korisnik, Razred = r.Razred, Mekteb = m })
@@ -705,8 +748,9 @@ namespace eMekteb.Services
             }
             if (MedzlisId.HasValue)
             {
-                uceniciQuery = uceniciQuery.Where(k => k.Mekteb.MedzlisId == MedzlisId.Value); // Now, Mekteb is available
+                uceniciQuery = uceniciQuery.Where(k => k.Mekteb.MedzlisId == MedzlisId.Value);
             }
+
             var uceniciWithAttendance = await uceniciQuery
                 .Distinct()
                 .ToListAsync();
@@ -753,13 +797,106 @@ namespace eMekteb.Services
 
             PagedResult<KorisnikM> result = new PagedResult<KorisnikM>
             {
-                //Count = uceniciWithAttendance.Count,
                 Count = uceniciWithAttendance.Select(ud => ud.Korisnik.Id).Distinct().Count(),
                 Result = _mapper.Map<List<KorisnikM>>(uceniciWithAttendance.Select(ud => ud.Korisnik).Distinct().ToList())
             };
 
             return result;
         }
+
+        public async Task<PagedResult<KorisnikM>> GetArhivUcenika(int? mektebId, int? MedzlisId)
+        {
+            var ucenikRoleName = "Ucenik";
+
+            var lastAkademskaGodinaId = await _dbContext.AkademskaGodina
+                .OrderByDescending(ag => ag.Id)
+                .Select(ag => ag.Id)
+                .FirstOrDefaultAsync();
+
+            var uceniciQuery = _dbContext.Set<Korisnik>()
+                 .Where(k => k.KorisniciUloge.Any(ku => ku.Uloga.Naziv == ucenikRoleName) &&
+                             (k.Status == "Završio" || k.Status == "Neaktivan"))
+                 .Join(_dbContext.RazredKorisnik,
+                       k => k.Id,
+                       kr => kr.KorisnikId,
+                       (k, kr) => new { Korisnik = k, KorisnikRazred = kr })
+                 .Join(_dbContext.Razred,
+                       kr => kr.KorisnikRazred.RazredId,
+                       r => r.Id,
+                       (kr, r) => new { kr.Korisnik, Razred = r })
+                 .Join(_dbContext.Mekteb,
+                       r => r.Razred.MektebId,
+                       m => m.Id,
+                       (r, m) => new { r.Korisnik, Razred = r.Razred, Mekteb = m })
+                 .Join(_dbContext.AkademskaRazred,
+                       r => r.Razred.Id,
+                       ra => ra.RazredId,
+                       (r, ra) => new { r.Korisnik, r.Razred, r.Mekteb, RazredAkademska = ra })
+                 .Where(ra => ra.RazredAkademska.AkademskaGodinaId == lastAkademskaGodinaId)
+                 .Distinct();
+
+            if (mektebId.HasValue)
+            {
+                uceniciQuery = uceniciQuery.Where(k => k.Razred.MektebId == mektebId.Value);
+            }
+            if (MedzlisId.HasValue)
+            {
+                uceniciQuery = uceniciQuery.Where(k => k.Mekteb.MedzlisId == MedzlisId.Value);
+            }
+
+            var uceniciWithAttendance = await uceniciQuery
+                .Distinct()
+                .ToListAsync();
+
+            foreach (var ucenikData in uceniciWithAttendance)
+            {
+                var ucenik = ucenikData.Korisnik;
+                var razred = ucenikData.Razred;
+
+                var attendanceRecords = await _dbContext.Prisustvo
+                    .Where(p => p.KorisnikId == ucenik.Id && p.RazredId == razred.Id)
+                    .ToListAsync();
+
+                int totalClasses = attendanceRecords.Count;
+                if (totalClasses > 0)
+                {
+                    int presentCount = attendanceRecords.Count(p => p.Prisutan == true);
+                    double attendancePercentage = (double)presentCount / totalClasses * 100;
+                    ucenik.Prisustvo = attendancePercentage;
+                }
+                else
+                {
+                    ucenik.Prisustvo = 0;
+                }
+
+                var zadace = await _dbContext.Zadaca
+                    .Where(z => z.RazredId == razred.Id && z.KorisnikId == ucenik.Id)
+                    .Include(z => z.Ocjene)
+                    .ToListAsync();
+
+                if (zadace.Count > 0)
+                {
+                    double averageGrade = (double)zadace.Average(z => z.Ocjene.Ocjena);
+                    ucenik.Prosjek = averageGrade;
+                }
+                else
+                {
+                    ucenik.Prosjek = 0;
+                }
+
+                ucenik.NazivRazreda = razred.Naziv;
+                ucenik.IdRazreda = razred.Id;
+            }
+
+            PagedResult<KorisnikM> result = new PagedResult<KorisnikM>
+            {
+                Count = uceniciWithAttendance.Select(ud => ud.Korisnik.Id).Distinct().Count(),
+                Result = _mapper.Map<List<KorisnikM>>(uceniciWithAttendance.Select(ud => ud.Korisnik).Distinct().ToList())
+            };
+
+            return result;
+        }
+
 
         private string GenerateRandomPassword(int length = 10)
         {

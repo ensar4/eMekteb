@@ -192,5 +192,24 @@ T fromJson (data){
     }
   }
 
+  Future<void> resetPassword(String email) async {
+    final url = Uri.parse('${_baseUrl}Korisnik/reset-password');
+    final headers = getHeaders();
+
+    final body = jsonEncode({
+      "email": email,
+    });
+
+    final response = await http?.post(url, headers: headers, body: body);
+
+    if (response!.statusCode < 299) {
+      // ok
+      return;
+    } else if (response.statusCode == 404) {
+      throw "Korisnik sa ovom email adresom nije pronađen.";
+    } else {
+      throw "Greška na serveru.";
+    }
+  }
 
 }

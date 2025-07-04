@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/korisnik.dart';
 import '../providers/auth_provider.dart';
+import '../providers/password_provider.dart';
 import '../providers/user_provider.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
   late AuthProvider _authProvider;
   late UserProvider _userProvider;
+  late PasswordProvider _passwordProvider;
 
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -19,6 +21,8 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     _authProvider = context.read<AuthProvider>();
     _userProvider = context.read<UserProvider>();
+    _passwordProvider = context.read<PasswordProvider>();
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Center(
@@ -50,9 +54,9 @@ class LoginPage extends StatelessWidget {
                     controller: _passwordController,
                     obscureText: true,
                   ),
-                  const SizedBox(height: 30,),
+                  const SizedBox(height: 15,),
                   SizedBox(
-                    width: 150,
+                    width: 300,
                     child: ElevatedButton(
                       onPressed: () async {
                         if (_usernameController.text.isEmpty) {
@@ -60,6 +64,7 @@ class LoginPage extends StatelessWidget {
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                               title: const Text("Greška"),
+                              shape: Border.symmetric(),
                               content: const Text("Korisničko ime ne može biti prazno."),
                               actions: [
                                 TextButton(
@@ -104,6 +109,7 @@ class LoginPage extends StatelessWidget {
                               context: context,
                               builder: (BuildContext context) => AlertDialog(
                                 title: const Text("Greška"),
+                                shape: Border.symmetric(),
                                 content: const Text("Prijava nije moguća."),
                                 actions: [
                                   TextButton(
@@ -121,6 +127,7 @@ class LoginPage extends StatelessWidget {
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                               title: const Text("Greška"),
+                              shape: Border.symmetric(),
                               content: Text(e.toString()), // Display the exception message only
                               actions: [
                                 TextButton(
@@ -146,7 +153,111 @@ class LoginPage extends StatelessWidget {
                         style: TextStyle(fontSize: 18),
                       ),
                     ),
+                  ),
+                  Focus(
+                    skipTraversal: true,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () async {
+                          final TextEditingController emailController = TextEditingController();
+                          bool isLoading = false;
 
+                          await showDialog(
+                            context: context,
+                            barrierDismissible: !isLoading,
+                            builder: (context) {
+                              return StatefulBuilder(
+                                builder: (context, setState) {
+                                  return AlertDialog(
+                                    title: Text('Reset lozinke'),
+                                    shape: Border.symmetric(),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        TextField(
+                                          controller: emailController,
+                                          keyboardType: TextInputType.emailAddress,
+                                          decoration: InputDecoration(
+                                            labelText: 'Unesite vašu email adresu!',
+                                          ),
+                                          enabled: !isLoading,
+                                        ),
+                                        if (isLoading)
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 16.0),
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                      ],
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: isLoading
+                                            ? null
+                                            : () => Navigator.of(context).pop(),
+                                        child: Text(
+                                          'Otkaži',
+                                          style: TextStyle(color: Colors.red, fontSize: 16),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: isLoading
+                                            ? null
+                                            : () async {
+                                          final email = emailController.text.trim();
+
+                                          if (email.isEmpty) {
+                                            Navigator.of(context).pop();
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(content: Text('Email adresa je obavezna.')),
+                                            );
+                                            return;
+                                          }
+
+                                          setState(() => isLoading = true);
+
+                                          try {
+                                            await Provider.of<PasswordProvider>(
+                                              context,
+                                              listen: false,
+                                            ).resetPassword(email);
+
+                                            Navigator.of(context).pop();
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: Text('Nova lozinka je poslana na vaš email.'),
+                                              ),
+                                            );
+                                          } catch (e) {
+                                            Navigator.of(context).pop();
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(content: Text(e.toString())),
+                                            );
+                                          } finally {
+                                            setState(() => isLoading = false);
+                                          }
+                                        },
+                                        child: Text(
+                                          'Pošalji',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        },
+                        child: Text(
+                          "Zaboravljena lozinka?",
+                          style: TextStyle(
+                            color: Colors.blue.shade800, // Make it look like a link
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),

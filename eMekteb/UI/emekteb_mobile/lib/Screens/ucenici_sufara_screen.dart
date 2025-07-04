@@ -299,6 +299,7 @@ class _UceniciSufaraState extends State<UceniciSufara> {
       text: ucenik.datumRodjenja?.toLocal().toString().split(' ')[0] ?? "",
     );
     String? selectedSpol = ucenik.spol;
+    String? selectedStatus = ucenik.status;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -472,6 +473,7 @@ class _UceniciSufaraState extends State<UceniciSufara> {
                     _brojTelefonaController.text,
                     _mailController.text,
                     selectedSpol!,
+                    selectedStatus!,
                     DateTime.parse(_datumRodjenjaController.text),
                     _imeRoditeljaController.text,
                     _userProvider.user?.mektebId,

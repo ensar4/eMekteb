@@ -15,7 +15,7 @@ namespace eMekteb.Services.Interfaces
         Task<KorisnikM> Login(string username, string password);
         Task<KorisnikM> GetByUsernameAndLozinkaAsync(string username, string password);
         Task<PagedResult<KorisnikM>> GetUcenici(int? id, int? MedzlisId);
-
+        Task<PagedResult<KorisnikM>> GetArhivUcenika(int? id, int? MedzlisId);
         Task<PagedResult<KorisnikM>> GetSuperAdmin(int? Id, int? MuftijstvoId);
         Task<PagedResult<KorisnikM>> GetMualimi(int ? id, int? MedzlisId, int? MuftijstvoId);
         Task<PagedResult<KorisnikM>> GetKomisija(int? id, int? MedzlisId);

@@ -206,7 +206,7 @@ class _MasterScreenState extends State<MasterScreen> {
       drawer: Drawer(
         backgroundColor: Colors.white,
         child: Padding(
-          padding: EdgeInsets.all(30.0),
+          padding: EdgeInsets.all(31.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[

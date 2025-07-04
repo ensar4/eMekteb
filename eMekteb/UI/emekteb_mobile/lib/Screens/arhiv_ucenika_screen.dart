@@ -1,24 +1,28 @@
 import 'package:emekteb_mobile/Widgets/master_screen.dart';
 import 'package:emekteb_mobile/providers/ucenici_provider.dart';
+import 'package:emekteb_mobile/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../models/searches/search_result.dart';
 import '../models/ucenik.dart';
 import '../providers/razred_provider.dart';
-import '../providers/user_provider.dart';
+import '../providers/slika_provider.dart';
+import 'dart:typed_data';
 
-class UceniciINivo extends StatefulWidget {
-  const UceniciINivo({super.key});
+import '../utils/util.dart'; // Import this if you haven't already
+
+class UceniciArhiv extends StatefulWidget {
+  const UceniciArhiv({super.key});
 
   @override
-  State<UceniciINivo> createState() => _UceniciINivoState();
+  State<UceniciArhiv> createState() => _UceniciArhivState();
 }
 
-class _UceniciINivoState extends State<UceniciINivo> {
+class _UceniciArhivState extends State<UceniciArhiv> {
   late UceniciProvider _uceniciProvider;
   late UserProvider _userProvider;
   late RazredProvider _nivoProvider;
+  late SlikaProvider _slikaProvider;
 
   final _formKey = GlobalKey<FormState>();
   SearchResult<Ucenik>? listaUcenika;
@@ -30,7 +34,7 @@ class _UceniciINivoState extends State<UceniciINivo> {
   int ukupno2 = 1;
   List<dynamic> filteredListNivo = [];
   dynamic listaNivo;
-
+  String slikaBytes = '';
 
   @override
   Future<void> didChangeDependencies() async {
@@ -38,10 +42,21 @@ class _UceniciINivoState extends State<UceniciINivo> {
     _uceniciProvider = context.read<UceniciProvider>();
     _userProvider = context.read<UserProvider>();
     _nivoProvider = context.read<RazredProvider>();
+    _slikaProvider = context.read<SlikaProvider>();
+
     await fetchData();
     await fetchDataRazredi();
   }
 
+
+  Future<void> fetchDataSlika(int? id) async {
+    SearchResult<dynamic> result = await _slikaProvider.getById2(id);
+    if (result.result.isNotEmpty) {
+      setState(() {
+        slikaBytes = result.result[0].slikaBytes;
+      });
+    }
+  }
 
   Future<void> fetchDataRazredi() async {
     if (!isLoading2) {
@@ -73,14 +88,12 @@ class _UceniciINivoState extends State<UceniciINivo> {
       isLoading = true;
     });
 
-    var data = await _uceniciProvider.getById2(_userProvider.user!.mektebId);
-
+    var data = await _uceniciProvider.getArhivUcenika(_userProvider.user!.mektebId);
 
     setState(() {
       listaUcenika = data;
-      // Filter only pupils where nazivRazreda == "Sufara"
-      filteredList = listaUcenika?.result.where((ucenik) => ucenik.nazivRazreda == "I nivo").toList() ?? [];
-      ukupnoUcenika = filteredList.length; // Update the count to reflect filtered data
+      filteredList = listaUcenika?.result ?? [];
+      ukupnoUcenika = data.count;
       isLoading = false;
     });
   }
@@ -88,7 +101,7 @@ class _UceniciINivoState extends State<UceniciINivo> {
   @override
   Widget build(BuildContext context) {
     return MasterScreen(
-      title: "Učenici - I nivo",
+      title: "Svi učenici",
       child: Column(
         children: [
           _buildAppBar(),
@@ -104,11 +117,11 @@ class _UceniciINivoState extends State<UceniciINivo> {
       child: Row(
         children: [
           IconButton(
-            icon: Icon(Icons.filter_list),
+            icon: const Icon(Icons.filter_list),
             onPressed: _showFilterOptions,
           ),
           _buildSearchField(), // Add the search field here
-          Spacer(),
+          const Spacer(),
           Text(
             "Ukupno: $ukupnoUcenika",
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
@@ -124,15 +137,15 @@ class _UceniciINivoState extends State<UceniciINivo> {
         child: TextField(
           controller: searchController,
           onChanged: searchByName,
-          style: TextStyle(fontSize: 14), // Smaller font size
+          style: const TextStyle(fontSize: 14), // Smaller font size
           decoration: InputDecoration(
             hintText: "...",
             isDense: true, // Reduces the height
-            contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16), // Custom padding
+            contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16), // Custom padding
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10), // Rounded corners if desired
             ),
-            prefixIcon: Icon(Icons.search, size: 20), // Smaller icon size
+            prefixIcon: const Icon(Icons.search, size: 20), // Smaller icon size
           ),
         ),
       ),
@@ -141,43 +154,49 @@ class _UceniciINivoState extends State<UceniciINivo> {
 
 
   Widget _buildTable() {
+    final screenWidth = MediaQuery.of(context).size.width;
     return isLoading
-        ? Center(child: CircularProgressIndicator())
+        ? const Center(child: CircularProgressIndicator())
         : listaUcenika == null
-        ? Center(child: Text('No data available'))
+        ? const Center(child: Text('No data available'))
         : SingleChildScrollView(
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
-          columns: [
+          columnSpacing: screenWidth*0.09,
+          columns: const [
             DataColumn(label: Text('Ime i prezime')),
-            DataColumn(label: Text('Prisustvo')),
+            DataColumn(label: Text('Status')),
+            DataColumn(label: Text('Detalji')),
             DataColumn(label: Text('Uredi')),
           ],
           rows: filteredList.map((ucenik) {
             return DataRow(
               cells: [
                 DataCell(Text('${ucenik.ime} ${ucenik.prezime}')),
-                DataCell(Text('${ucenik.prisustvo!.toStringAsFixed(0)}%')),
+                DataCell(Text('${ucenik.status}')),
+                DataCell(
+                  IconButton(
+                    icon: const Icon(Icons.more_vert),
+                    onPressed: () {
+                      showUcenikDetails(context, ucenik);
+                    },
+                  ),
+                ),
                 DataCell(
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.edit),
+                        icon: const Icon(Icons.edit),
                         onPressed: () {
                           _editUcenik(context, ucenik);
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.more_vert),
-                        onPressed: () {
-                          showUcenikDetails(context, ucenik);
                         },
                       ),
                     ],
                   ),
                 ),
+
               ],
             );
           }).toList(),
@@ -195,6 +214,7 @@ class _UceniciINivoState extends State<UceniciINivo> {
     );
   }
 
+
   Widget _buildFilterOptions() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -202,14 +222,14 @@ class _UceniciINivoState extends State<UceniciINivo> {
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
-            title: Text('Sort by Prisustvo'),
+            title: const Text('Sort by Prisustvo'),
             onTap: () {
               sortDataByPrisustvo();
               Navigator.pop(context);
             },
           ),
           ListTile(
-            title: Text('Sort by Prosjek'),
+            title: const Text('Sort by Prosjek'),
             onTap: () {
               sortDataByProsjek();
               Navigator.pop(context);
@@ -252,28 +272,64 @@ class _UceniciINivoState extends State<UceniciINivo> {
       }
     });
   }
+  void showUcenikDetails(BuildContext context, Ucenik ucenik) async {
+    // Fetch the image data before showing the dialog
+    await fetchDataSlika(ucenik.id);
 
-  void showUcenikDetails(BuildContext context, Ucenik ucenik) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('${ucenik.ime} ${ucenik.prezime}'),
+          title: Text(
+            '${ucenik.ime} ${ucenik.prezime}',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Telefon: ${ucenik.telefon ?? "N/A"}'),
-              Text('Datum rođenja: ${ucenik.datumRodjenja != null ? ucenik.datumRodjenja!.toLocal().toString().split(' ')[0] : "N/A"}'),
-              Text('Ime roditelja: ${ucenik.imeRoditelja ?? "N/A"}'),
-              Text('Naziv razreda: ${ucenik.nazivRazreda ?? "N/A"}'),
-              Text('Prisustvo: ${ucenik.prisustvo != null ? ucenik.prisustvo!.toStringAsFixed(0) + "%" : "N/A"}'),
-              Text('Prosjek: ${ucenik.prosjek != null ? ucenik.prosjek!.toStringAsFixed(2) : "N/A"}'),
+              // Show the circular image container at the top with a fallback image if slikaBytes is empty
+              Center(
+                child: Container(
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: Colors.white, // Background color
+                    shape: BoxShape.circle, // Makes the container circular
+                    image: DecorationImage(
+                      image: slikaBytes.isNotEmpty
+                          ? imageFromBase64String(slikaBytes) // Decode base64 image if available
+                          : AssetImage("assets/images/profilnaB.png") as ImageProvider, // Fallback image from assets
+                      fit: BoxFit.cover, // Fit image within the circle
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10), // Add some spacing below the image
+              _buildDetailRow('Username', ucenik.username ?? "N/A"),
+              _buildDetailRow('Telefon', ucenik.telefon ?? "N/A"),
+              _buildDetailRow('Datum rođenja',
+                  ucenik.datumRodjenja != null
+                      ? ucenik.datumRodjenja!.toLocal().toString().split(' ')[0]
+                      : "N/A"
+              ),
+              _buildDetailRow('Ime roditelja', ucenik.imeRoditelja ?? "N/A"),
+              _buildDetailRow('Naziv razreda', ucenik.nazivRazreda ?? "N/A"),
+              _buildDetailRow('Prisustvo',
+                  ucenik.prisustvo != null
+                      ? "${ucenik.prisustvo!.toStringAsFixed(0)}%"
+                      : "N/A"
+              ),
+              _buildDetailRow('Prosjek',
+                  ucenik.prosjek != null
+                      ? ucenik.prosjek!.toStringAsFixed(2)
+                      : "N/A"
+              ),
             ],
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Close'),
+              child: const Text('Zatvori'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -281,20 +337,45 @@ class _UceniciINivoState extends State<UceniciINivo> {
           ],
         );
       },
+    ).then((_) {
+      // Reset the image after the dialog is closed
+      setState(() {
+        slikaBytes = ''; // Resetting slikaBytes to an empty value
+      });
+    });
+  }
+
+
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$label: ',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Expanded(
+            child: Text(value, style: TextStyle(color: Colors.grey.shade600)),
+          ),
+        ],
+      ),
     );
   }
 
   void _editUcenik(BuildContext context, Ucenik ucenik) {
-    final _imeController = TextEditingController(text: ucenik.ime);
-    final _prezimeController = TextEditingController(text: ucenik.prezime);
-    final _usernameController = TextEditingController(text: ucenik.username);
-    final _imeRoditeljaController = TextEditingController(text: ucenik.imeRoditelja);
-    final _brojTelefonaController = TextEditingController(text: ucenik.telefon);
-    final _mailController = TextEditingController(text: ucenik.mail);
-   // final _statusController = TextEditingController(text: ucenik.status);
+    final imeController = TextEditingController(text: ucenik.ime);
+    final prezimeController = TextEditingController(text: ucenik.prezime);
+    final usernameController = TextEditingController(text: ucenik.username);
+    final imeRoditeljaController = TextEditingController(text: ucenik.imeRoditelja);
+    final brojTelefonaController = TextEditingController(text: ucenik.telefon);
+    final mailController = TextEditingController(text: ucenik.mail);
+    //final statusController = TextEditingController(text: ucenik.status);
     int? nivoId = ucenik.idRazreda;
     String? nivo = ucenik.nazivRazreda;
-    final _datumRodjenjaController = TextEditingController(
+    final datumRodjenjaController = TextEditingController(
       text: ucenik.datumRodjenja?.toLocal().toString().split(' ')[0] ?? "",
     );
     String? selectedSpol = ucenik.spol;
@@ -303,7 +384,7 @@ class _UceniciINivoState extends State<UceniciINivo> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Uredi učenika'),
+          title: const Text('Uredi učenika'),
           content: SingleChildScrollView(
             child: Form(
               key: _formKey,
@@ -311,8 +392,8 @@ class _UceniciINivoState extends State<UceniciINivo> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextFormField(
-                    controller: _imeController,
-                    decoration: InputDecoration(labelText: 'Ime:'),
+                    controller: imeController,
+                    decoration: const InputDecoration(labelText: 'Ime:'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Unesite ime';
@@ -321,8 +402,8 @@ class _UceniciINivoState extends State<UceniciINivo> {
                     },
                   ),
                   TextFormField(
-                    controller: _prezimeController,
-                    decoration: InputDecoration(labelText: 'Prezime:'),
+                    controller: prezimeController,
+                    decoration: const InputDecoration(labelText: 'Prezime:'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Unesite prezime';
@@ -331,8 +412,8 @@ class _UceniciINivoState extends State<UceniciINivo> {
                     },
                   ),
                   TextFormField(
-                    controller: _usernameController,
-                    decoration: InputDecoration(labelText: 'Korisničko ime:'),
+                    controller: usernameController,
+                    decoration: const InputDecoration(labelText: 'Korisničko ime:'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Unesite korisničko ime';
@@ -341,8 +422,8 @@ class _UceniciINivoState extends State<UceniciINivo> {
                     },
                   ),
                   TextFormField(
-                    controller: _imeRoditeljaController,
-                    decoration: InputDecoration(labelText: 'Ime roditelja:'),
+                    controller: imeRoditeljaController,
+                    decoration: const InputDecoration(labelText: 'Ime roditelja:'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Unesite ime roditelja';
@@ -350,32 +431,37 @@ class _UceniciINivoState extends State<UceniciINivo> {
                       return null;
                     },
                   ),
-                 //TextFormField(
-                 //  controller: _statusController,
-                 //  decoration: InputDecoration(labelText: 'Status:'),
-                 //  validator: (value) {
-                 //    if (value == null || value.isEmpty) {
-                 //      return 'Unesite status';
-                 //    }
-                 //    return null;
-                 //  },
-                 //),
+                  DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(labelText: 'Status'),
+                    value: selectedStatus,
+                    items: ['Aktivan', 'Neaktivan', 'Završio'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedStatus = newValue;
+                      });
+                    },
+                  ),
                   TextFormField(
-                    controller: _brojTelefonaController,
-                    decoration: InputDecoration(labelText: 'Broj telefona:'),
+                    controller: brojTelefonaController,
+                    decoration: const InputDecoration(labelText: 'Broj telefona:'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Unesite broj telefona';
                       }
-                      else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                        return 'Neispravan format, unesite samo brojeve!';
+                      else if (!RegExp(r'^[0-9\s\-/]+$').hasMatch(value)) {
+                        return 'Neispravan format!';
                       }
                       return null;
                     },
                   ),
                   TextFormField(
-                    controller: _mailController,
-                    decoration: InputDecoration(labelText: 'Mail:'),
+                    controller: mailController,
+                    decoration: const InputDecoration(labelText: 'Mail:'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Unesite mail';
@@ -386,7 +472,7 @@ class _UceniciINivoState extends State<UceniciINivo> {
                     },
                   ),
                   TextFormField(
-                    controller: _datumRodjenjaController,
+                    controller: datumRodjenjaController,
                     decoration: const InputDecoration(labelText: 'Datum rođenja:'),
                     onTap: () async {
                       FocusScope.of(context).requestFocus(FocusNode());
@@ -397,7 +483,7 @@ class _UceniciINivoState extends State<UceniciINivo> {
                         lastDate: DateTime(2100),
                       );
                       if (picked != null) {
-                        _datumRodjenjaController.text = picked.toLocal().toString().split(' ')[0];
+                        datumRodjenjaController.text = picked.toLocal().toString().split(' ')[0];
                       }
                     },
                     validator: (value) {
@@ -408,7 +494,7 @@ class _UceniciINivoState extends State<UceniciINivo> {
                     },
                   ),
                   DropdownButtonFormField<String>(
-                    decoration: InputDecoration(labelText: 'Spol'),
+                    decoration: const InputDecoration(labelText: 'Spol'),
                     value: selectedSpol,
                     items: ['M', 'Ž'].map((String value) {
                       return DropdownMenuItem<String>(
@@ -423,7 +509,7 @@ class _UceniciINivoState extends State<UceniciINivo> {
                     },
                   ),
                   DropdownButtonFormField<String>(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                     ),
                     hint: Text(ucenik.nazivRazreda.toString()),
@@ -431,8 +517,7 @@ class _UceniciINivoState extends State<UceniciINivo> {
                     onChanged: (newValue) {
                       setState(() {
                         nivo = newValue;
-                        nivoId = filteredListNivo.firstWhere((item) => item.id.toString() == newValue).id;
-
+                        nivoId = filteredListNivo.firstWhere((item) => item.id.toString() == newValue).id; // Update nivoId based on selected value
                       });
                     },
                     items: filteredListNivo.map<DropdownMenuItem<String>>((nivoItem) {
@@ -455,28 +540,28 @@ class _UceniciINivoState extends State<UceniciINivo> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Odustani'),
+              child: const Text('Odustani'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Spasi'),
+              child: const Text('Spasi'),
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   // Perform the save operation
                   // Call your provider method here to save the updated ucenik
                   bool result = await _uceniciProvider.update(
                     ucenik.id,  // Assuming ucenik has an id property
-                    _imeController.text,
-                    _prezimeController.text,
-                    _usernameController.text,
-                    _brojTelefonaController.text,
-                    _mailController.text,
+                    imeController.text,
+                    prezimeController.text,
+                    usernameController.text,
+                    brojTelefonaController.text,
+                    mailController.text,
                     selectedSpol!,
                     selectedStatus!,
-                    DateTime.parse(_datumRodjenjaController.text),
-                    _imeRoditeljaController.text,
+                    DateTime.parse(datumRodjenjaController.text),
+                    imeRoditeljaController.text,
                     _userProvider.user?.mektebId,
                     nivoId!,
                   );

@@ -558,6 +558,7 @@ class _ProfilInfoState extends State<Ocjene> {
       text: ucenik.datumRodjenja?.toLocal().toString().split(' ')[0] ?? "",
     );
     String? selectedSpol = ucenik.spol;
+    String? selectedStatus = ucenik.status;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -732,6 +733,7 @@ class _ProfilInfoState extends State<Ocjene> {
                     brojTelefonaController.text,
                     mailController.text,
                     selectedSpol!,
+                    selectedStatus!,
                     DateTime.parse(datumRodjenjaController.text),
                     imeRoditeljaController.text,
                     _userProvider.user?.mektebId,

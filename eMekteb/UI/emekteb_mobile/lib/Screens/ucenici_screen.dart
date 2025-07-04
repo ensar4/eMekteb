@@ -11,6 +11,7 @@ import 'dart:typed_data';
 
 import '../utils/util.dart'; // Import this if you haven't already
 
+//:::::::::::::::::::::::::::::::::::::::::::Svi ucenici screen::::::::::::::::::::::::::::::::::::::::::::::::::
 class Ucenici extends StatefulWidget {
   const Ucenici({super.key});
 
@@ -304,6 +305,7 @@ class _ProfilInfoState extends State<Ucenici> {
                 ),
               ),
               const SizedBox(height: 10), // Add some spacing below the image
+              _buildDetailRow('Username', ucenik.username ?? "N/A"),
               _buildDetailRow('Telefon', ucenik.telefon ?? "N/A"),
               _buildDetailRow('Datum rođenja',
                   ucenik.datumRodjenja != null
@@ -369,13 +371,14 @@ class _ProfilInfoState extends State<Ucenici> {
     final imeRoditeljaController = TextEditingController(text: ucenik.imeRoditelja);
     final brojTelefonaController = TextEditingController(text: ucenik.telefon);
     final mailController = TextEditingController(text: ucenik.mail);
-   // final statusController = TextEditingController(text: ucenik.status);
+    //final statusController = TextEditingController(text: ucenik.status);
     int? nivoId = ucenik.idRazreda;
     String? nivo = ucenik.nazivRazreda;
     final datumRodjenjaController = TextEditingController(
       text: ucenik.datumRodjenja?.toLocal().toString().split(' ')[0] ?? "",
     );
     String? selectedSpol = ucenik.spol;
+    String? selectedStatus = ucenik.status;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -427,16 +430,21 @@ class _ProfilInfoState extends State<Ucenici> {
                       return null;
                     },
                   ),
-                  //TextFormField(
-                  //  controller: statusController,
-                  //  decoration: const InputDecoration(labelText: 'Status:'),
-                  //  validator: (value) {
-                  //    if (value == null || value.isEmpty) {
-                  //      return 'Unesite status';
-                  //    }
-                  //    return null;
-                  //  },
-                  //),
+                  DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(labelText: 'Status'),
+                    value: selectedStatus,
+                    items: ['Aktivan', 'Neaktivan', 'Završio'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedStatus = newValue;
+                      });
+                    },
+                  ),
                   TextFormField(
                     controller: brojTelefonaController,
                     decoration: const InputDecoration(labelText: 'Broj telefona:'),
@@ -550,6 +558,7 @@ class _ProfilInfoState extends State<Ucenici> {
                     brojTelefonaController.text,
                     mailController.text,
                     selectedSpol!,
+                    selectedStatus!,
                     DateTime.parse(datumRodjenjaController.text),
                     imeRoditeljaController.text,
                     _userProvider.user?.mektebId,

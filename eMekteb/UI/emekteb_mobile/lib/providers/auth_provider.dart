@@ -52,7 +52,8 @@ class AuthProvider with ChangeNotifier{
      if (response.statusCode < 299) {
        return true;
      } else if (response.statusCode == 500) {
-       throw "Nepostojeće korisničko ime.";
+       //throw "Nepostojeće korisničko ime.";
+       throw "Neispravni kredencijali za prijavu.";
      } else if (response.statusCode == 404) {
        throw "Neispravni kredencijali za prijavu.";
      } else if (response.statusCode == 400) {

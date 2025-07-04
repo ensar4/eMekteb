@@ -1,3 +1,4 @@
+import 'package:emekteb_mobile/Screens/arhiv_ucenika_screen.dart';
 import 'package:emekteb_mobile/Screens/pregled_ocjena_screen.dart';
 import 'package:emekteb_mobile/Screens/ucenici_IIINivo_screen.dart';
 import 'package:emekteb_mobile/Screens/ucenici_IINivo_screen.dart';
@@ -131,7 +132,8 @@ class _SelectUceniciState extends State<SelectUcenici> {
       'III nivo',
       'Sufara',
       'Tedžvid',
-      'Hatma'
+      'Hatma',
+      'Arhiv'
     ];
 
     return Column(
@@ -187,6 +189,9 @@ class _SelectUceniciState extends State<SelectUcenici> {
         break;
       case 'Hatma':
         destinationPage = UceniciHatma(); // Replace with your actual page widget
+        break;
+        case 'Arhiv':
+        destinationPage = UceniciArhiv(); // Replace with your actual page widget
         break;
       default:
         return; // If level does not match, do nothing

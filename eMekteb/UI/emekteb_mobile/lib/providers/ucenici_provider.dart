@@ -16,7 +16,6 @@ Ucenik fromJson(data) {
     return Ucenik.fromJson(data);
   }
 
-
   Future<SearchResult<Ucenik>> getById3(
       int? id, {
         DateTime? datumOd,
@@ -88,7 +87,42 @@ Ucenik fromJson(data) {
   }
 
 
+  Future<SearchResult<Ucenik>> getArhivUcenika(int? id) async {
+    var url = "$baseOfUrl""Ucenici/Arhiv/$id";
 
+    var uri = Uri.parse(url);
+    var headers = getHeaders();
+
+    var response = await http.get(uri, headers: headers);
+
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      if (data is! Map<String, dynamic>) {
+        throw Exception("Unexpected JSON format");
+      }
+
+      var result = SearchResult<Ucenik>();
+
+      if (data.containsKey('count') && data['count'] is int) {
+        result.count = data['count'];
+      } else {
+        throw Exception("Invalid or missing 'count' field");
+      }
+
+      if (data.containsKey('result') && data['result'] is List) {
+        for (var item in data['result']) {
+          result.result.add(fromJson(item));
+        }
+      } else {
+        throw Exception("Invalid or missing 'result' field");
+      }
+
+      return result;
+    } else {
+      throw Exception("Error with response");
+    }
+  }
 
 
 
@@ -204,6 +238,7 @@ Ucenik fromJson(data) {
       String username,
       String telefon,
       String mail,
+      String mailRoditelja,
       String spol,
       String status,
       DateTime datumRodjenja,
@@ -237,7 +272,7 @@ Ucenik fromJson(data) {
         'roditeljPrezime': prezime,
         'roditeljUsername': roditeIjUsername,
         'roditeljTelefon': telefon,
-        'roditeljMail': mail,
+        'roditeljMail': mailRoditelja,
         'roditeljSpol': spol,
         'roditeljStatus': status,
         'roditeljDatumRodjenja': datumRodjenja.toIso8601String(),
@@ -279,6 +314,7 @@ Ucenik fromJson(data) {
       String telefon,
       String mail,
       String spol,
+      String status,
       DateTime datumRodjenja,
       String imeRoditelja,
       int? mektebId,
@@ -297,7 +333,7 @@ Ucenik fromJson(data) {
         'telefon': telefon,
         'mail': mail,
         'spol': spol,
-        'status': "aktivan",
+        'status': status,
         'datumRodjenja': datumRodjenja.toIso8601String(),
         'imeRoditelja': imeRoditelja,
         'mektebId': mektebId,

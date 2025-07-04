@@ -33,6 +33,7 @@ class _InsertUceniciState extends State<UceniciInsert> {
   TextEditingController _brojTelefonaController = TextEditingController();
   TextEditingController _datumRodjenjaController = TextEditingController();
   TextEditingController _mailController = TextEditingController();
+  TextEditingController _mailRoditeljaController = TextEditingController();
 
   String? selectedSpol;
   String? nivo;
@@ -233,6 +234,18 @@ class _InsertUceniciState extends State<UceniciInsert> {
             },
           ),
           TextFormField(
+            controller: _mailController,
+            decoration: InputDecoration(labelText: 'Mail:'),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Unesite mail';
+              } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                return 'Neispravan format maila!';
+              }
+              return null;
+            },
+          ),
+          TextFormField(
             controller: _brojTelefonaController,
             decoration: InputDecoration(labelText: 'Broj telefona roditelja:'),
             validator: (value) {
@@ -244,12 +257,13 @@ class _InsertUceniciState extends State<UceniciInsert> {
               return null;
             },
           ),
+
           TextFormField(
-            controller: _mailController,
-            decoration: InputDecoration(labelText: 'Mail:'),
+            controller: _mailRoditeljaController,
+            decoration: InputDecoration(labelText: 'Mail roditelja:'),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Unesite mail';
+                return 'Unesite mail roditelja';
               } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
                 return 'Neispravan format maila!';
               }
@@ -320,8 +334,9 @@ class _InsertUceniciState extends State<UceniciInsert> {
             String passwordPotvrda = _passwordPotvrdaController.text;
             String username = _korisnickoImeController.text;
             String mail = _mailController.text;
+            String mailRoditelja = _mailRoditeljaController.text;
             String? spol = selectedSpol;
-            String status = "aktivan";
+            String status = "Aktivan";
 
             if (spol == null) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -336,6 +351,7 @@ class _InsertUceniciState extends State<UceniciInsert> {
               username,
               telefon,
               mail,
+              mailRoditelja,
               spol,
               status,
               datumRodjenja,
@@ -362,6 +378,7 @@ class _InsertUceniciState extends State<UceniciInsert> {
               _passwordController.clear();
               _passwordPotvrdaController.clear();
               _mailController.clear();
+              _mailRoditeljaController.clear();
               setState(() {
                 selectedSpol = null;
                 nivo = null;
