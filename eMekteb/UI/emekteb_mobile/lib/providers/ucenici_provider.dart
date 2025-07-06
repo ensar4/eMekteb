@@ -243,14 +243,15 @@ Ucenik fromJson(data) {
       String status,
       DateTime datumRodjenja,
       String imeRoditelja,
-      String password,
-      String passwordPotvrda,
       int? mektebId,
       int razredId
       ) async {
     final url = Uri.parse('$baseOfUrl''Korisnik''/create-student-with-parent');
     final roditeIjUsername = '${imeRoditelja.toLowerCase()}.${prezime.toLowerCase()}';
     final headers = getHeaders();
+
+    final ucenikPassword = '${ime.toLowerCase()}1234';
+    final roditeljPassword = '${imeRoditelja.toLowerCase()}1234';
 
     final response = await http.post(
       url,
@@ -266,8 +267,8 @@ Ucenik fromJson(data) {
         'ucenikDatumRodjenja': datumRodjenja.toIso8601String(),
         'ucenikImeRoditelja': imeRoditelja,
         'ucenikMektebId': mektebId,
-        'ucenikPassword': password,
-        'ucenikPasswordPotvrda': passwordPotvrda,
+        'ucenikPassword': ucenikPassword,
+        'ucenikPasswordPotvrda': ucenikPassword,
         'roditeljIme': imeRoditelja,
         'roditeljPrezime': prezime,
         'roditeljUsername': roditeIjUsername,
@@ -278,8 +279,8 @@ Ucenik fromJson(data) {
         'roditeljDatumRodjenja': datumRodjenja.toIso8601String(),
         'roditeljImeRoditelja': 'ime',
         'roditeljMektebId': mektebId,
-        'roditeljPassword': 'test',
-        'roditeljPasswordPotvrda': 'test'
+        'roditeljPassword': roditeljPassword,
+        'roditeljPasswordPotvrda': roditeljPassword
       }),
     );
 
@@ -290,7 +291,6 @@ Ucenik fromJson(data) {
       final parentId = responseData['parentId'];
 
       bool studentRoleAdded = await _addRoleToKorisnik(studentId, 2);
-
       bool parentRoleAdded = await _addRoleToKorisnik(parentId, 4);
 
       if (studentRoleAdded && parentRoleAdded) {

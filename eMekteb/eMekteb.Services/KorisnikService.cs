@@ -244,13 +244,13 @@ namespace eMekteb.Services
                  <p>Poštovani {parentEntity.Ime} {parentEntity.Prezime},</p>
                  <p>Vaš korisnički profil za eMekteb je uspješno kreiran.</p>
                  <p><strong>Username:</strong> {parentEntity.Username}<br/>
-                 <strong>Privremena lozinka:</strong> test</p>
+                 <strong>Privremena lozinka:</strong> {parentEntity.Ime?.ToLower()}1234</p>
 
                  <p>Također, kreiran je korisnički račun za Vaše dijete:</p>
                  <p><strong>Ime djeteta:</strong> {studentEntity.Ime} {studentEntity.Prezime}<br/>
                  <strong>Username djeteta:</strong> {studentEntity.Username}</p>
-
-                 <p>Molimo Vas da prilikom prve prijave promijenite lozinku.</p>
+                 <strong>Privremena lozinka za vaše dijete:</strong> {studentEntity.Ime?.ToLower()}1234</p>
+                 <p>Molimo Vas da prilikom prve prijave promijenite lozinke.</p>
                  <p>Lijep pozdrav,<br/>eMekteb tim</p>";
 
             var mailObj = new MailObjekat
@@ -261,7 +261,7 @@ namespace eMekteb.Services
             };
 
             var mailService = new MailSendingService();
-            mailService.PosaljiMail(mailObj);
+            await mailService.PosaljiMail(mailObj);
 
             return new UcenikRoditeljResponse
             {

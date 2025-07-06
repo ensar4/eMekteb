@@ -13,7 +13,7 @@ namespace eMekteb.Services
     public class MailSendingService
     {
 
-        public void PosaljiMail(MailObjekat obj)
+        public async Task PosaljiMail(MailObjekat obj)
         {
             string serverAddress = Environment.GetEnvironmentVariable("SERVER_ADDRESS") ?? "smtp.gmail.com";
             string mailSender = Environment.GetEnvironmentVariable("MAIL_SENDER") ?? "emektebmail@gmail.com";
@@ -23,15 +23,15 @@ namespace eMekteb.Services
             string content = $"<p>{obj.poruka}</p>";
             string subject = obj.subject;
 
-
             var message = new MailMessage()
             {
                 From = new MailAddress(mailSender),
-                To = { new MailAddress(obj.mailAdresa) },
                 Subject = subject,
                 Body = content,
                 IsBodyHtml = true
             };
+
+            message.To.Add(new MailAddress(obj.mailAdresa));
 
             var smtpClient = new SmtpClient(serverAddress, port)
             {
@@ -41,15 +41,17 @@ namespace eMekteb.Services
 
             try
             {
-                Console.WriteLine("ADDRESS: " + serverAddress + "| SENDER: " + mailSender + "| PASS: " + mailPass + "| PORT: " + port.ToString());
-                smtpClient.Send(message);
+                Console.WriteLine($"ADDRESS: {serverAddress} | SENDER: {mailSender} | PORT: {port}");
+                await smtpClient.SendMailAsync(message);
                 Console.WriteLine("Mail sent");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex?.Message);
+                Console.WriteLine("Error sending email: " + ex.Message);
+                throw;
             }
         }
+
 
     }
 

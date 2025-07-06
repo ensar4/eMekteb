@@ -28,8 +28,8 @@ class _InsertUceniciState extends State<UceniciInsert> {
   TextEditingController _prezimeController = TextEditingController();
   TextEditingController _imeRoditeljaController = TextEditingController();
   TextEditingController _korisnickoImeController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _passwordPotvrdaController = TextEditingController();
+ // TextEditingController _passwordController = TextEditingController();
+  //TextEditingController _passwordPotvrdaController = TextEditingController();
   TextEditingController _brojTelefonaController = TextEditingController();
   TextEditingController _datumRodjenjaController = TextEditingController();
   TextEditingController _mailController = TextEditingController();
@@ -210,29 +210,29 @@ class _InsertUceniciState extends State<UceniciInsert> {
               }
             },
           ),
-          TextFormField(
-            controller: _passwordController,
-            decoration: InputDecoration(labelText: 'Password:'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Unesite password';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _passwordPotvrdaController,
-            decoration: InputDecoration(labelText: 'Password potvrda:'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Unesite potvrdu passworda';
-              }
-              if (value != _passwordController.text) {
-                return 'Passwordi se ne poklapaju';
-              }
-              return null;
-            },
-          ),
+          //TextFormField(
+          //  controller: _passwordController,
+          //  decoration: InputDecoration(labelText: 'Password:'),
+          //  validator: (value) {
+          //    if (value == null || value.isEmpty) {
+          //      return 'Unesite password';
+          //    }
+          //    return null;
+          //  },
+          //),
+          //TextFormField(
+          //  controller: _passwordPotvrdaController,
+          //  decoration: InputDecoration(labelText: 'Password potvrda:'),
+          //  validator: (value) {
+          //    if (value == null || value.isEmpty) {
+          //      return 'Unesite potvrdu passworda';
+          //    }
+          //    if (value != _passwordController.text) {
+          //      return 'Passwordi se ne poklapaju';
+          //    }
+          //    return null;
+          //  },
+          //),
           TextFormField(
             controller: _mailController,
             decoration: InputDecoration(labelText: 'Mail:'),
@@ -330,8 +330,8 @@ class _InsertUceniciState extends State<UceniciInsert> {
             String telefon = _brojTelefonaController.text;
             DateTime datumRodjenja = DateTime.parse(_datumRodjenjaController.text);
             int nivoId = int.parse(nivo!);
-            String password = _passwordController.text;
-            String passwordPotvrda = _passwordPotvrdaController.text;
+           // String password = _passwordController.text;
+           // String passwordPotvrda = _passwordPotvrdaController.text;
             String username = _korisnickoImeController.text;
             String mail = _mailController.text;
             String mailRoditelja = _mailRoditeljaController.text;
@@ -356,8 +356,8 @@ class _InsertUceniciState extends State<UceniciInsert> {
               status,
               datumRodjenja,
               imeRoditelja,
-              password,
-              passwordPotvrda,
+              //password,
+              //passwordPotvrda,
               _userProvider.user?.mektebId,
               nivoId,
             );
@@ -375,8 +375,8 @@ class _InsertUceniciState extends State<UceniciInsert> {
               _korisnickoImeController.clear();
               _brojTelefonaController.clear();
               _datumRodjenjaController.clear();
-              _passwordController.clear();
-              _passwordPotvrdaController.clear();
+              //_passwordController.clear();
+              //_passwordPotvrdaController.clear();
               _mailController.clear();
               _mailRoditeljaController.clear();
               setState(() {
