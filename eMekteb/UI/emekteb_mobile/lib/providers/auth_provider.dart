@@ -13,7 +13,8 @@ class AuthProvider with ChangeNotifier{
 
 
   AuthProvider(){
-     _baseUrl = const String.fromEnvironment("IdentityServerUrl", defaultValue: "https://192.168.1.7:7049/");
+    _baseUrl = const String.fromEnvironment("baseUrl", defaultValue: "https://192.168.1.7:7160/");
+     //_baseUrl = const String.fromEnvironment("IdentityServerUrl", defaultValue: "https://192.168.1.7:7049/");
      //_baseUrl = const String.fromEnvironment("IdentityServerUrl", defaultValue: "https://10.0.2.2:7049/");
     client.badCertificateCallback = (cert, host, port) => true;
     http = IOClient(client);

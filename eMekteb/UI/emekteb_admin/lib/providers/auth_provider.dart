@@ -9,9 +9,9 @@ class AuthProvider with ChangeNotifier{
    static String? _baseUrl;
 
   AuthProvider(){
-   _baseUrl = const String.fromEnvironment("IdentityServerUrl", defaultValue: "https://localhost:7049/");
+   //_baseUrl = const String.fromEnvironment("IdentityServerUrl", defaultValue: "https://localhost:7049/");
     //  _baseUrl = const String.fromEnvironment("IdentityServerUrl", defaultValue: "https://10.0.2.2:7049/");
-
+   _baseUrl = const String.fromEnvironment("baseUrl", defaultValue: "https://localhost:7160/");
   }
 
    Future<String> login(String username, String lozinka) async {

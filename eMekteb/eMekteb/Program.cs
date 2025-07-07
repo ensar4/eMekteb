@@ -70,42 +70,57 @@ builder.Services.AddDbContext<eMektebContext>(options =>
 builder.Services.AddAutoMapper(typeof(MektebService));
 builder.Services.AddControllersWithViews();
 
-//builder.Services.AddAuthentication("BasicAuthentication")
-//    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
-
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddJwtBearer(options =>
-//    {
-//        options.Authority = "https://localhost:7049";
-//        options.Audience = "weatherapi";
-//        options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
-//    });
-
-
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        // Korišćenje IConfiguration objekta
-        var configuration = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
+        var key = Encoding.UTF8.GetBytes(builder.Configuration["JWTSecret"]!);
 
-       // options.Authority = configuration.GetValue<string>("IdentityServerUrl")!;
-       // options.MetadataAddress = configuration.GetValue<string>("IdentityServerMetaDataUrl")!;    //visak dvije linije options.authority & metaadress
-        options.RequireHttpsMetadata = false;
-        IdentityModelEventSource.ShowPII = true;
-        var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("IdentityServerJWTSecret")!));
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "https://localhost:7160", // ili zamijeni sa tvojim domenom
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
 
-        options.TokenValidationParameters.ValidateAudience = false;
-        options.TokenValidationParameters.ValidateIssuer = false;
-        options.TokenValidationParameters.ValidateLifetime = true;
-        options.TokenValidationParameters.ValidateIssuerSigningKey = true;
-        options.TokenValidationParameters.IssuerSigningKey = secretKey;
+        // Za debug tokena (opcionalno)
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine("Token validation failed: " + context.Exception.Message);
+                return Task.CompletedTask;
+            }
+        };
     });
+
+builder.Services.AddAuthorization();
+
+
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+//        // Korišćenje IConfiguration objekta
+//        var configuration = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
+//
+//       // options.Authority = configuration.GetValue<string>("IdentityServerUrl")!;
+//       // options.MetadataAddress = configuration.GetValue<string>("IdentityServerMetaDataUrl")!;    //visak dvije linije options.authority & metaadress
+//        options.RequireHttpsMetadata = false;
+//        IdentityModelEventSource.ShowPII = true;
+//        var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("IdentityServerJWTSecret")!));
+//
+//        options.TokenValidationParameters.ValidateAudience = false;
+//        options.TokenValidationParameters.ValidateIssuer = false;
+//        options.TokenValidationParameters.ValidateLifetime = true;
+//        options.TokenValidationParameters.ValidateIssuerSigningKey = true;
+//        options.TokenValidationParameters.IssuerSigningKey = secretKey;
+//    });
 
 
 var app = builder.Build();
-
-
 
 
 // Configure the HTTP request pipeline.
@@ -116,6 +131,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting(); //+++++
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseAuthentication();
 app.UseAuthorization();
