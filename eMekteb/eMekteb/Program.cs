@@ -1,19 +1,13 @@
-﻿using eMekteb;
-using eMekteb.Controllers;
-using eMekteb.Filters;
+﻿using eMekteb.Filters;
 using eMekteb.Model;
 using eMekteb.Model.SearchObjects;
 using eMekteb.Services;
 using eMekteb.Services.Database;
 using eMekteb.Services.Interfaces;
 using eMekteb.Services.ObavijestStateMachine;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Security.Authentication;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
