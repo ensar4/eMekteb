@@ -583,6 +583,8 @@ class _ProfilInfoState extends State<AkGodine> {
 
 
   Widget headerButtons() {
+    String userRole = getCurrentUserRole();
+    bool isSuperAdmin = userRole == "SuperAdmin";
     return Padding(
       padding: const EdgeInsets.all(30.0),
       child: Row(
@@ -652,7 +654,7 @@ class _ProfilInfoState extends State<AkGodine> {
                 fontWeight: FontWeight.w500), // Use the actual total count
           ),
           const SizedBox(width: 20),
-
+          if(isSuperAdmin)
           ElevatedButton(
             onPressed: () => _showCreateForm(context, _akademskaProvider, _akademskaMektebProvider, filteredListM),
             style: ElevatedButton.styleFrom(
@@ -733,6 +735,13 @@ class _ProfilInfoState extends State<AkGodine> {
         return bValue.compareTo(aValue);
       });
     }
+  }
+
+  String getCurrentUserRole() {
+    if (Korisnik.uloge.contains("SuperAdmin")) {
+      return "SuperAdmin";
+    } else
+      return "Admin";
   }
 
 }
