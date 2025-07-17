@@ -953,14 +953,14 @@ class _ProfilInfoState extends State<Postavke> {
                     Navigator.of(context).pop();
 
                     // Construct the mail object
-                    var mailObject = MailObject(
-                      mail,  // mailAdresa
-                      "Takmicenje",  // subject
-                      "Esselamu alejkum, Postavljeni ste za člana komisije na ovogodišnjem takmičenju, pristupne podatke ćete dobiti na dan takmičenja. Hvala!",  // poruka
-                    );
+                    //var mailObject = MailObject(
+                    //  mail,  // mailAdresa
+                    //  "Takmicenje",  // subject
+                    //  "Esselamu alejkum, Postavljeni ste za člana komisije na ovogodišnjem takmičenju, pristupne podatke ćete dobiti na dan takmičenja. Hvala!",  // poruka
+                    //);
 
                     // Send the email
-                    await provider.sendMail(mailObject);
+                    //await provider.sendMail(mailObject);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Greška pri dodavanju člana komisije')),

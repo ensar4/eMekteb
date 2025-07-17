@@ -548,21 +548,34 @@ class _ProfilInfoState extends State<AkGodine> {
                 if (formKey.currentState!.validate()) {
                   formKey.currentState!.save();
 
-                  // Create AkademskaGodina and get its ID
-                  int? akademskaGodinaId = await provider.createAkademskaGodina(naziv, datumPocetka, datumZavrsetka);
+                  // Provjera da li već postoji akademska godina s istim nazivom
+                  bool exists = filteredList.any((ak) => ak.naziv?.trim() == naziv.trim());
+                  if (exists) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Akademska godina s tim nazivom već postoji'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    return;
+                  }
+
+                  // Ako ne postoji, nastavi s kreiranjem
+                  int? akademskaGodinaId = await provider.createAkademskaGodina(
+                      naziv, datumPocetka, datumZavrsetka);
 
                   if (akademskaGodinaId != null) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Akademska godina uspješno dodana')),
                     );
 
-                    // Loop through all mektebs in filteredListM and insert AkademskaMekteb records in many to many tbl
                     for (Mekteb mekteb in filteredListM) {
-                      await _akademskaMektebProvider.insertAkademskaMekteb(akademskaGodinaId, mekteb.id);
+                      await _akademskaMektebProvider.insertAkademskaMekteb(
+                          akademskaGodinaId, mekteb.id);
                     }
-                    // Loop through all razreds in razreds and insert AkademskaRazred records in many to many tbl
                     for (Razred razred in filteredListRazredi) {
-                      await _akademskaRazredProvider.insertAkademskaRazred(akademskaGodinaId, razred.id);
+                      await _akademskaRazredProvider.insertAkademskaRazred(
+                          akademskaGodinaId, razred.id);
                     }
 
                     fetchData();
