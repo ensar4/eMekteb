@@ -66,7 +66,17 @@ class _ProfilInfoState extends State<ProfilScreen> {
           children: [
             imgPart(),
             profilInfo(),
-            settingsButton()
+            settingsButton(),
+            SizedBox(height: 20),
+            Text(
+              "Verzija 1.0.0 🌸",
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+
           ],
         ),
       ),
@@ -83,9 +93,10 @@ class _ProfilInfoState extends State<ProfilScreen> {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: BoxDecoration(//
             borderRadius: BorderRadius.circular(8.0),
-            color: Color(0xFFE37224), // Background color
+            // color: Color(0xFFE662B2),
+           color: Color(0xFFCC579E),
           ),
           width: double.infinity, // Full-width container
           height: 180, // Adjust the height as necessary
@@ -122,7 +133,7 @@ class _ProfilInfoState extends State<ProfilScreen> {
                         child: Icon(
                           Icons.edit,
                           size: 15,
-                          color: Colors.orange,
+                          color: Color(0xFFCC579E),
                         ),
                       ),
                     ),
